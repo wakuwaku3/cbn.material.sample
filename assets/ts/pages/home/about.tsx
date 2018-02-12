@@ -3,14 +3,17 @@ import { connect, DispatchProp, Dispatch } from "react-redux";
 import actionCreatorFactory, { Action } from 'typescript-fsa';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { AppState } from "../../shared/app-factory";
-import * as $ from 'jquery';
 
 export class HomeAboutService {
     async getInitializeAsync(): Promise<string> {
-        return await $.get('/test/get');
+        let res = await fetch('/test/get');
+        let text = await res.text();
+        return text;
     }
     async getStepAsync(): Promise<number> {
-        return await $.get('/test/getStep');
+        let res = await fetch('/test/getStep');
+        let json = await res.json();
+        return json;
     }
 }
 
@@ -82,7 +85,7 @@ export namespace HomeAbout {
         );
     }
     function createPage() {
-        return connect(HomeAboutContainer.mapStateToProps, HomeAboutContainer.mapDispatchToProps)(Component);
+        return connect((appState: AppState) => HomeAboutContainer.mapStateToProps(appState), x => HomeAboutContainer.mapDispatchToProps(x))(Component);
     }
     export const Page = createPage();
 }
