@@ -22,8 +22,8 @@ const app = {
     module: {
         rules: [
             {
-                // 拡張子 .ts の場合
-                test: /\.ts$/,
+                // 拡張子 .ts もしくは .tsx の場合
+                test: /\.tsx?$/,
                 exclude: /node_modules/,
                 // TypeScript をコンパイルする
                 use: 'awesome-typescript-loader'
@@ -66,7 +66,7 @@ const app = {
     // import 文で .ts ファイルを解決するため
     resolve: {
         extensions: [
-            '.ts', '.js'
+            '.ts', '.tsx', '.js', '.json'
         ]
     },
     // ソースマップを有効に

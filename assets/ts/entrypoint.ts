@@ -1,9 +1,9 @@
 import 'bootstrap';
 import * as $ from 'jquery';
-export namespace test {
-    export async function render(id: string) {
-        await $();
-        let val = await $.get('test/get');
-        $(`#${id}`).val(val);
-    }
-}
+import * as ReactDOM from 'react-dom';
+import * as React from 'react';
+import { App } from './shared/app';
+
+$(() => {
+    ReactDOM.render(React.createElement(App), document.getElementById('app'));
+});

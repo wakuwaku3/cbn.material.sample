@@ -3,6 +3,12 @@
         "sourceMap": true,
         "target": "es2017",
         "module": "es2015",
+        "jsx": "react",
+        "moduleResolution": "node",
+        "lib": [
+            "es2017",
+            "dom"
+        ]
     },
     "exclude": [
         "./node_modules"

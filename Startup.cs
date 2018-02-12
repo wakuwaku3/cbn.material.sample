@@ -43,6 +43,10 @@ namespace cbn.react.sample
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Test}/{action=Index}/{id?}");
+
+                routes.MapSpaFallbackRoute(
+                    name: "spa-fallback",
+                    defaults : new { controller = "Test", action = "Index" });
             });
         }
     }
