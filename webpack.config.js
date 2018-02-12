@@ -13,10 +13,8 @@ const app = {
         library: 'bundle'
     },
     plugins: [
-        new UglifyJsPlugin({
-            cache: true,
-            parallel: true,
-            sourceMap: true
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
         }),
     ],
     module: {
@@ -72,4 +70,14 @@ const app = {
     // ソースマップを有効に
     devtool: 'source-map'
 };
+
+if (process.env.NODE_ENV !== 'production') {
+    app.devtool = 'source-map';
+} else {
+    app.plugins.push(new UglifyJsPlugin({
+        cache: true,
+        parallel: true,
+        sourceMap: true
+    }));
+}
 module.exports = [app];

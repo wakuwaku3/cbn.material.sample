@@ -4,6 +4,7 @@ import { AppRouter } from './app-router';
 import { TopNav } from './top-nav';
 import { Component } from 'react';
 import * as React from 'react';
+import { createStore } from 'redux';
 
 export class App extends Component {
     render() {

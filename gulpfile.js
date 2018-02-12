@@ -55,7 +55,7 @@ gulp.task('publish', cb => {
 });
 gulp.task('publish:web', () => {
     let output = path.join(process.cwd(), 'dist', 'web');
-    let webpack = spawn('webpack', { shell: true });
+    let webpack = spawn('webpack -p', { shell: true });
     webpack.stdout.on("data", data => console.log("stdout: " + data));
     webpack.stderr.on("data", data => console.log("stdout: " + data));
     return webpack.on("exit", data => {

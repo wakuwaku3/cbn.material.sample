@@ -2,8 +2,9 @@ import 'bootstrap';
 import * as $ from 'jquery';
 import * as ReactDOM from 'react-dom';
 import * as React from 'react';
-import { App } from './shared/app';
+import { appFactory } from './shared/app-factory';
 
+let component = appFactory.createApp();
 $(() => {
-    ReactDOM.render(React.createElement(App), document.getElementById('app'));
+    ReactDOM.render(component, document.getElementById('app'));
 });

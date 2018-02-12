@@ -10,7 +10,7 @@ export class AppRouter extends Component {
         return (
             <Switch>
                 <Route exact path='/' component={HomeIndex} />
-                <Route exact path='/home/about' component={HomeAbout} />
+                <Route exact path='/home/about' component={HomeAbout.Page} />
             </Switch>
         );
     }
