@@ -14,5 +14,11 @@ namespace cbn.react.sample.Controllers
         {
             return "success!";
         }
+
+        [HttpGet]
+        public int GetStep()
+        {
+            return 10;
+        }
     }
 }

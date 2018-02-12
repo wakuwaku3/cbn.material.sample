@@ -1,49 +1,88 @@
 import * as React from "react";
-import { connect, DispatchProp } from "react-redux";
-import actionCreatorFactory from 'typescript-fsa';
+import { connect, DispatchProp, Dispatch } from "react-redux";
+import actionCreatorFactory, { Action } from 'typescript-fsa';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { AppState } from "../../shared/app-factory";
-
+import * as $ from 'jquery';
 
 export class HomeAboutService {
-    public getInitialState(): HomeAbout.State {
-        return { counter: 0 };
+    async getInitializeAsync(): Promise<string> {
+        return await $.get('/test/get');
     }
+    async getStepAsync(): Promise<number> {
+        return await $.get('/test/getStep');
+    }
+}
 
-    public addCounter(oldState: HomeAbout.State, payload: number): HomeAbout.State {
+export namespace HomeAboutActionCreator {
+    const factory = actionCreatorFactory();
+    export const initialize = factory<string>('initialize');
+    export const addCounter = factory<number>('addCounter');
+}
+
+export namespace HomeAboutReducerService {
+    export const initializeState: HomeAbout.State = {
+        counter: 0,
+        header: '',
+    };
+    export function initialize(oldState: HomeAbout.State, payload: string): HomeAbout.State {
+        let newState = Object.assign({}, oldState);
+        newState.header = payload;
+        return newState;
+    }
+    export function addCounter(oldState: HomeAbout.State, payload: number): HomeAbout.State {
         let newState = Object.assign({}, oldState);
         newState.counter += payload;
         return newState;
     }
 }
 
-export namespace HomeAbout {
-    export interface State extends DispatchProp<any> {
-        counter: number;
-    }
-    const initialState: State = {
-        counter: 0,
-    }
-
-    namespace actionCreator {
-        const factory = actionCreatorFactory();
-        export const addCounter = factory<number>('addCounter');
-    }
-
+export namespace HomeAboutContainer {
     const service = new HomeAboutService();
-    export const Reducer = reducerWithInitialState(service.getInitialState())
-        .case(actionCreator.addCounter, service.addCounter);
-
-    class Component extends React.Component<State> {
-        render() {
-            return (
-                <div>
-                    <h1>About</h1>
-                    <p>現在の数値：{this.props.counter}</p>
-                    <button onClick={() => { this.props.dispatch(actionCreator.addCounter(1)) }} >加算</button>
-                </div>
-            );
-        }
+    export function mapDispatchToProps(dispatch: Dispatch<void>) {
+        service.getInitializeAsync()
+            .then(res => {
+                return dispatch(HomeAboutActionCreator.initialize(res));
+            });
+        return {
+            addCounter: async (v: number) => {
+                let res = await service.getStepAsync();
+                return dispatch(HomeAboutActionCreator.addCounter(res + v));
+            },
+        };
     }
-    export const Page = connect((state: AppState) => Object.assign({}, state.HomeAboutReducer))(Component);
+
+    export function mapStateToProps(appState: AppState) {
+        return Object.assign({}, appState.HomeAboutReducer);
+    }
+}
+
+export namespace HomeAbout {
+    export interface State {
+        counter: number;
+        header: string;
+    }
+    export interface Actions {
+        addCounter: (v: number) => Promise<Action<number>>;
+    }
+    export interface Props extends State, Actions { }
+
+    export const Reducer = reducerWithInitialState(HomeAboutReducerService.initializeState)
+        .case(HomeAboutActionCreator.initialize, (oldState: HomeAbout.State, payload: string) => HomeAboutReducerService.initialize(oldState, payload))
+        .case(HomeAboutActionCreator.addCounter, (oldState: HomeAbout.State, payload: number) => HomeAboutReducerService.addCounter(oldState, payload));
+
+    const Component: React.SFC<Props> = (props: Props) => {
+        return (
+            <div>
+                <h1>About</h1>
+                <h3>{props.header}</h3>
+                <p>現在の数値：{props.counter}</p>
+                <button onClick={() => { props.addCounter(1) }} >加算</button>
+            </div>
+        );
+    }
+    function createPage() {
+        return connect(HomeAboutContainer.mapStateToProps, HomeAboutContainer.mapDispatchToProps)(Component);
+    }
+    export const Page = createPage();
 }
