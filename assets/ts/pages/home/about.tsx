@@ -3,17 +3,14 @@ import { connect, DispatchProp, Dispatch } from "react-redux";
 import actionCreatorFactory, { Action } from 'typescript-fsa';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { AppState } from "../../shared/app-factory";
+import * as $ from 'jquery';
 
 export class HomeAboutService {
     async getInitializeAsync(): Promise<string> {
-        let res = await fetch('/test/get');
-        let text = await res.text();
-        return text;
+        return await $.get('/test/get');
     }
     async getStepAsync(): Promise<number> {
-        let res = await fetch('/test/getStep');
-        let json = await res.json();
-        return json;
+        return await $.get('/test/getStep');
     }
 }
 
@@ -29,12 +26,12 @@ export namespace HomeAboutReducerService {
         header: '',
     };
     export function initialize(oldState: HomeAbout.State, payload: string): HomeAbout.State {
-        let newState = Object.assign({}, oldState);
+        let newState = $.extend({}, oldState);
         newState.header = payload;
         return newState;
     }
     export function addCounter(oldState: HomeAbout.State, payload: number): HomeAbout.State {
-        let newState = Object.assign({}, oldState);
+        let newState = $.extend({}, oldState);
         newState.counter += payload;
         return newState;
     }
@@ -56,7 +53,7 @@ export namespace HomeAboutContainer {
     }
 
     export function mapStateToProps(appState: AppState) {
-        return Object.assign({}, appState.HomeAboutReducer);
+        return $.extend({}, appState.HomeAboutReducer);
     }
 }
 

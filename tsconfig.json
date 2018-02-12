@@ -22,19 +22,11 @@
                     "env",
                     {
                         "targets": "last 2 versions, ie 11",
+                        "useBuiltIns": true,
                         "modules": false
                     }
                 ]
             ],
-            "plugins": [
-                [
-                    "transform-runtime",
-                    {
-                        "polyfill": false,
-                        "regenerator": true
-                    }
-                ]
-            ]
         },
         "useCache": true
     }

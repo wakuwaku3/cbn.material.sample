@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import 'bootstrap';
 import * as $ from 'jquery';
 import * as ReactDOM from 'react-dom';
