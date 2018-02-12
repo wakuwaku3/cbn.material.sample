@@ -1,0 +1,35 @@
+{
+    "compilerOptions": {
+        "sourceMap": true,
+        "target": "es2017",
+        "module": "es2015",
+    },
+    "exclude": [
+        "./node_modules"
+    ],
+    "awesomeTypescriptLoaderOptions": {
+        "useBabel": true,
+        "babelOptions": {
+            "babelrc": false, /* Important line */
+            "presets": [
+                [
+                    "env",
+                    {
+                        "targets": "last 2 versions, ie 11",
+                        "modules": false
+                    }
+                ]
+            ],
+            "plugins": [
+                [
+                    "transform-runtime",
+                    {
+                        "polyfill": false,
+                        "regenerator": true
+                    }
+                ]
+            ]
+        },
+        "useCache": true
+    }
+}
