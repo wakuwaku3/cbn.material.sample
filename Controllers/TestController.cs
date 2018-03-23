@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace cbn.react.sample.Controllers
+namespace cbn.undux.sample.Controllers
 {
     public class TestController : Controller
     {

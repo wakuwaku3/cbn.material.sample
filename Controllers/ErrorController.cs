@@ -1,8 +1,8 @@
-using cbn.react.sample.Models;
-using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using cbn.undux.sample.Models;
+using Microsoft.AspNetCore.Mvc;
 
-namespace cbn.react.sample.Controllers
+namespace cbn.undux.sample.Controllers
 {
     public class ErrorController : Controller
     {

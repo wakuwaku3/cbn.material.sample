@@ -1,7 +1,7 @@
 {
-  "name": "cbn.react.sample",
+  "name": "cbn.undux.sample",
   "version": "1.0.0",
-  "description": "typescript + es2017 + react のサンプル",
+  "description": "typescript + es2017 + react + undux のサンプル",
   "main": "index.js",
   "scripts": {
     "install": "gulp restore",

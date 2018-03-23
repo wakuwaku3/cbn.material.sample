@@ -1,6 +1,6 @@
 using System;
 
-namespace cbn.react.sample.Models
+namespace cbn.undux.sample.Models
 {
     public class ErrorViewModel
     {

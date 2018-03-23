@@ -25,16 +25,14 @@
     "editor.formatOnSave": true,
     "editor.detectIndentation": true,
     "prettier.semi": true,
-    "prettier.tabWidth": 4,
+    "prettier.tabWidth": 2,
     "prettier.singleQuote": true,
     "csharpfixformat.style.braces.onSameLine": false,
     "csharpfixformat.style.spaces.beforeParenthesis": false,
     "csharpfixformat.style.spaces.beforeIndexerBracket": false,
     "editor.tabCompletion": true,
     "omnisharp.useEditorFormattingSettings": false,
-    "prettier.disableLanguages": [
-      "jchannon.csharpextensions"
-    ],
+    "prettier.disableLanguages": ["jchannon.csharpextensions"],
     "csproj.excludeRegex": ".*",
     "csproj.silentDeletion": true
   },
