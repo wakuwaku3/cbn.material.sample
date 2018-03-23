@@ -4,7 +4,6 @@ import { AppRouter } from './app-router';
 import { TopNav } from './top-nav';
 import { Component } from 'react';
 import * as React from 'react';
-import { createStore } from 'redux';
 
 export class App extends Component {
     render() {
@@ -17,7 +16,9 @@ export class App extends Component {
                     </div>
                     <footer className="footer">
                         <div className="container">
-                            <span className="text-muted">&copy; 2018 - cbn.es2017.sample</span>
+                            <span className="text-muted">
+                                &copy; 2018 - cbn.es2017.sample
+                            </span>
                         </div>
                     </footer>
                 </div>

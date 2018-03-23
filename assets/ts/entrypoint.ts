@@ -1,11 +1,12 @@
 import 'babel-polyfill';
 import 'bootstrap';
+import '../scss/entrypoint.scss';
 import * as $ from 'jquery';
 import * as ReactDOM from 'react-dom';
 import * as React from 'react';
-import { appFactory } from './shared/app-factory';
+import { AppFactory } from './shared/app-factory';
 
-let component = appFactory.createApp();
+let component = AppFactory.createApp();
 $(() => {
     ReactDOM.render(component, document.getElementById('app'));
 });

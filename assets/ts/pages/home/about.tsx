@@ -1,88 +1,56 @@
-import * as React from "react";
-import { connect, DispatchProp, Dispatch } from "react-redux";
-import actionCreatorFactory, { Action } from 'typescript-fsa';
-import { reducerWithInitialState } from 'typescript-fsa-reducers';
-import { AppState } from "../../shared/app-factory";
+import * as React from 'react';
 import * as $ from 'jquery';
+import { ActionBase } from '../../shared/action-base';
+import { AppStoreFactory } from '../../shared/app-store';
 
-export class HomeAboutService {
-    async getInitializeAsync(): Promise<string> {
-        return await $.get('/test/get');
-    }
-    async getStepAsync(): Promise<number> {
-        return await $.get('/test/getStep');
-    }
-}
-
-export namespace HomeAboutActionCreator {
-    const factory = actionCreatorFactory();
-    export const initialize = factory<string>('initialize');
-    export const addCounter = factory<number>('addCounter');
-}
-
-export namespace HomeAboutReducerService {
-    export const initializeState: HomeAbout.State = {
-        counter: 0,
-        header: '',
-    };
-    export function initialize(oldState: HomeAbout.State, payload: string): HomeAbout.State {
-        let newState = $.extend({}, oldState);
-        newState.header = payload;
-        return newState;
-    }
-    export function addCounter(oldState: HomeAbout.State, payload: number): HomeAbout.State {
-        let newState = $.extend({}, oldState);
-        newState.counter += payload;
-        return newState;
-    }
-}
-
-export namespace HomeAboutContainer {
-    const service = new HomeAboutService();
-    export function mapDispatchToProps(dispatch: Dispatch<void>) {
-        service.getInitializeAsync()
-            .then(res => {
-                return dispatch(HomeAboutActionCreator.initialize(res));
-            });
-        return {
-            addCounter: async (v: number) => {
-                let res = await service.getStepAsync();
-                return dispatch(HomeAboutActionCreator.addCounter(res + v));
-            },
-        };
-    }
-
-    export function mapStateToProps(appState: AppState) {
-        return $.extend({}, appState.HomeAboutReducer);
-    }
-}
-
-export namespace HomeAbout {
-    export interface State {
+export namespace HomeAboutPage {
+    export interface Model {
+        state: null | 'initializing' | 'initializd';
         counter: number;
         header: string;
     }
-    export interface Actions {
-        addCounter: (v: number) => Promise<Action<number>>;
+    class Action extends ActionBase<'HomeAboutState'> {
+        constructor() {
+            super('HomeAboutState');
+            this.observable
+                .filter(s => s.state === 'initializing')
+                .subscribe(async () => {
+                    this.model.header = await this.getInitializeAsync();
+                    this.model.state = 'initializd';
+                    this.reloadState();
+                });
+            if (!this.model.state) {
+                this.model = {
+                    state: 'initializing',
+                    counter: 0,
+                    header: null
+                };
+            } else {
+                this.model.state = 'initializing';
+                this.reloadState();
+            }
+        }
+        async getInitializeAsync(): Promise<string> {
+            return await $.get('/test/get');
+        }
+        async getStepAsync(): Promise<number> {
+            return await $.get('/test/getStep');
+        }
+        async addCounterAsync(num: number) {
+            let step = await this.getStepAsync();
+            this.model.counter += step * num;
+            this.reloadState();
+        }
     }
-    export interface Props extends State, Actions { }
-
-    export const Reducer = reducerWithInitialState(HomeAboutReducerService.initializeState)
-        .case(HomeAboutActionCreator.initialize, (oldState: HomeAbout.State, payload: string) => HomeAboutReducerService.initialize(oldState, payload))
-        .case(HomeAboutActionCreator.addCounter, (oldState: HomeAbout.State, payload: number) => HomeAboutReducerService.addCounter(oldState, payload));
-
-    const Component: React.SFC<Props> = (props: Props) => {
+    export const action = new Action();
+    export const view = AppStoreFactory.WithStore('HomeAboutState')(() => {
         return (
             <div>
                 <h1>About</h1>
-                <h3>{props.header}</h3>
-                <p>現在の数値：{props.counter}</p>
-                <button onClick={() => { props.addCounter(1) }} >加算</button>
+                <h3>{action.model.header}</h3>
+                <p>現在の数値：{action.model.counter}</p>
+                <button onClick={() => action.addCounterAsync(1)}>加算</button>
             </div>
         );
-    }
-    function createPage() {
-        return connect((appState: AppState) => HomeAboutContainer.mapStateToProps(appState), x => HomeAboutContainer.mapDispatchToProps(x))(Component);
-    }
-    export const Page = createPage();
+    });
 }

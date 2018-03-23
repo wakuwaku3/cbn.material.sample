@@ -3,7 +3,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 const app = {
   // メインとなるファイル（エントリーポイント）
-  entry: ['./assets/scss/entrypoint.scss', './assets/ts/entrypoint.ts'],
+  entry: ['./assets/ts/entrypoint.ts'],
   // ファイルの出力設定
   output: {
     //  出力ファイルのディレクトリ名

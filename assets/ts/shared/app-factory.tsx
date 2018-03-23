@@ -1,28 +1,10 @@
 import * as React from 'react';
-import { combineReducers, createStore } from "redux";
-import { HomeAbout } from "../pages/home/about";
-import { Provider } from 'react-redux'
+import { HomeAboutPage } from '../pages/home/about';
 import { App } from './app';
+import { connect, createStore } from 'undux';
 
-export interface AppState {
-  HomeAboutReducer: HomeAbout.State,
-}
-export namespace appFactory {
-  function createAppStore() {
-    let reducers = createAppReducers();
-    return createStore(reducers);
-  }
-
-  function createAppReducers() {
-    return combineReducers<AppState>({ HomeAboutReducer: HomeAbout.Reducer });
-  }
-
-  export function createApp() {
-    let store = createAppStore();
-    return (
-      <Provider store={store} >
-        <App />
-      </Provider>
-    );
-  }
+export namespace AppFactory {
+    export function createApp() {
+        return <App />;
+    }
 }
