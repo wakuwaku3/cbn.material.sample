@@ -1,3 +1,4 @@
+import * as $ from 'jquery';
 import { AppStore, AppStoreFactory } from './app-store';
 import { Store } from 'undux';
 import { Observable } from 'rx';
