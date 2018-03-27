@@ -1,18 +1,23 @@
-import { BrowserRouter, Link } from 'react-router-dom';
-import { Route } from 'react-router';
+import { BrowserRouter } from 'react-router-dom';
 import { AppRouter } from './app-router';
-import { TopNav } from './top-nav';
-import { Component } from 'react';
 import * as React from 'react';
+import { AppTop } from './app-top';
+import { AppStyleHelper } from '../helpers/app-style-helper';
 
-export class App extends Component {
-    render() {
+export namespace App {
+    const styles = {
+        app: {
+            background: '#f7df1e'
+        }
+    };
+    const classes = AppStyleHelper.attachStyles(styles);
+    export const Component: React.SFC = () => {
         return (
             <BrowserRouter>
-                <div>
-                    <TopNav />
+                <div className={classes.app}>
+                    <AppTop.Component />
                     <div className="container body-content">
-                        <AppRouter />
+                        <AppRouter.Component />
                     </div>
                     <footer className="footer">
                         <div className="container">
@@ -24,5 +29,5 @@ export class App extends Component {
                 </div>
             </BrowserRouter>
         );
-    }
+    };
 }

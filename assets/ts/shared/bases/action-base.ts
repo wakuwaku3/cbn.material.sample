@@ -1,12 +1,14 @@
 import * as $ from 'jquery';
-import { AppStore, AppStoreFactory } from './app-store';
 import { Store } from 'undux';
 import { Observable } from 'rx';
+import { AppStoreHelper } from '../helpers/app-store-helper';
+import { AppStore } from '../models/app-store';
+import * as Rx from 'rx';
 
 export abstract class ActionBase<Key extends keyof AppStore> {
     constructor(private key: Key) {}
     get store(): Store<AppStore> {
-        return AppStoreFactory.Store;
+        return AppStoreHelper.Store;
     }
     get model(): AppStore[Key] {
         return this.store.get(this.key);

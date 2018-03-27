@@ -1,12 +1,15 @@
 import 'babel-polyfill';
 import 'bootstrap';
 import '../scss/entrypoint.scss';
-import * as $ from 'jquery';
-import * as ReactDOM from 'react-dom';
 import * as React from 'react';
-import { AppFactory } from './shared/app-factory';
+import * as ReactDOM from 'react-dom';
+import { App } from './shared/components/app';
 
-let component = AppFactory.createApp();
-$(() => {
-    ReactDOM.render(component, document.getElementById('app'));
-});
+namespace EntryPoint {
+    export function render() {
+        const rootComponent = React.createElement(App.Component);
+        const target = document.getElementById('app');
+        ReactDOM.render(rootComponent, target);
+    }
+    render();
+}
