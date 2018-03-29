@@ -2,22 +2,22 @@ import { BrowserRouter } from 'react-router-dom';
 import { AppRouter } from './app-router';
 import * as React from 'react';
 import { AppTop } from './app-top';
-import { AppStyleHelper } from '../helpers/app-style-helper';
+import { Cbn } from '../../lib/shared/cbn';
 
-export namespace App {
+export namespace AppMain {
     const styles = {
         app: {
             background: '#f7df1e'
         }
     };
-    const classes = AppStyleHelper.attachStyles(styles);
-    export const Component: React.SFC = () => {
+    const classes = Cbn.Jss.attachStyles(styles);
+    export const component: React.SFC = () => {
         return (
             <BrowserRouter>
                 <div className={classes.app}>
-                    <AppTop.Component />
+                    <AppTop.component />
                     <div className="container body-content">
-                        <AppRouter.Component />
+                        <AppRouter.component />
                     </div>
                     <footer className="footer">
                         <div className="container">

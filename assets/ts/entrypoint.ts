@@ -3,13 +3,13 @@ import 'bootstrap';
 import '../scss/entrypoint.scss';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { App } from './shared/components/app';
+import { AppMain } from './app/masters/app-main';
 
 namespace EntryPoint {
-    export function render() {
-        const rootComponent = React.createElement(App.Component);
+    export const render = () => {
+        const rootComponent = React.createElement(AppMain.component);
         const target = document.getElementById('app');
         ReactDOM.render(rootComponent, target);
-    }
+    };
     render();
 }
