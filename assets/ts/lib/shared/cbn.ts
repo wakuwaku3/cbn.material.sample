@@ -130,7 +130,7 @@ export namespace Cbn {
     }
     export namespace Ajax {
         export const get = async <T>(url: string) => {
-            return (await $.get('/test/get')) as T;
+            return (await $.get(url)) as T;
         };
     }
 }

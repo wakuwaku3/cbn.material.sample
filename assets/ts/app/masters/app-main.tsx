@@ -3,31 +3,37 @@ import { AppRouter } from './app-router';
 import * as React from 'react';
 import { AppTop } from './app-top';
 import { Cbn } from '../../lib/shared/cbn';
+import {
+    MuiThemeProvider,
+    getMuiTheme,
+    darkBaseTheme,
+    lightBaseTheme,
+    LightRawTheme
+} from 'material-ui/styles';
+import { AppFotter } from './app-footer';
+import { App } from '../shared/app';
+import * as $ from 'jquery';
+import { AppBody } from './app-body';
 
 export namespace AppMain {
-    const styles = {
-        app: {
-            background: '#f7df1e'
-        }
-    };
-    const classes = Cbn.Jss.attachStyles(styles);
-    export const component: React.SFC = () => {
+    export const component = () => {
+        const styles = {
+            '@global': {
+                body: { ...App.theme.paper }
+            }
+        };
+        styles['@global'].body['margin'] = 0;
+        const classes = Cbn.Jss.attachStyles(styles);
         return (
-            <BrowserRouter>
-                <div className={classes.app}>
-                    <AppTop.component />
-                    <div className="container body-content">
-                        <AppRouter.component />
+            <MuiThemeProvider muiTheme={App.theme}>
+                <BrowserRouter>
+                    <div>
+                        <AppTop.component />
+                        <AppBody.component />
+                        <AppFotter.component />
                     </div>
-                    <footer className="footer">
-                        <div className="container">
-                            <span className="text-muted">
-                                &copy; 2018 - cbn.es2017.sample
-                            </span>
-                        </div>
-                    </footer>
-                </div>
-            </BrowserRouter>
+                </BrowserRouter>
+            </MuiThemeProvider>
         );
     };
 }

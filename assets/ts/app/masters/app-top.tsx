@@ -1,78 +1,98 @@
-import { Component } from 'react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { Cbn } from '../../lib/shared/cbn';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import MenuIcon from 'material-ui/svg-icons/navigation/menu';
+import CloseIcon from 'material-ui/svg-icons//navigation/close';
+import {
+    AppBar,
+    IconMenu,
+    IconButton,
+    MenuItem,
+    IconMenuProps,
+    RaisedButton,
+    Drawer
+} from 'material-ui';
+import { AppMain } from './app-main';
+import { App } from '../shared/app';
+import { AppRouter } from './app-router';
 
 export namespace AppTop {
-    export const component: React.SFC = () => {
-        return (
-            <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-                <Link className="navbar-brand" to="/">
-                    Expand at lg
-                </Link>
-                <button
-                    className="navbar-toggler"
-                    type="button"
-                    data-toggle="collapse"
-                    data-target="#navbarsExample05"
-                    aria-controls="navbarsExample05"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                >
-                    <span className="navbar-toggler-icon" />
-                </button>
-                <div className="collapse navbar-collapse" id="navbarsExample05">
-                    <ul className="navbar-nav mr-auto">
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/">
-                                Home
-                            </Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/home/about">
-                                About
-                            </Link>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link disabled" href="#">
-                                Disabled
-                            </a>
-                        </li>
-                        <li className="nav-item dropdown">
-                            <a
-                                className="nav-link dropdown-toggle"
-                                href="http://example.com"
-                                id="dropdown05"
-                                data-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="false"
-                            >
-                                Dropdown
-                            </a>
-                            <div
-                                className="dropdown-menu"
-                                aria-labelledby="dropdown05"
-                            >
-                                <a className="dropdown-item" href="#">
-                                    Action
-                                </a>
-                                <a className="dropdown-item" href="#">
-                                    Another action
-                                </a>
-                                <a className="dropdown-item" href="#">
-                                    Something else here
-                                </a>
-                            </div>
-                        </li>
-                    </ul>
-                    <form className="form-inline my-2 my-md-0">
-                        <input
-                            className="form-control"
-                            type="text"
-                            placeholder="Search"
-                        />
-                    </form>
-                </div>
-            </nav>
-        );
+    const getTheme = () => App.theme;
+    const getBarColor = () => App.theme.appBar.textColor;
+    const styles = {
+        bar: {}
     };
+    const classes = Cbn.Jss.attachStyles(styles);
+    const MenuItems = () => (
+        <div>
+            <MenuItem
+                primaryText="Home"
+                containerElement={<Link to={AppRouter.homeIndex} />}
+            />
+            <MenuItem
+                primaryText="About"
+                containerElement={<Link to={AppRouter.homeAbout} />}
+            />
+            <MenuItem primaryText="Refresh" />
+        </div>
+    );
+    interface LeftProps extends LeftState {}
+    interface LeftState {
+        isOpen: boolean;
+    }
+    class Left extends React.Component<LeftProps, LeftState> {
+        constructor(props) {
+            super(props);
+            this.state = { ...props };
+        }
+        handleToggle = () => this.setState({ isOpen: !this.state.isOpen });
+        render() {
+            let theme = getTheme();
+            return (
+                <div>
+                    <IconButton
+                        onClick={this.handleToggle}
+                        className={classes['left-button']}
+                    >
+                        {this.state.isOpen ? (
+                            <CloseIcon color={getBarColor()} />
+                        ) : (
+                            <MenuIcon color={getBarColor()} />
+                        )}
+                    </IconButton>
+                    <Drawer
+                        docked={false}
+                        open={this.state.isOpen}
+                        overlayClassName={classes.bar}
+                        onRequestChange={isOpen => this.setState({ isOpen })}
+                    >
+                        <MenuItems />
+                    </Drawer>
+                </div>
+            );
+        }
+    }
+    const Right = () => (
+        <IconMenu
+            iconButtonElement={
+                <IconButton>
+                    <MoreVertIcon color={getBarColor()} />
+                </IconButton>
+            }
+            targetOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+        >
+            <MenuItems />
+        </IconMenu>
+    );
+
+    export const component = () => (
+        <AppBar
+            title="Title"
+            className={classes.bar}
+            iconElementLeft={<Left isOpen={false} />}
+            iconElementRight={<Right />}
+        />
+    );
 }

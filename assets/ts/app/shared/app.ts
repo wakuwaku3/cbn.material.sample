@@ -1,6 +1,7 @@
 import { Cbn } from '../../lib/shared/cbn';
 import { HomeIndex } from '../pages/home';
 import { HomeAbout } from '../pages/home/about';
+import { getMuiTheme, lightBaseTheme, darkBaseTheme } from 'material-ui/styles';
 
 export namespace App {
     export class Store {
@@ -29,4 +30,5 @@ export namespace App {
      * 接続先ストアを引数にとるHOC
      */
     export const withStore = Cbn.Undux.withStore<Store>();
+    export const theme = getMuiTheme(lightBaseTheme);
 }
