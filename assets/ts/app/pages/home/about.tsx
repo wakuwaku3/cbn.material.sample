@@ -3,6 +3,8 @@ import { Observable } from 'rxjs';
 import { Cbn } from '../../../lib/shared/cbn';
 import { App } from '../../shared/app';
 import { Test } from '../../services/test-service';
+import { FloatingActionButton } from 'material-ui';
+import { ContentAdd, ContentRemove } from 'material-ui/svg-icons';
 
 export namespace HomeAbout {
     export interface Model {
@@ -10,24 +12,23 @@ export namespace HomeAbout {
         header: string;
     }
     export interface Event extends Cbn.Event {
-        onInitialize: void;
-        onClickOperateCounterButton: boolean;
-        onCounterChanged: number;
+        initialize: void;
+        clickOperateCounterButton: boolean;
+        counterChanged: number;
     }
-    class Action extends Cbn.PageAction<App.Store, 'HomeAbout', Event> {
+    class Action extends Cbn.PageAction<App.Store, 'homeAbout', Event> {
         paddingObservable: Observable<number>;
-        constructor() {
-            super('HomeAbout');
+        protected initialize() {
             Cbn.Observable.fromEvent(
                 this.emitter,
-                'onClickOperateCounterButton'
+                'clickOperateCounterButton'
             ).subscribe(async p => {
                 let step = await Test.service.getStepAsync();
                 this.model.counter += step * (p ? 1 : -1);
-                this.emitter.emit('onCounterChanged', this.model.counter);
+                this.emitter.emit('counterChanged', this.model.counter);
                 this.emitter.emit('reflesh');
             });
-            Cbn.Observable.fromEvent(this.emitter, 'onInitialize').subscribe(
+            Cbn.Observable.fromEvent(this.emitter, 'initialize').subscribe(
                 async () => {
                     this.model = {
                         counter: 0,
@@ -37,17 +38,17 @@ export namespace HomeAbout {
             );
             this.paddingObservable = Cbn.Observable.fromEvent(
                 this.emitter,
-                'onCounterChanged'
+                'counterChanged'
             )
                 .startWith(0)
                 .map(num => 40 + num / 10);
             if (!this.model) {
                 this.model = { counter: 0, header: '' };
             }
-            this.emitter.emit('onInitialize');
+            this.emitter.emit('initialize');
         }
     }
-    const action = new Action();
+    const action = new Action('homeAbout');
     const styles = {
         'home-about': {
             padding: action.paddingObservable,
@@ -55,30 +56,28 @@ export namespace HomeAbout {
         }
     };
     const classes = Cbn.Jss.attachStyles(styles);
-    export const component = App.withStore('HomeAbout')(() => {
-        return (
-            <div className={classes['home-about']}>
-                <h1>About</h1>
-                <h3>{action.model.header}</h3>
-                <p>現在の数値：{action.model.counter}</p>
-                <button
-                    onClick={() =>
-                        action.emitter.emit('onClickOperateCounterButton', true)
-                    }
-                >
-                    加算
-                </button>
-                <button
-                    onClick={() =>
-                        action.emitter.emit(
-                            'onClickOperateCounterButton',
-                            false
-                        )
-                    }
-                >
-                    減算
-                </button>
-            </div>
-        );
-    });
+    export const component = App.withStore('homeAbout')(() => (
+        <div className={classes['home-about']}>
+            <h1>About</h1>
+            <h3>{action.model.header}</h3>
+            <p>現在の数値：{action.model.counter}</p>
+            <FloatingActionButton
+                mini={true}
+                onClick={e =>
+                    action.emitter.emit('clickOperateCounterButton', true)
+                }
+            >
+                <ContentAdd />
+            </FloatingActionButton>
+            <FloatingActionButton
+                mini={true}
+                secondary={true}
+                onClick={e =>
+                    action.emitter.emit('clickOperateCounterButton', false)
+                }
+            >
+                <ContentRemove />
+            </FloatingActionButton>
+        </div>
+    ));
 }

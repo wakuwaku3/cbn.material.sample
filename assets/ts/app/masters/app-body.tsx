@@ -8,29 +8,33 @@ export namespace AppBody {
     interface Event extends Cbn.Event {
         resize: void;
     }
-    const emitter = new Cbn.EventEmitter<Event>();
-    const padding = 10;
-    const styles = {
-        body: {
-            paddingTop: padding,
-            paddingBottom: padding,
-            paddingLeft: padding,
-            paddingRight: padding,
-            height: Cbn.Observable.fromEvent(emitter, 'resize').map(
-                () =>
-                    window.innerHeight -
-                    AppFotter.styles.footer.height -
-                    App.theme.appBar.height -
-                    padding * 2
-            )
-        }
+    const createStyles = () => {
+        let styles = {
+            body: {
+                paddingTop: 10,
+                paddingBottom: 10,
+                paddingLeft: 10,
+                paddingRight: 10,
+                overflow: 'auto'
+            }
+        };
+        styles.body['height'] = Cbn.Observable.fromEvent(
+            Cbn.Window.emitter,
+            'resize'
+        ).map(
+            () =>
+                window.innerHeight -
+                AppFotter.styles.footer.height -
+                App.getTheme().appBar.height -
+                styles.body.paddingTop -
+                styles.body.paddingBottom
+        );
+        return styles;
     };
-    window.addEventListener('resize', () => {
-        emitter.emit('resize');
-    });
+    const styles = createStyles();
     const classes = Cbn.Jss.attachStyles(styles);
     export const component: React.SFC = () => {
-        emitter.emit('resize');
+        Cbn.Window.emitter.emit('resize');
         return (
             <div className={classes.body}>
                 <AppRouter.component />

@@ -1,12 +1,26 @@
 import { Cbn } from '../../lib/shared/cbn';
 import { HomeIndex } from '../pages/home';
 import { HomeAbout } from '../pages/home/about';
-import { getMuiTheme, lightBaseTheme, darkBaseTheme } from 'material-ui/styles';
+import {
+    getMuiTheme,
+    lightBaseTheme,
+    darkBaseTheme,
+    MuiTheme
+} from 'material-ui/styles';
+import { ProductsIndex } from '../pages/products';
 
 export namespace App {
+    let theme: MuiTheme;
+    export function getTheme() {
+        if (!theme) {
+            theme = getMuiTheme(darkBaseTheme);
+        }
+        return theme;
+    }
     export class Store {
-        HomeIndex: HomeIndex.Model = this.getNewValue('HomeIndex');
-        HomeAbout: HomeAbout.Model = this.getNewValue('HomeAbout');
+        homeIndex: HomeIndex.Model = this.getNewValue('homeIndex');
+        homeAbout: HomeAbout.Model = this.getNewValue('homeAbout');
+        productsIndex: ProductsIndex.Model = this.getNewValue('productsIndex');
 
         private getNewValue<Key extends keyof Store>(key: Key): Store[Key] {
             //return this.getByLocalStorage(key, k => null);
@@ -30,5 +44,4 @@ export namespace App {
      * 接続先ストアを引数にとるHOC
      */
     export const withStore = Cbn.Undux.withStore<Store>();
-    export const theme = getMuiTheme(lightBaseTheme);
 }

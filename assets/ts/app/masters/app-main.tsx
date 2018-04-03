@@ -16,16 +16,16 @@ import * as $ from 'jquery';
 import { AppBody } from './app-body';
 
 export namespace AppMain {
+    const styles = {
+        '@global': {
+            body: { ...App.getTheme().paper }
+        }
+    };
+    styles['@global'].body['margin'] = 0;
+    const classes = Cbn.Jss.attachStyles(styles);
     export const component = () => {
-        const styles = {
-            '@global': {
-                body: { ...App.theme.paper }
-            }
-        };
-        styles['@global'].body['margin'] = 0;
-        const classes = Cbn.Jss.attachStyles(styles);
         return (
-            <MuiThemeProvider muiTheme={App.theme}>
+            <MuiThemeProvider muiTheme={App.getTheme()}>
                 <BrowserRouter>
                     <div>
                         <AppTop.component />

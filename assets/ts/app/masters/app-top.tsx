@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Cbn } from '../../lib/shared/cbn';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import MenuIcon from 'material-ui/svg-icons/navigation/menu';
-import CloseIcon from 'material-ui/svg-icons//navigation/close';
 import {
     AppBar,
     IconMenu,
@@ -11,32 +8,74 @@ import {
     MenuItem,
     IconMenuProps,
     RaisedButton,
-    Drawer
+    Drawer,
+    MenuItemProps
 } from 'material-ui';
 import { AppMain } from './app-main';
 import { App } from '../shared/app';
 import { AppRouter } from './app-router';
+import { Route } from 'react-router';
+import { MenuItemLink } from '../../lib/components/mui/menu-item-link';
+import {
+    NavigationChevronLeft,
+    NavigationChevronRight,
+    NavigationClose,
+    NavigationMenu,
+    NavigationMoreVert
+} from 'material-ui/svg-icons';
 
 export namespace AppTop {
-    const getTheme = () => App.theme;
-    const getBarColor = () => App.theme.appBar.textColor;
+    const barColor = App.getTheme().appBar.textColor;
     const styles = {
         bar: {}
     };
     const classes = Cbn.Jss.attachStyles(styles);
-    const MenuItems = () => (
-        <div>
-            <MenuItem
-                primaryText="Home"
-                containerElement={<Link to={AppRouter.homeIndex} />}
-            />
-            <MenuItem
-                primaryText="About"
-                containerElement={<Link to={AppRouter.homeAbout} />}
-            />
-            <MenuItem primaryText="Refresh" />
-        </div>
-    );
+    interface MenuOption {
+        isLeft: boolean;
+        onClick?: React.MouseEventHandler<{}>;
+    }
+    const getMenuItems = (option: MenuOption) => [
+        <MenuItem
+            primaryText="Home"
+            key={Cbn.getKey()}
+            leftIcon={option.isLeft ? null : <NavigationChevronLeft />}
+            rightIcon={option.isLeft ? <NavigationChevronRight /> : null}
+            menuItems={[
+                <MenuItemLink.component
+                    key={Cbn.getKey()}
+                    primaryText="Index"
+                    url={AppRouter.homeIndex}
+                    onClick={option.onClick}
+                />,
+                <MenuItemLink.component
+                    key={Cbn.getKey()}
+                    primaryText="About"
+                    url={AppRouter.homeAbout}
+                    onClick={option.onClick}
+                />
+            ]}
+        />,
+        <MenuItem
+            primaryText="Products"
+            key={Cbn.getKey()}
+            leftIcon={option.isLeft ? null : <NavigationChevronLeft />}
+            rightIcon={option.isLeft ? <NavigationChevronRight /> : null}
+            menuItems={[
+                <MenuItemLink.component
+                    key={Cbn.getKey()}
+                    primaryText="一覧"
+                    url={AppRouter.productsIndex}
+                    onClick={option.onClick}
+                />
+            ]}
+        />,
+        <MenuItem
+            key={Cbn.getKey()}
+            primaryText="Refresh"
+            insetChildren={!option.isLeft}
+            onClick={option.onClick}
+        />
+    ];
     interface LeftProps extends LeftState {}
     interface LeftState {
         isOpen: boolean;
@@ -47,8 +86,8 @@ export namespace AppTop {
             this.state = { ...props };
         }
         handleToggle = () => this.setState({ isOpen: !this.state.isOpen });
+        handleClose = () => this.setState({ isOpen: false });
         render() {
-            let theme = getTheme();
             return (
                 <div>
                     <IconButton
@@ -56,9 +95,9 @@ export namespace AppTop {
                         className={classes['left-button']}
                     >
                         {this.state.isOpen ? (
-                            <CloseIcon color={getBarColor()} />
+                            <NavigationClose color={barColor} />
                         ) : (
-                            <MenuIcon color={getBarColor()} />
+                            <NavigationMenu color={barColor} />
                         )}
                     </IconButton>
                     <Drawer
@@ -67,7 +106,10 @@ export namespace AppTop {
                         overlayClassName={classes.bar}
                         onRequestChange={isOpen => this.setState({ isOpen })}
                     >
-                        <MenuItems />
+                        {getMenuItems({
+                            isLeft: true,
+                            onClick: this.handleClose
+                        })}
                     </Drawer>
                 </div>
             );
@@ -77,16 +119,16 @@ export namespace AppTop {
         <IconMenu
             iconButtonElement={
                 <IconButton>
-                    <MoreVertIcon color={getBarColor()} />
+                    <NavigationMoreVert color={barColor} />
                 </IconButton>
             }
             targetOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
         >
-            <MenuItems />
+            {getMenuItems({ isLeft: false })}
         </IconMenu>
     );
-
+    Right['muiName'] = 'IconMenu';
     export const component = () => (
         <AppBar
             title="Title"

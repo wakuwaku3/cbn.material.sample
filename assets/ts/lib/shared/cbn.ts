@@ -7,30 +7,13 @@ import * as undux from 'undux';
 import * as rxjs from 'rxjs';
 
 export namespace Cbn {
+    let index = 0;
+    export const getKey = () => index++;
+
     export interface Event {
         reflesh: void;
     }
-    export interface Props<TModel, TEvent extends Event> {
-        model: TModel;
-        emitter: EventEmitter<TEvent>;
-    }
-    export abstract class ComponentAction<TModel, TEvent extends Event> {
-        constructor(protected props: Props<TModel, TEvent>) {}
-        get model() {
-            return this.props.model;
-        }
-        get emitter() {
-            return this.props.emitter;
-        }
-    }
-    export class EventEmitter<T extends Event> {
-        constructor(emitter?: EventEmitter<Event>) {
-            if (emitter) {
-                this.on('reflesh', () => {
-                    emitter.emit('reflesh');
-                });
-            }
-        }
+    export class EventEmitter<T> {
         private _inner = new events.EventEmitter();
         get inner() {
             return this._inner;
@@ -47,11 +30,13 @@ export namespace Cbn {
         Key extends keyof TStore,
         TEvent extends Event
     > {
+        protected abstract initialize();
         emitter = new EventEmitter<TEvent>();
         constructor(private key: Key) {
             Observable.fromEvent(this.emitter, 'reflesh').subscribe(() => {
                 this.reflesh();
             });
+            this.initialize();
         }
         get store(): undux.Store<TStore> {
             return Undux.getStore<TStore>();
@@ -67,7 +52,7 @@ export namespace Cbn {
         }
     }
     export namespace Observable {
-        export const fromEvent = <T extends Event, Key extends keyof T>(
+        export const fromEvent = <T, Key extends keyof T>(
             emitter: EventEmitter<T>,
             key: Key
         ) => {
@@ -77,11 +62,6 @@ export namespace Cbn {
                 }
             );
         };
-    }
-    export namespace React {
-        export type SFC<TModel, TEvent extends Event> = react.SFC<
-            Props<TModel, TEvent>
-        >;
     }
     export namespace Undux {
         export const withLocalStorage = <TStore extends object>(
@@ -131,6 +111,82 @@ export namespace Cbn {
     export namespace Ajax {
         export const get = async <T>(url: string) => {
             return (await $.get(url)) as T;
+        };
+    }
+    export namespace Window {
+        interface Event {
+            resize: void;
+        }
+        export const emitter = new EventEmitter<Event>();
+        window.addEventListener('resize', () => {
+            emitter.emit('resize');
+        });
+        export function getScrollBarWidth() {
+            var inner = document.createElement('p');
+            inner.style.width = '100%';
+            inner.style.height = '200px';
+
+            var outer = document.createElement('div');
+            outer.style.position = 'absolute';
+            outer.style.top = '0px';
+            outer.style.left = '0px';
+            outer.style.visibility = 'hidden';
+            outer.style.width = '200px';
+            outer.style.height = '150px';
+            outer.style.overflow = 'hidden';
+            outer.appendChild(inner);
+
+            document.body.appendChild(outer);
+            var w1 = inner.offsetWidth;
+            outer.style.overflow = 'scroll';
+            var w2 = inner.offsetWidth;
+            if (w1 == w2) w2 = outer.clientWidth;
+
+            document.body.removeChild(outer);
+
+            return w1 - w2;
+        }
+    }
+    export interface Pager {
+        display: number;
+        current: number;
+        total: number;
+    }
+    export namespace TwoWay {
+        export interface EventArgs {
+            object: object;
+            name: string;
+            value: any;
+        }
+        export interface Event {
+            valueChange: EventArgs;
+        }
+        export interface Props {
+            defaultValue: any;
+            onChange: (e, val) => void;
+        }
+        export const createProps = <T extends object, TKey extends keyof T>(
+            emitter: EventEmitter<Event>,
+            object: T,
+            name: TKey,
+            marge?: object
+        ) => {
+            let p = {
+                defaultValue: object[name],
+                value: object[name],
+                onChange: (e, value) => {
+                    object[name] = value;
+                    emitter.emit('valueChange', {
+                        object,
+                        name: name,
+                        value
+                    });
+                }
+            };
+            if (marge) {
+                return $.extend(p, marge);
+            }
+            return p;
         };
     }
 }
