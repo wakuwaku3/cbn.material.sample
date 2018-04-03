@@ -61,7 +61,7 @@ gulp.task('publish:web', () => {
     webpack.stderr.on('data', data => console.log('stdout: ' + data));
     return webpack.on('exit', data => {
         return gulp
-            .src('cbn.react.sample.csproj', { read: false })
+            .src(webprj, { read: false })
             .pipe(publish({ configuration: 'Release', output: output }));
     });
 });
