@@ -1,8 +1,9 @@
 {
     "name": "cbn.undux.sample",
     "version": "1.0.0",
-    "description": "typescript + es2017 + react + undux のサンプル",
-    "main": "index.js",
+    "description":
+        "typescript + es2017 + react + undux + material-ui のサンプル",
+    "main": ".src/entrypoint.js",
     "scripts": {
         "install": "gulp restore",
         "build": "gulp build",
@@ -10,7 +11,7 @@
         "publish": "gulp publish",
         "start": "gulp run"
     },
-    "author": "",
+    "author": "wakuwaku3",
     "license": "ISC",
     "dependencies": {
         "babel-polyfill": "^6.26.0",
