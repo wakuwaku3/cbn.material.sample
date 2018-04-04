@@ -1,6 +1,5 @@
 import jss from 'jss';
 import preset from 'jss-preset-default';
-import * as $ from 'jquery';
 import * as events from 'events';
 import * as react from 'react';
 import * as undux from 'undux';
@@ -48,7 +47,7 @@ export namespace Cbn {
             this.store.set(this.key)(value);
         }
         private reflesh() {
-            this.model = $.extend(true, {}, this.model);
+            this.model = Object.assign({}, this.model);
         }
     }
     export namespace Observable {
@@ -108,9 +107,15 @@ export namespace Cbn {
             return styleSheets.classes;
         };
     }
+    export function createPromise<T>() {}
     export namespace Ajax {
         export const get = async <T>(url: string) => {
-            return (await $.get(url)) as T;
+            let text = await getText(url);
+            return JSON.parse(text);
+        };
+        export const getText = async (url: string) => {
+            let response = await fetch(url);
+            return response.text();
         };
     }
     export namespace Window {
@@ -184,7 +189,7 @@ export namespace Cbn {
                 }
             };
             if (marge) {
-                return $.extend(p, marge);
+                return Object.assign(p, marge);
             }
             return p;
         };

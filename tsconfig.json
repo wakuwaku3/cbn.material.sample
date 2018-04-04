@@ -1,28 +1,28 @@
 {
-  "compilerOptions": {
-    "sourceMap": true,
-    "target": "es2017",
-    "module": "es2015",
-    "jsx": "react",
-    "moduleResolution": "node",
-    "lib": ["es2017", "dom"]
-  },
-  "exclude": ["./node_modules"],
-  "awesomeTypescriptLoaderOptions": {
-    "useBabel": true,
-    "babelOptions": {
-      "babelrc": false /* Important line */,
-      "presets": [
-        [
-          "env",
-          {
-            "targets": "last 2 versions, ie 11",
-            "useBuiltIns": true,
-            "modules": false
-          }
-        ]
-      ]
+    "compilerOptions": {
+        "sourceMap": true,
+        "target": "es2017",
+        "module": "es2015",
+        "jsx": "react",
+        "moduleResolution": "node",
+        "lib": ["es2017", "dom"]
     },
-    "useCache": true
-  }
+    "exclude": ["./node_modules"],
+    "awesomeTypescriptLoaderOptions": {
+        "useBabel": true,
+        "babelOptions": {
+            "babelrc": false /* Important line */,
+            "presets": [
+                [
+                    "env",
+                    {
+                        "targets": "last 2 versions, ie 11",
+                        "useBuiltIns": true,
+                        "modules": false
+                    }
+                ]
+            ]
+        },
+        "useCache": true
+    }
 }

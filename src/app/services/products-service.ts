@@ -27,13 +27,9 @@ export namespace Products {
             };
         }
         getAsync(req: GetAsyncRequest): GetAsyncResponse {
-            let total = 1000 + new Date(Date.now()).getSeconds();
-            if (req.pager.current * req.pager.display > total) {
-                req.pager.current = Math.floor(total / req.pager.display);
-            }
-            let skip = req.pager.current * req.pager.display;
-
-            let items = Array.from(new Array(total))
+            let items = Array.from(
+                new Array(100 + new Date(Date.now()).getMilliseconds())
+            )
                 .map((v, i) => {
                     return {
                         id: i,
@@ -50,8 +46,14 @@ export namespace Products {
                         res = res && x.status.includes(req.status);
                     }
                     return res;
-                })
-                .slice(skip, skip + req.pager.display);
+                });
+            let total = items.length;
+            if (req.pager.current * req.pager.display > total) {
+                req.pager.current = Math.floor(total / req.pager.display);
+            }
+            let skip = req.pager.current * req.pager.display;
+
+            items = items.slice(skip, skip + req.pager.display);
             return {
                 pager: {
                     total,

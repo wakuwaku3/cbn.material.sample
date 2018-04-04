@@ -12,7 +12,6 @@ import {
 } from 'material-ui/styles';
 import { AppFotter } from './app-footer';
 import { App } from '../shared/app';
-import * as $ from 'jquery';
 import { AppBody } from './app-body';
 
 export namespace AppMain {
