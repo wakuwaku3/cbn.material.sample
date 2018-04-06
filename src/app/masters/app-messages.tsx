@@ -10,6 +10,10 @@ import {
 } from 'material-ui';
 import * as React from 'react';
 import { Note, Close } from 'material-ui-icons';
+import {
+    AppIconButton,
+    AppTypography
+} from '../components/material-ui/wrapper';
 
 export namespace AppMessages {
     const styles = (theme: Theme) => ({
@@ -36,12 +40,12 @@ export namespace AppMessages {
                     MessagesAction.action.emitter.emit('handleClose', r)
                 }
                 message={
-                    <Typography id="message-id">
+                    <AppTypography.component id="message-id">
                         {MessagesAction.action.model.errorMessage}
-                    </Typography>
+                    </AppTypography.component>
                 }
                 action={[
-                    <IconButton
+                    <AppIconButton.component
                         key="close"
                         aria-label="Close"
                         color="inherit"
@@ -51,7 +55,7 @@ export namespace AppMessages {
                         }
                     >
                         <Close />
-                    </IconButton>
+                    </AppIconButton.component>
                 ]}
             />
         )

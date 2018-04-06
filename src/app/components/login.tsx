@@ -1,109 +1,11 @@
-import {
-    Theme,
-    WithStyles,
-    Paper,
-    Grid,
-    TextField,
-    Button,
-    Snackbar
-} from 'material-ui';
+import { Theme, Grid, TextField, Button } from 'material-ui';
 import { App } from '../shared/app';
 import * as React from 'react';
-import { PaperProps } from 'material-ui/Paper';
-import { Cbn } from '../../lib/shared/cbn';
 import { MessagesAction } from '../actions/shared/messages-action';
+import { AppContainer } from './app-container';
+import { AppForm } from './app-form';
+import { AppTextField, AppButton } from './material-ui/wrapper';
 
-export namespace CbnContainer {
-    export interface Props
-        extends StyledArgs,
-            React.DetailedHTMLProps<
-                React.FormHTMLAttributes<HTMLDivElement>,
-                HTMLDivElement
-            > {}
-
-    type vertical = 'top' | 'center' | 'bottom';
-    type horizontal = 'left' | 'center' | 'right';
-    type flexPosition = 'flex-start' | 'center' | 'flex-end';
-    interface StyledArgs {
-        vertical?: vertical;
-        horizontal?: horizontal;
-    }
-    const convertVertical = (args: StyledArgs): flexPosition => {
-        if (!args || !args.vertical) {
-            return 'flex-start';
-        }
-        switch (args.vertical) {
-            case 'top':
-                return 'flex-start';
-            case 'center':
-                return 'center';
-            case 'bottom':
-                return 'flex-end';
-        }
-    };
-    const convertHorizontal = (args: StyledArgs): flexPosition => {
-        if (!args || !args.horizontal) {
-            return 'flex-start';
-        }
-        switch (args.horizontal) {
-            case 'left':
-                return 'flex-start';
-            case 'center':
-                return 'center';
-            case 'right':
-                return 'flex-end';
-        }
-    };
-    export const styles = (theme: Theme) => {
-        return {
-            container: (props: Props) => {
-                let style = {
-                    'align-items': convertVertical(props),
-                    height: '100%',
-                    width: '100%',
-                    display: 'flex' as 'flex',
-                    'justify-content': convertHorizontal(props)
-                };
-                return style;
-            }
-        };
-    };
-    export const component = App.decorate(styles)(sheet => (props: Props) => {
-        sheet.update(props);
-        let merged = Cbn.mergeClassNeme(props, sheet.classes.container);
-        return <div {...merged}>{props.children}</div>;
-    });
-}
-export namespace CbnForm {
-    export interface Props {
-        paperProps?: PaperProps;
-        innerFormProps?: React.DetailedHTMLProps<
-            React.FormHTMLAttributes<HTMLFormElement>,
-            HTMLFormElement
-        >;
-    }
-    export const styles = (theme: Theme) => {
-        return {
-            paper: {
-                padding: [10, 20]
-            }
-        };
-    };
-    type styles = WithStyles<'paper'>;
-    export const component = App.decorate(styles)(
-        sheet => (props: Cbn.WithChildren<Props>) => {
-            let paperProps = Cbn.mergeClassNeme(
-                props.paperProps,
-                sheet.classes.paper
-            );
-            return (
-                <Paper {...paperProps}>
-                    <form {...props.innerFormProps}>{props.children}</form>
-                </Paper>
-            );
-        }
-    );
-}
 export namespace LogIn {
     export interface EventArgs {
         id: string;
@@ -117,7 +19,6 @@ export namespace LogIn {
         id: string;
         password: string;
     }
-    type styles = WithStyles<'paper' | 'button-container'>;
     export const styles = (theme: Theme) => {
         return {
             paper: {
@@ -156,18 +57,18 @@ export namespace LogIn {
                 }
                 render() {
                     return (
-                        <CbnContainer.component
+                        <AppContainer.component
                             vertical="center"
                             horizontal="center"
                         >
-                            <CbnForm.component
+                            <AppForm.component
                                 paperProps={{
                                     className: sheet.classes.paper
                                 }}
                             >
                                 <Grid container>
                                     <Grid item xs={12}>
-                                        <TextField
+                                        <AppTextField.component
                                             label="ユーザーId"
                                             value={this.state.id}
                                             margin="normal"
@@ -176,7 +77,7 @@ export namespace LogIn {
                                         />
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <TextField
+                                        <AppTextField.component
                                             label="パスワード"
                                             type="password"
                                             value={this.state.password}
@@ -188,7 +89,7 @@ export namespace LogIn {
                                         />
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <CbnContainer.component
+                                        <AppContainer.component
                                             vertical="center"
                                             horizontal="center"
                                             className={
@@ -197,18 +98,18 @@ export namespace LogIn {
                                                 ]
                                             }
                                         >
-                                            <Button
+                                            <AppButton.component
                                                 variant="raised"
                                                 color="primary"
                                                 onClick={this.handleLogIn}
                                             >
                                                 ログイン
-                                            </Button>
-                                        </CbnContainer.component>
+                                            </AppButton.component>
+                                        </AppContainer.component>
                                     </Grid>
                                 </Grid>
-                            </CbnForm.component>
-                        </CbnContainer.component>
+                            </AppForm.component>
+                        </AppContainer.component>
                     );
                 }
             }

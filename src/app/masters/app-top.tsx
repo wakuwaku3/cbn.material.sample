@@ -4,16 +4,13 @@ import { Cbn } from '../../lib/shared/cbn';
 import {
     Divider,
     AppBar,
-    IconButton,
     MenuItem,
     Drawer,
     withStyles,
     Theme,
     Toolbar,
-    Typography,
     WithStyles,
-    Menu,
-    Button
+    Menu
 } from 'material-ui';
 import { AppMain } from './app-main';
 import { App } from '../shared/app';
@@ -27,6 +24,10 @@ import {
 } from 'material-ui-icons';
 import { LogIn } from '../components/login';
 import { AuthAction } from '../actions/shared/auth-action';
+import {
+    AppIconButton,
+    AppTypography
+} from '../components/material-ui/wrapper';
 
 export namespace AppTop {
     export const getHeight = () => {
@@ -74,11 +75,11 @@ export namespace AppTop {
                 }
                 render() {
                     return (
-                        <AppBar position="static">
-                            <Toolbar className={sheet.classes.bar}>
-                                <Route
-                                    render={({ history, location }) => (
-                                        <IconButton
+                        <Route
+                            render={({ history, location }) => (
+                                <AppBar position="static">
+                                    <Toolbar className={sheet.classes.bar}>
+                                        <AppIconButton.component
                                             onClick={e => {
                                                 history.push(
                                                     AppRouter.homeIndex
@@ -86,108 +87,120 @@ export namespace AppTop {
                                             }}
                                         >
                                             <Apps />
-                                        </IconButton>
-                                    )}
-                                />
-                                <Typography
-                                    variant="title"
-                                    color="inherit"
-                                    className={sheet.classes.title}
-                                >
-                                    Title
-                                </Typography>
-                                {AuthAction.action.model.authenticated && (
-                                    <div>
-                                        <IconButton
-                                            aria-owns="menu-appbar"
-                                            aria-haspopup="true"
+                                        </AppIconButton.component>
+                                        <AppTypography.component
+                                            variant="title"
                                             color="inherit"
-                                            onClick={e =>
-                                                this.handleOpenProfile(
-                                                    e.currentTarget
-                                                )
-                                            }
+                                            className={sheet.classes.title}
                                         >
-                                            <AccountCircle />
-                                        </IconButton>
-                                        <Menu
-                                            id="menu-appbar"
-                                            anchorEl={this.state.profile}
-                                            anchorOrigin={{
-                                                vertical: 'bottom',
-                                                horizontal: 'right'
-                                            }}
-                                            transformOrigin={{
-                                                vertical: 'top',
-                                                horizontal: 'right'
-                                            }}
-                                            getContentAnchorEl={null}
-                                            open={Boolean(this.state.profile)}
-                                            onClose={() =>
-                                                this.handleCloseProfile()
-                                            }
-                                        >
-                                            <MenuItem
-                                                onClick={() =>
-                                                    this.handleCloseProfile()
-                                                }
-                                            >
-                                                Profile
-                                            </MenuItem>
-                                            <Divider />
-                                            <MenuItem
-                                                onClick={() => {
-                                                    this.handleCloseProfile();
-                                                    AuthAction.action.emitter.emit(
-                                                        'logout'
-                                                    );
-                                                }}
-                                            >
-                                                LogOut
-                                            </MenuItem>
-                                        </Menu>
-                                        <IconButton
-                                            className={sheet.classes.menuButton}
-                                            aria-haspopup="true"
-                                            color="inherit"
-                                            onClick={e =>
-                                                this.handleOpenMenu(
-                                                    e.currentTarget
-                                                )
-                                            }
-                                            aria-label="Menu"
-                                        >
-                                            <MenuIcon />
-                                        </IconButton>
-                                        <Menu
-                                            id="menu-appbar"
-                                            anchorEl={this.state.menu}
-                                            anchorOrigin={{
-                                                vertical: 'bottom',
-                                                horizontal: 'right'
-                                            }}
-                                            transformOrigin={{
-                                                vertical: 'top',
-                                                horizontal: 'right'
-                                            }}
-                                            getContentAnchorEl={null}
-                                            open={Boolean(this.state.menu)}
-                                            onClose={() =>
-                                                this.handleCloseMenu()
-                                            }
-                                        >
-                                            <MenuItem
-                                                onClick={() =>
-                                                    this.handleCloseMenu()
-                                                }
-                                            >
-                                                My account
-                                            </MenuItem>
-                                        </Menu>
-                                    </div>
-                                )}
-                            </Toolbar>
-                        </AppBar>
+                                            Title
+                                        </AppTypography.component>
+                                        {AuthAction.action.model
+                                            .authenticated && (
+                                            <div>
+                                                <AppIconButton.component
+                                                    aria-owns="menu-appbar"
+                                                    aria-haspopup="true"
+                                                    color="inherit"
+                                                    onClick={e =>
+                                                        this.handleOpenProfile(
+                                                            e.currentTarget
+                                                        )
+                                                    }
+                                                >
+                                                    <AccountCircle />
+                                                </AppIconButton.component>
+                                                <Menu
+                                                    id="menu-appbar"
+                                                    anchorEl={
+                                                        this.state.profile
+                                                    }
+                                                    anchorOrigin={{
+                                                        vertical: 'bottom',
+                                                        horizontal: 'right'
+                                                    }}
+                                                    transformOrigin={{
+                                                        vertical: 'top',
+                                                        horizontal: 'right'
+                                                    }}
+                                                    getContentAnchorEl={null}
+                                                    open={Boolean(
+                                                        this.state.profile
+                                                    )}
+                                                    onClose={() =>
+                                                        this.handleCloseProfile()
+                                                    }
+                                                >
+                                                    <MenuItem
+                                                        onClick={() =>
+                                                            this.handleCloseProfile()
+                                                        }
+                                                    >
+                                                        Profile
+                                                    </MenuItem>
+                                                    <Divider />
+                                                    <MenuItem
+                                                        onClick={() => {
+                                                            this.handleCloseProfile();
+                                                            AuthAction.action.emitter.emit(
+                                                                'logout'
+                                                            );
+                                                        }}
+                                                    >
+                                                        LogOut
+                                                    </MenuItem>
+                                                </Menu>
+                                                <AppIconButton.component
+                                                    className={
+                                                        sheet.classes.menuButton
+                                                    }
+                                                    aria-haspopup="true"
+                                                    color="inherit"
+                                                    onClick={e =>
+                                                        this.handleOpenMenu(
+                                                            e.currentTarget
+                                                        )
+                                                    }
+                                                    aria-label="Menu"
+                                                >
+                                                    <MenuIcon />
+                                                </AppIconButton.component>
+                                                <Menu
+                                                    id="menu-appbar"
+                                                    anchorEl={this.state.menu}
+                                                    anchorOrigin={{
+                                                        vertical: 'bottom',
+                                                        horizontal: 'right'
+                                                    }}
+                                                    transformOrigin={{
+                                                        vertical: 'top',
+                                                        horizontal: 'right'
+                                                    }}
+                                                    getContentAnchorEl={null}
+                                                    open={Boolean(
+                                                        this.state.menu
+                                                    )}
+                                                    onClose={() =>
+                                                        this.handleCloseMenu()
+                                                    }
+                                                >
+                                                    <MenuItem
+                                                        onClick={() => {
+                                                            history.push(
+                                                                AppRouter.homeAbout
+                                                            );
+                                                            this.handleCloseMenu();
+                                                        }}
+                                                    >
+                                                        About
+                                                    </MenuItem>
+                                                </Menu>
+                                            </div>
+                                        )}
+                                    </Toolbar>
+                                </AppBar>
+                            )}
+                        />
                     );
                 }
             }

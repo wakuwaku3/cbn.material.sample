@@ -5,6 +5,10 @@ import { Cbn } from '../../../lib/shared/cbn';
 import { App } from '../../shared/app';
 import { Typography, TextField, Theme } from 'material-ui';
 import { HomeIndexAction } from '../../actions/home/home-index-action';
+import {
+    AppTextField,
+    AppTypography
+} from '../../components/material-ui/wrapper';
 
 export namespace HomeIndex {
     const styles = (theme: Theme) => {
@@ -14,7 +18,7 @@ export namespace HomeIndex {
         sheet => props => {
             return (
                 <div>
-                    <Typography>Home</Typography>
+                    <AppTypography.component>Home</AppTypography.component>
                     <Counter.component
                         name={HomeIndexAction.action.model.name}
                         count={HomeIndexAction.action.model.count}
@@ -22,7 +26,7 @@ export namespace HomeIndex {
                             HomeIndexAction.action.emitter.emit('count')
                         }
                     />
-                    <TextField
+                    <AppTextField.component
                         label="name"
                         type="name"
                         value={HomeIndexAction.action.model.name}

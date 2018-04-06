@@ -3,7 +3,7 @@ import { MouseEvent } from 'react';
 import { App } from '../shared/app';
 import { Cbn } from '../../lib/shared/cbn';
 import { Add } from 'material-ui-icons';
-import { Button, Typography } from 'material-ui';
+import { AppButton, AppTypography } from './material-ui/wrapper';
 
 export namespace Counter {
     export interface Props {
@@ -19,16 +19,16 @@ export namespace Counter {
         };
         return (
             <div>
-                <Typography>{props.name}</Typography>
-                <Typography>{props.count}</Typography>
-                <Button
+                <AppTypography.component>{props.name}</AppTypography.component>
+                <AppTypography.component>{props.count}</AppTypography.component>
+                <AppButton.component
                     variant="fab"
                     color="primary"
                     mini={true}
                     onClick={e => handleClick(e)}
                 >
                     <Add />
-                </Button>
+                </AppButton.component>
             </div>
         );
     };

@@ -10,6 +10,7 @@ import { HomeIndexAction } from '../actions/home/home-index-action';
 import { Theme, createMuiTheme } from 'material-ui';
 import { purple } from 'material-ui/colors';
 import { StyleSheet } from 'jss';
+import { HomeAboutAction } from '../actions/home/home-about-action';
 
 export namespace App {
     let theme: Theme;
@@ -32,7 +33,7 @@ export namespace App {
         auth: AuthAction.Model = this.getByLocalStorage('auth');
         messages: MessagesAction.Model = this.getByLocalStorage('messages');
         homeIndex: HomeIndexAction.Model = this.getNewValue('homeIndex');
-        // homeAbout: HomeAbout.Model = this.getNewValue('homeAbout');
+        homeAbout: HomeAboutAction.Model = this.getNewValue('homeAbout');
         // productsIndex: ProductsIndex.Model = this.getNewValue('productsIndex');
 
         private getNewValue<Key extends keyof Store>(key: Key): Store[Key] {
@@ -91,38 +92,4 @@ export namespace App {
             });
         };
     };
-
-    // export const decorate = <ClassKey extends string>(
-    //     style: StyleRules<ClassKey> | StyleRulesCallback<ClassKey>
-    // ) => {
-    //     let options = { withTheme: true, link: true };
-    //     return Cbn.Material.decorate(style, options);
-    // };
-
-    // export const decorateWithProps = <ClassKey extends string, Props>(
-    //     style: (
-    //         props: Props
-    //     ) => StyleRules<ClassKey> | StyleRulesCallback<ClassKey>
-    // ) => {
-    //     return (
-    //         component: React.ComponentType<Props & WithStyles<ClassKey>>
-    //     ) => (props: Props & { children?: React.ReactNode }) => {
-    //         let styled = App.decorate(style(props))<Props>(component);
-    //         return React.createElement(styled, props, props.children);
-    //     };
-    // };
-
-    // export const decorateWithStore = <ClassKey extends string>(
-    //     style: StyleRules<ClassKey> | StyleRulesCallback<ClassKey>,
-    //     ...listenOn: (keyof Store)[]
-    // ) => {
-    //     return <Props>(
-    //         component: React.ComponentType<Props & WithStyles<ClassKey>>
-    //     ) => {
-    //         let styled = App.decorate(style)<Props>(component);
-    //         return App.withStore(...listenOn)(() => {
-    //             return React.createElement(styled);
-    //         });
-    //     };
-    // };
 }
