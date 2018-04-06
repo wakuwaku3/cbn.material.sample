@@ -3,43 +3,40 @@ import * as React from 'react';
 import { Counter } from '../../components/counter';
 import { Cbn } from '../../../lib/shared/cbn';
 import { App } from '../../shared/app';
+import { Typography, TextField, Theme } from 'material-ui';
+import { HomeIndexAction } from '../../actions/home/home-index-action';
 
 export namespace HomeIndex {
-    export interface Model {
-        count: number;
-    }
-    interface Event extends Cbn.Event {
-        initialize: void;
-        count: void;
-    }
-    class Action extends Cbn.PageAction<App.Store, 'homeIndex', Event> {
-        protected initialize() {
-            Cbn.Observable.fromEvent(this.emitter, 'initialize').subscribe(
-                () => {
-                    this.model = { count: 0 };
-                    this.emitter.emit('reflesh');
-                }
+    const styles = (theme: Theme) => {
+        return {};
+    };
+    export const component = App.decorateWithStore(styles, HomeIndexAction.key)(
+        sheet => props => {
+            return (
+                <div>
+                    <Typography>Home</Typography>
+                    <Counter.component
+                        name={HomeIndexAction.action.model.name}
+                        count={HomeIndexAction.action.model.count}
+                        onClick={e =>
+                            HomeIndexAction.action.emitter.emit('count')
+                        }
+                    />
+                    <TextField
+                        label="name"
+                        type="name"
+                        value={HomeIndexAction.action.model.name}
+                        margin="normal"
+                        fullWidth
+                        onChange={e =>
+                            HomeIndexAction.action.emitter.emit(
+                                'setName',
+                                e.target.value
+                            )
+                        }
+                    />
+                </div>
             );
-            Cbn.Observable.fromEvent(this.emitter, 'count').subscribe(() => {
-                this.model.count++;
-                this.emitter.emit('reflesh');
-            });
-            this.emitter.emit('initialize');
         }
-    }
-    const action = new Action('homeIndex');
-    const styles = {};
-    const classes = Cbn.Jss.attachStyles(styles);
-    export const component = App.withStore('homeIndex')(() => {
-        return (
-            <div>
-                <h1>Home</h1>
-                <Counter.component
-                    name="test"
-                    count={action.model.count}
-                    onClick={e => action.emitter.emit('count')}
-                />
-            </div>
-        );
-    });
+    );
 }

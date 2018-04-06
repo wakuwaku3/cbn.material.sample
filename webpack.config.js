@@ -26,6 +26,7 @@ const app = {
                 // TypeScript をコンパイルする
                 use: 'awesome-typescript-loader'
             },
+            { test: /\.css$/, use: 'css-loader/locals' },
             // ソースマップファイルの処理
             {
                 enforce: 'pre',

@@ -3,42 +3,71 @@ import { Cbn } from '../../lib/shared/cbn';
 import { AppRouter } from './app-router';
 import { AppFotter } from './app-footer';
 import { App } from '../shared/app';
+import {
+    withStyles,
+    Theme,
+    WithStyles,
+    StyleRulesCallback,
+    Button
+} from 'material-ui';
+import { AppTop } from './app-top';
+import { StyleRules } from 'material-ui/styles';
+import { Store } from 'undux';
+import { LogIn } from '../components/login';
+import { BrowserAction } from '../actions/shared/browser-action';
+import { AuthAction } from '../actions/shared/auth-action';
+import { AppMessages } from './app-messages';
 
 export namespace AppBody {
-    interface Event extends Cbn.Event {
-        resize: void;
-    }
-    const createStyles = () => {
-        let styles = {
+    const styles = (theme: Theme) => {
+        let pt = 10;
+        let pb = 10;
+        let style = {
             body: {
-                paddingTop: 10,
-                paddingBottom: 10,
+                paddingTop: pt,
+                paddingBottom: pb,
                 paddingLeft: 10,
                 paddingRight: 10,
-                overflow: 'auto'
+                overflow: 'auto' as 'auto',
+                height: Cbn.Observable.fromEvent(
+                    BrowserAction.action.emitter,
+                    'resize'
+                )
+                    .map(() => '')
+                    .startWith('')
+                    .map(() => {
+                        let top = AppTop.getHeight();
+                        return window.innerHeight - AppFotter.height - top;
+                    })
             }
         };
-        styles.body['height'] = Cbn.Observable.fromEvent(
-            Cbn.Window.emitter,
-            'resize'
-        ).map(
-            () =>
-                window.innerHeight -
-                AppFotter.styles.footer.height -
-                App.getTheme().appBar.height -
-                styles.body.paddingTop -
-                styles.body.paddingBottom
-        );
-        return styles;
+        return style;
     };
-    const styles = createStyles();
-    const classes = Cbn.Jss.attachStyles(styles);
-    export const component: React.SFC = () => {
-        Cbn.Window.emitter.emit('resize');
+    export const component = App.decorateWithStore(
+        styles,
+        BrowserAction.key,
+        AuthAction.key
+    )(sheet => props => {
         return (
-            <div className={classes.body}>
-                <AppRouter.component />
+            <div className={sheet.classes.body}>
+                <AppMessages.component />
+                {(() => {
+                    if (AuthAction.action.model.authenticated) {
+                        return <AppRouter.component />;
+                    } else {
+                        return (
+                            <LogIn.component
+                                onLogIn={args =>
+                                    AuthAction.action.emitter.emit(
+                                        'login',
+                                        args
+                                    )
+                                }
+                            />
+                        );
+                    }
+                })()}
             </div>
         );
-    };
+    });
 }

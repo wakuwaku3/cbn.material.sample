@@ -2,8 +2,8 @@ import * as React from 'react';
 import { MouseEvent } from 'react';
 import { App } from '../shared/app';
 import { Cbn } from '../../lib/shared/cbn';
-import { FloatingActionButton } from 'material-ui';
-import { ContentAdd } from 'material-ui/svg-icons';
+import { Add } from 'material-ui-icons';
+import { Button, Typography } from 'material-ui';
 
 export namespace Counter {
     export interface Props {
@@ -19,11 +19,16 @@ export namespace Counter {
         };
         return (
             <div>
-                <h2>{props.name}</h2>
-                <div>{props.count}</div>
-                <FloatingActionButton mini={true} onClick={e => handleClick(e)}>
-                    <ContentAdd />
-                </FloatingActionButton>
+                <Typography>{props.name}</Typography>
+                <Typography>{props.count}</Typography>
+                <Button
+                    variant="fab"
+                    color="primary"
+                    mini={true}
+                    onClick={e => handleClick(e)}
+                >
+                    <Add />
+                </Button>
             </div>
         );
     };

@@ -2,139 +2,194 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Cbn } from '../../lib/shared/cbn';
 import {
+    Divider,
     AppBar,
-    IconMenu,
     IconButton,
     MenuItem,
-    IconMenuProps,
-    RaisedButton,
     Drawer,
-    MenuItemProps
+    withStyles,
+    Theme,
+    Toolbar,
+    Typography,
+    WithStyles,
+    Menu,
+    Button
 } from 'material-ui';
 import { AppMain } from './app-main';
 import { App } from '../shared/app';
 import { AppRouter } from './app-router';
 import { Route } from 'react-router';
-import { MenuItemLink } from '../../lib/components/mui/menu-item-link';
 import {
-    NavigationChevronLeft,
-    NavigationChevronRight,
-    NavigationClose,
-    NavigationMenu,
-    NavigationMoreVert
-} from 'material-ui/svg-icons';
+    ChevronLeft,
+    AccountCircle,
+    Apps,
+    Menu as MenuIcon
+} from 'material-ui-icons';
+import { LogIn } from '../components/login';
+import { AuthAction } from '../actions/shared/auth-action';
 
 export namespace AppTop {
-    const barColor = App.getTheme().appBar.textColor;
-    const styles = {
-        bar: {}
+    export const getHeight = () => {
+        let theme = App.getTheme();
+        return window.innerWidth >= theme.breakpoints.values.sm
+            ? theme.mixins.toolbar[theme.breakpoints.up('sm')].minHeight
+            : theme.mixins.toolbar.minHeight;
     };
-    const classes = Cbn.Jss.attachStyles(styles);
-    interface MenuOption {
-        isLeft: boolean;
-        onClick?: React.MouseEventHandler<{}>;
-    }
-    const getMenuItems = (option: MenuOption) => [
-        <MenuItem
-            primaryText="Home"
-            key={Cbn.getKey()}
-            leftIcon={option.isLeft ? null : <NavigationChevronLeft />}
-            rightIcon={option.isLeft ? <NavigationChevronRight /> : null}
-            menuItems={[
-                <MenuItemLink.component
-                    key={Cbn.getKey()}
-                    primaryText="Index"
-                    url={AppRouter.homeIndex}
-                    onClick={option.onClick}
-                />,
-                <MenuItemLink.component
-                    key={Cbn.getKey()}
-                    primaryText="About"
-                    url={AppRouter.homeAbout}
-                    onClick={option.onClick}
-                />
-            ]}
-        />,
-        <MenuItem
-            primaryText="Products"
-            key={Cbn.getKey()}
-            leftIcon={option.isLeft ? null : <NavigationChevronLeft />}
-            rightIcon={option.isLeft ? <NavigationChevronRight /> : null}
-            menuItems={[
-                <MenuItemLink.component
-                    key={Cbn.getKey()}
-                    primaryText="一覧"
-                    url={AppRouter.productsIndex}
-                    onClick={option.onClick}
-                />
-            ]}
-        />,
-        <MenuItem
-            key={Cbn.getKey()}
-            primaryText="Refresh"
-            insetChildren={!option.isLeft}
-            onClick={option.onClick}
-        />
-    ];
-    interface LeftProps extends LeftState {}
-    interface LeftState {
-        isOpen: boolean;
-    }
-    class Left extends React.Component<LeftProps, LeftState> {
-        constructor(props) {
-            super(props);
-            this.state = { ...props };
-        }
-        handleToggle = () => this.setState({ isOpen: !this.state.isOpen });
-        handleClose = () => this.setState({ isOpen: false });
-        render() {
-            return (
-                <div>
-                    <IconButton
-                        onClick={this.handleToggle}
-                        className={classes['left-button']}
-                    >
-                        {this.state.isOpen ? (
-                            <NavigationClose color={barColor} />
-                        ) : (
-                            <NavigationMenu color={barColor} />
-                        )}
-                    </IconButton>
-                    <Drawer
-                        docked={false}
-                        open={this.state.isOpen}
-                        overlayClassName={classes.bar}
-                        onRequestChange={isOpen => this.setState({ isOpen })}
-                    >
-                        {getMenuItems({
-                            isLeft: true,
-                            onClick: this.handleClose
-                        })}
-                    </Drawer>
-                </div>
-            );
-        }
-    }
-    const Right = () => (
-        <IconMenu
-            iconButtonElement={
-                <IconButton>
-                    <NavigationMoreVert color={barColor} />
-                </IconButton>
+    export const styles = (theme: Theme) => {
+        return {
+            bar: {
+                padding: 0
+            },
+            title: {
+                flex: 1
+            },
+            menuButton: {
+                marginLeft: -12,
+                marginRight: 20
             }
-            targetOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-            anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
-        >
-            {getMenuItems({ isLeft: false })}
-        </IconMenu>
-    );
-    Right['muiName'] = 'IconMenu';
-    export const component = () => (
-        <AppBar
-            title="Title"
-            className={classes.bar}
-            iconElementLeft={<Left isOpen={false} />}
-            iconElementRight={<Right />}
-        />
+        };
+    };
+    interface State {
+        profile: HTMLElement;
+        menu: HTMLElement;
+    }
+    export const component = App.decorateWithStore(styles, AuthAction.key)(
+        sheet =>
+            class extends React.Component<{}, State> {
+                constructor(props: {}) {
+                    super(props);
+                    this.state = { profile: null, menu: null };
+                }
+                private handleOpenMenu(el: HTMLElement) {
+                    this.setState({ menu: el });
+                }
+                private handleCloseMenu() {
+                    this.setState({ menu: null });
+                }
+                private handleOpenProfile(el: HTMLElement) {
+                    this.setState({ profile: el });
+                }
+                private handleCloseProfile() {
+                    this.setState({ profile: null });
+                }
+                render() {
+                    return (
+                        <AppBar position="static">
+                            <Toolbar className={sheet.classes.bar}>
+                                <Route
+                                    render={({ history, location }) => (
+                                        <IconButton
+                                            onClick={e => {
+                                                history.push(
+                                                    AppRouter.homeIndex
+                                                );
+                                            }}
+                                        >
+                                            <Apps />
+                                        </IconButton>
+                                    )}
+                                />
+                                <Typography
+                                    variant="title"
+                                    color="inherit"
+                                    className={sheet.classes.title}
+                                >
+                                    Title
+                                </Typography>
+                                {AuthAction.action.model.authenticated && (
+                                    <div>
+                                        <IconButton
+                                            aria-owns="menu-appbar"
+                                            aria-haspopup="true"
+                                            color="inherit"
+                                            onClick={e =>
+                                                this.handleOpenProfile(
+                                                    e.currentTarget
+                                                )
+                                            }
+                                        >
+                                            <AccountCircle />
+                                        </IconButton>
+                                        <Menu
+                                            id="menu-appbar"
+                                            anchorEl={this.state.profile}
+                                            anchorOrigin={{
+                                                vertical: 'bottom',
+                                                horizontal: 'right'
+                                            }}
+                                            transformOrigin={{
+                                                vertical: 'top',
+                                                horizontal: 'right'
+                                            }}
+                                            getContentAnchorEl={null}
+                                            open={Boolean(this.state.profile)}
+                                            onClose={() =>
+                                                this.handleCloseProfile()
+                                            }
+                                        >
+                                            <MenuItem
+                                                onClick={() =>
+                                                    this.handleCloseProfile()
+                                                }
+                                            >
+                                                Profile
+                                            </MenuItem>
+                                            <Divider />
+                                            <MenuItem
+                                                onClick={() => {
+                                                    this.handleCloseProfile();
+                                                    AuthAction.action.emitter.emit(
+                                                        'logout'
+                                                    );
+                                                }}
+                                            >
+                                                LogOut
+                                            </MenuItem>
+                                        </Menu>
+                                        <IconButton
+                                            className={sheet.classes.menuButton}
+                                            aria-haspopup="true"
+                                            color="inherit"
+                                            onClick={e =>
+                                                this.handleOpenMenu(
+                                                    e.currentTarget
+                                                )
+                                            }
+                                            aria-label="Menu"
+                                        >
+                                            <MenuIcon />
+                                        </IconButton>
+                                        <Menu
+                                            id="menu-appbar"
+                                            anchorEl={this.state.menu}
+                                            anchorOrigin={{
+                                                vertical: 'bottom',
+                                                horizontal: 'right'
+                                            }}
+                                            transformOrigin={{
+                                                vertical: 'top',
+                                                horizontal: 'right'
+                                            }}
+                                            getContentAnchorEl={null}
+                                            open={Boolean(this.state.menu)}
+                                            onClose={() =>
+                                                this.handleCloseMenu()
+                                            }
+                                        >
+                                            <MenuItem
+                                                onClick={() =>
+                                                    this.handleCloseMenu()
+                                                }
+                                            >
+                                                My account
+                                            </MenuItem>
+                                        </Menu>
+                                    </div>
+                                )}
+                            </Toolbar>
+                        </AppBar>
+                    );
+                }
+            }
     );
 }

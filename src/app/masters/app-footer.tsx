@@ -1,30 +1,27 @@
 import { Cbn } from '../../lib/shared/cbn';
 import * as React from 'react';
-import { Paper, BottomNavigation, BottomNavigationItem } from 'material-ui';
+import { Paper, withStyles, Theme, Typography } from 'material-ui';
 import { App } from '../shared/app';
 
 export namespace AppFotter {
-    export const styles = {
-        footer: {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: 40
-        }
+    export const height = 40;
+    export const styles = (theme: Theme) => {
+        return {
+            footer: {
+                display: 'flex' as 'flex',
+                alignItems: 'center' as 'center',
+                justifyContent: 'center' as 'center',
+                height: height,
+                backgroundColor: theme.palette.primary.main,
+                color: theme.palette.primary.contrastText
+            }
+        };
     };
-    const classes = Cbn.Jss.attachStyles(styles);
-    export const component = () => {
+    export const component = App.decorate(styles)(sheet => props => {
         return (
-            <Paper
-                className={classes.footer}
-                style={{
-                    backgroundColor: App.getTheme().appBar.color,
-                    color: App.getTheme().appBar.textColor
-                }}
-                zDepth={1}
-            >
-                &copy; 2018 - cbn.es2017.sample
+            <Paper className={sheet.classes.footer} elevation={3}>
+                <Typography>&copy; 2018 - cbn.es2017.sample</Typography>
             </Paper>
         );
-    };
+    });
 }

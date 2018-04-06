@@ -1,9 +1,11 @@
-import jss from 'jss';
+import jss, { GenerateClassName } from 'jss';
 import preset from 'jss-preset-default';
 import * as events from 'events';
-import * as react from 'react';
-import * as undux from 'undux';
 import * as rxjs from 'rxjs';
+import { Store, createStore } from 'undux';
+import { StyleRules } from 'material-ui/styles';
+import { StyleRulesCallback, withStyles, Theme } from 'material-ui';
+import { WithStylesOptions } from 'material-ui/styles/withStyles';
 
 export namespace Cbn {
     let index = 0;
@@ -27,18 +29,15 @@ export namespace Cbn {
     export abstract class PageAction<
         TStore extends object,
         Key extends keyof TStore,
-        TEvent extends Event
+        TEvent
     > {
         protected abstract initialize();
-        emitter = new EventEmitter<TEvent>();
-        constructor(private key: Key) {
+        emitter = new EventEmitter<TEvent & Event>();
+        constructor(protected key: Key, protected store: Store<TStore>) {
             Observable.fromEvent(this.emitter, 'reflesh').subscribe(() => {
                 this.reflesh();
             });
             this.initialize();
-        }
-        get store(): undux.Store<TStore> {
-            return Undux.getStore<TStore>();
         }
         get model(): TStore[Key] {
             return this.store.get(this.key);
@@ -50,6 +49,26 @@ export namespace Cbn {
             this.model = Object.assign({}, this.model);
         }
     }
+    interface StyledProps {
+        className?: string;
+    }
+    export const mergeClassNeme = <T extends StyledProps>(
+        props: T,
+        ...classNames: string[]
+    ) => {
+        if (props) {
+            let assign: StyledProps = {
+                className: [props.className, ...classNames]
+                    .filter(x => x)
+                    .join(' ')
+            };
+            return Object.assign({}, props, assign);
+        }
+        return {
+            className: [...classNames].filter(x => x).join(' ')
+        };
+    };
+
     export namespace Observable {
         export const fromEvent = <T, Key extends keyof T>(
             emitter: EventEmitter<T>,
@@ -62,60 +81,15 @@ export namespace Cbn {
             );
         };
     }
-    export namespace Undux {
-        export const withLocalStorage = <TStore extends object>(
-            store: undux.Store<TStore>
-        ): undux.Store<TStore> => {
-            store
-                .beforeAll()
-                .subscribe(({ key, previousValue, value }) =>
-                    localStorage.setItem(key, JSON.stringify(value))
-                );
-            return store;
-        };
-        export interface InitailzeStoreOption {
-            withLocalStorage: boolean;
-        }
-        let store: undux.Store<object>;
-        export const initializeStore = <TStore extends object>(
-            source: TStore,
-            option?: InitailzeStoreOption
-        ) => {
-            let s = undux.createStore<TStore>(source);
-            if (option && option.withLocalStorage) {
-                withLocalStorage(s);
-            }
-            store = s;
-        };
-        export const getStore = <TStore extends object>() => {
-            return store as undux.Store<TStore>;
-        };
-        export const withStore = <TStore extends object>() => {
-            let s = getStore<TStore>();
-            return undux.connect(s);
-        };
-    }
-    export namespace Jss {
-        let isSetuped = false;
-        export const attachStyles = <T>(styles: T) => {
-            if (!isSetuped) {
-                jss.setup(preset());
-            }
-            let styleSheets = jss
-                .createStyleSheet(styles, { link: true })
-                .attach();
-            return styleSheets.classes;
-        };
-    }
     export function createPromise<T>() {}
     export namespace Ajax {
-        export const get = async <T>(url: string) => {
-            let text = await getText(url);
-            return JSON.parse(text);
-        };
         export const getText = async (url: string) => {
             let response = await fetch(url);
             return response.text();
+        };
+        export const get = async <T>(url: string) => {
+            let text = await getText(url);
+            return JSON.parse(text);
         };
     }
     export namespace Window {
@@ -194,4 +168,60 @@ export namespace Cbn {
             return p;
         };
     }
+    export namespace Material {
+        export const decorate = <ClassKey extends string>(
+            style: StyleRules<ClassKey> | StyleRulesCallback<ClassKey>,
+            options: WithStylesOptions &
+                Partial<{
+                    media: string;
+                    meta: string;
+                    link: boolean;
+                    element: HTMLStyleElement;
+                    index: number;
+                    generateClassName: GenerateClassName<ClassKey>;
+                    classNamePrefix: string;
+                }>
+        ) => {
+            return withStyles(style, options);
+        };
+    }
+    export namespace Undux {
+        export const withLocalStorage = <TStore extends object>(
+            store: Store<TStore>,
+            withLocalStorage: (keyof TStore)[]
+        ): Store<TStore> => {
+            withLocalStorage.forEach(key => {
+                store
+                    .before(key)
+                    .subscribe(p =>
+                        localStorage.setItem(key, JSON.stringify(p.value))
+                    );
+            });
+            return store;
+        };
+        export interface InitailzeStoreOption<TStore extends object> {
+            withLocalStorage: (keyof TStore)[];
+        }
+        export const initializeStore = <TStore extends object>(
+            source: TStore,
+            option?: InitailzeStoreOption<TStore>
+        ) => {
+            let store = createStore<TStore>(source);
+            if (option && option.withLocalStorage) {
+                withLocalStorage(store, option.withLocalStorage);
+            }
+            return store;
+        };
+    }
+    export namespace Jss {
+        let isSetuped = false;
+        export const attachStyles = <T>(styles: T) => {
+            if (!isSetuped) {
+                jss.setup(preset());
+            }
+            return jss.createStyleSheet(styles, { link: true }).attach();
+        };
+    }
+    export type WithTheme<T> = (theme: Theme) => T;
+    export type WithChildren<Props> = Props & { children?: React.ReactNode };
 }

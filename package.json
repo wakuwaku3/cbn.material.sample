@@ -1,8 +1,7 @@
 {
     "name": "cbn.undux.sample",
     "version": "1.0.0",
-    "description":
-        "typescript + es2017 + react + undux + material-ui のサンプル",
+    "description": "typescript + es2017 + react + undux + material-ui のサンプル",
     "main": ".src/entrypoint.js",
     "scripts": {
         "install": "gulp restore",
@@ -14,23 +13,25 @@
     "author": "wakuwaku3",
     "license": "ISC",
     "dependencies": {
+        "babel-plugin-transform-object-assign": "^6.22.0",
         "babel-polyfill": "^6.26.0",
         "babel-runtime": "^6.26.0",
         "jss": "^9.8.1",
         "jss-preset-default": "^4.3.0",
-        "material-ui": "^0.20.0",
+        "material-ui": "^1.0.0-beta.40",
+        "material-ui-icons": "^1.0.0-beta.36",
         "react": "^16.2.0",
         "react-dom": "^16.2.0",
+        "react-jss": "^8.4.0",
         "react-router-dom": "^4.2.2",
-        "rxjs": "^5.5.8",
-        "babel-plugin-transform-object-assign": "^6.22.0",
-        "undux": "^3.2.1",
         "regenerator-runtime": "^0.11.1",
+        "rxjs": "^5.5.8",
+        "typeface-roboto": "0.0.54",
+        "undux": "^3.2.1",
         "whatwg-fetch": "^2.0.4"
     },
     "devDependencies": {
         "@types/jss": "^9.3.2",
-        "@types/material-ui": "^0.21.1",
         "@types/node": "^9.6.0",
         "@types/react": "^16.0.36",
         "@types/react-dom": "^16.0.3",
@@ -39,11 +40,13 @@
         "babel-core": "^6.26.0",
         "babel-preset-env": "^1.6.1",
         "child_process": "^1.0.2",
+        "css-loader": "^0.28.11",
         "gulp": "^3.9.1",
         "gulp-dotnet-cli": "^1.1.0",
         "path": "^0.12.7",
         "run-sequence": "^2.2.1",
         "source-map-loader": "^0.2.3",
+        "style-loader": "^0.20.3",
         "typescript": "^2.7.1",
         "webpack": "^3.10.0"
     }
