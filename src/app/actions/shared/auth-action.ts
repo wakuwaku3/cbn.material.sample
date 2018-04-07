@@ -1,6 +1,7 @@
 import { LogIn } from '../../components/login';
-import { App } from '../../shared/app';
+import { AppStore } from '../app-store';
 import { Cbn } from '../../../lib/shared/cbn';
+import { Store } from 'undux';
 
 export namespace AuthAction {
     export const key = 'auth';
@@ -12,7 +13,10 @@ export namespace AuthAction {
     export interface Model {
         authenticated: boolean;
     }
-    class Action extends App.PageAction<key, Event> {
+    export class Action extends Cbn.PageAction<AppStore.Model, key, Event> {
+        constructor(store: Store<AppStore.Model>) {
+            super(key, store);
+        }
         protected initialize() {
             Cbn.Observable.fromEvent(this.emitter, 'login').subscribe(args => {
                 // ToDo 認証する
@@ -32,5 +36,5 @@ export namespace AuthAction {
             }
         }
     }
-    export const action = new Action(key);
+    export const action = new Action(AppStore.getStore());
 }

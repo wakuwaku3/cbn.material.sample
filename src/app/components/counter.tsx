@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { MouseEvent } from 'react';
-import { App } from '../shared/app';
+import { AppStyle } from '../shared/app-style';
 import { Cbn } from '../../lib/shared/cbn';
 import { Add } from 'material-ui-icons';
 import { AppButton, AppTypography } from './material-ui/wrapper';

@@ -1,4 +1,4 @@
-import { App } from '../shared/app';
+import { AppStyle } from '../shared/app-style';
 import { MessagesAction } from '../actions/shared/messages-action';
 import {
     Typography,
@@ -14,20 +14,24 @@ import {
     AppIconButton,
     AppTypography
 } from '../components/material-ui/wrapper';
+import { ThemeAction } from '../actions/shared/theme-action';
 
 export namespace AppMessages {
-    const styles = (theme: Theme) => ({
-        root: {
+    const styles = {
+        root: ThemeAction.action.getThemeObservable().map((theme: Theme) => ({
             color: theme.palette.error.contrastText,
             background: theme.palette.error[theme.palette.type]
-        },
-        close: {
+        })),
+        close: ThemeAction.action.getThemeObservable().map((theme: Theme) => ({
             width: theme.spacing.unit * 4,
             height: theme.spacing.unit * 4
-        }
-    });
-    export const component = App.decorateWithStore(styles, MessagesAction.key)(
-        sheet => props => (
+        }))
+    };
+    export const component = AppStyle.decorateWithStore(
+        styles,
+        MessagesAction.key
+    )(sheet => props => (
+        <div>
             <Snackbar
                 SnackbarContentProps={{ className: sheet.classes.root }}
                 anchorOrigin={{
@@ -35,7 +39,6 @@ export namespace AppMessages {
                     horizontal: 'right'
                 }}
                 open={MessagesAction.action.model.isShow}
-                autoHideDuration={6000}
                 onClose={(e, r) =>
                     MessagesAction.action.emitter.emit('handleClose', r)
                 }
@@ -58,6 +61,6 @@ export namespace AppMessages {
                     </AppIconButton.component>
                 ]}
             />
-        )
-    );
+        </div>
+    ));
 }

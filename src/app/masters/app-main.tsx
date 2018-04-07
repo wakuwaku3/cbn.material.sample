@@ -5,17 +5,18 @@ import { AppTop } from './app-top';
 import { Cbn } from '../../lib/shared/cbn';
 import { MuiThemeProvider } from 'material-ui/styles';
 import { AppFotter } from './app-footer';
-import { App } from '../shared/app';
 import { AppBody } from './app-body';
 import { CssBaseline, createMuiTheme } from 'material-ui';
 import { JssProvider, jss } from 'react-jss';
 import { purple } from 'material-ui/colors';
+import { ThemeAction } from '../actions/shared/theme-action';
+import { AppStore } from '../actions/app-store';
 
 export namespace AppMain {
-    export const component = () => {
+    export const component = AppStore.withStore(ThemeAction.key)(() => {
         return (
             <JssProvider jss={jss}>
-                <MuiThemeProvider theme={App.getTheme()}>
+                <MuiThemeProvider theme={ThemeAction.action.theme}>
                     <React.Fragment>
                         <CssBaseline />
                         <BrowserRouter>
@@ -29,5 +30,5 @@ export namespace AppMain {
                 </MuiThemeProvider>
             </JssProvider>
         );
-    };
+    });
 }

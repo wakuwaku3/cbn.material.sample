@@ -13,7 +13,7 @@ import {
     Menu
 } from 'material-ui';
 import { AppMain } from './app-main';
-import { App } from '../shared/app';
+import { AppStyle } from '../shared/app-style';
 import { AppRouter } from './app-router';
 import { Route } from 'react-router';
 import {
@@ -28,33 +28,33 @@ import {
     AppIconButton,
     AppTypography
 } from '../components/material-ui/wrapper';
+import { ThemeAction } from '../actions/shared/theme-action';
 
 export namespace AppTop {
     export const getHeight = () => {
-        let theme = App.getTheme();
-        return window.innerWidth >= theme.breakpoints.values.sm
-            ? theme.mixins.toolbar[theme.breakpoints.up('sm')].minHeight
-            : theme.mixins.toolbar.minHeight;
+        const theme = ThemeAction.action.theme;
+        if (window.innerWidth >= theme.breakpoints.values.sm) {
+            return theme.mixins.toolbar[theme.breakpoints.up('sm')].minHeight;
+        }
+        return theme.mixins.toolbar.minHeight;
     };
-    export const styles = (theme: Theme) => {
-        return {
-            bar: {
-                padding: 0
-            },
-            title: {
-                flex: 1
-            },
-            menuButton: {
-                marginLeft: -12,
-                marginRight: 20
-            }
-        };
+    export const styles = {
+        bar: {
+            padding: 0
+        },
+        title: {
+            flex: 1
+        },
+        menuButton: {
+            marginLeft: -12,
+            marginRight: 20
+        }
     };
     interface State {
         profile: HTMLElement;
         menu: HTMLElement;
     }
-    export const component = App.decorateWithStore(styles, AuthAction.key)(
+    export const component = AppStyle.decorateWithStore(styles, AuthAction.key)(
         sheet =>
             class extends React.Component<{}, State> {
                 constructor(props: {}) {
@@ -80,6 +80,7 @@ export namespace AppTop {
                                 <AppBar position="static">
                                     <Toolbar className={sheet.classes.bar}>
                                         <AppIconButton.component
+                                            color="inherit"
                                             onClick={e => {
                                                 history.push(
                                                     AppRouter.homeIndex
@@ -132,11 +133,14 @@ export namespace AppTop {
                                                     }
                                                 >
                                                     <MenuItem
-                                                        onClick={() =>
-                                                            this.handleCloseProfile()
-                                                        }
+                                                        onClick={() => {
+                                                            history.push(
+                                                                AppRouter.homeSetting
+                                                            );
+                                                            this.handleCloseProfile();
+                                                        }}
                                                     >
-                                                        Profile
+                                                        設定
                                                     </MenuItem>
                                                     <Divider />
                                                     <MenuItem

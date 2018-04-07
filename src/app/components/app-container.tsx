@@ -1,7 +1,6 @@
-import { Theme } from 'material-ui';
-import { App } from '../shared/app';
 import { Cbn } from '../../lib/shared/cbn';
 import * as React from 'react';
+import { AppStyle } from '../shared/app-style';
 
 export namespace AppContainer {
     export interface Props
@@ -44,23 +43,23 @@ export namespace AppContainer {
                 return 'flex-end';
         }
     };
-    export const styles = (theme: Theme) => {
-        return {
-            container: (props: Props) => {
-                let style = {
-                    'align-items': convertVertical(props),
-                    height: '100%',
-                    width: '100%',
-                    display: 'flex' as 'flex',
-                    'justify-content': convertHorizontal(props)
-                };
-                return style;
-            }
-        };
+    export const styles = {
+        container: (props: Props) => {
+            let style = {
+                'align-items': convertVertical(props),
+                height: '100%',
+                width: '100%',
+                display: 'flex' as 'flex',
+                'justify-content': convertHorizontal(props)
+            };
+            return style;
+        }
     };
-    export const component = App.decorate(styles)(sheet => (props: Props) => {
-        sheet.update(props);
-        let merged = Cbn.mergeClassNeme(props, sheet.classes.container);
-        return <div {...merged}>{props.children}</div>;
-    });
+    export const component = AppStyle.decorate(styles)(
+        sheet => (props: Props) => {
+            sheet.update(props);
+            let merged = Cbn.mergeClassNeme(props, sheet.classes.container);
+            return <div {...merged}>{props.children}</div>;
+        }
+    );
 }

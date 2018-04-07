@@ -222,6 +222,5 @@ export namespace Cbn {
             return jss.createStyleSheet(styles, { link: true }).attach();
         };
     }
-    export type WithTheme<T> = (theme: Theme) => T;
     export type WithChildren<Props> = Props & { children?: React.ReactNode };
 }

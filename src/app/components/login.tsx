@@ -1,5 +1,5 @@
-import { Theme, Grid, TextField, Button } from 'material-ui';
-import { App } from '../shared/app';
+import { Grid, TextField, Button } from 'material-ui';
+import { AppStyle } from '../shared/app-style';
 import * as React from 'react';
 import { MessagesAction } from '../actions/shared/messages-action';
 import { AppContainer } from './app-container';
@@ -19,17 +19,15 @@ export namespace LogIn {
         id: string;
         password: string;
     }
-    export const styles = (theme: Theme) => {
-        return {
-            paper: {
-                width: 400
-            },
-            'button-container': {
-                padding: [18, 0, 4]
-            }
-        };
+    export const styles = {
+        paper: {
+            width: 400
+        },
+        'button-container': {
+            padding: [18, 0, 4]
+        }
     };
-    export const component = App.decorate(styles)(
+    export const component = AppStyle.decorate(styles)(
         sheet =>
             class extends React.Component<Props, State> {
                 constructor(props: Props) {
