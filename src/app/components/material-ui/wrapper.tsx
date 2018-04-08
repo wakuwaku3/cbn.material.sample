@@ -16,7 +16,15 @@ import {
     Switch,
     Grid,
     AppBar as MuiAppBar,
-    Toolbar
+    Toolbar,
+    Menu,
+    Divider,
+    MenuItem,
+    Table,
+    TableHead,
+    TableRow,
+    TableCell,
+    TableBody
 } from 'material-ui';
 import { TextFieldProps } from 'material-ui/TextField';
 import { ButtonProps } from 'material-ui/Button';
@@ -38,6 +46,16 @@ import { SwitchProps } from 'material-ui/Switch';
 import { GridProps } from 'material-ui/Grid';
 import { AppBarProps as MuiAppBarProps } from 'material-ui/AppBar';
 import { ToolbarProps } from 'material-ui/Toolbar';
+import { MenuProps, MenuItemProps } from 'material-ui/Menu';
+import { DividerProps } from 'material-ui/Divider';
+import { decorateWithProps, decorate } from '../../helper/app-style-helper';
+import {
+    TableProps,
+    TableHeadProps,
+    TableRowProps,
+    TableCellProps,
+    TableBodyProps
+} from 'material-ui/Table';
 
 export interface AppTextFieldProps extends TextFieldProps {}
 export const AppTextField: React.SFC<AppTextFieldProps> = props => (
@@ -45,6 +63,9 @@ export const AppTextField: React.SFC<AppTextFieldProps> = props => (
         {props.children}
     </TextField>
 );
+AppTextField.defaultProps = {
+    fullWidth: true
+};
 export interface AppButtonProps extends ButtonProps {}
 export const AppButton: React.SFC<AppButtonProps> = props => (
     <Button {...props}>{props.children}</Button>
@@ -86,9 +107,25 @@ export const AppSwitch: React.SFC<AppSwitchProps> = props => (
     <Switch {...props}>{props.children}</Switch>
 );
 export interface AppGridProps extends GridProps {}
-export const AppGrid: React.SFC<AppGridProps> = props => (
-    <Grid {...props}>{props.children}</Grid>
-);
+const gridStyle = {
+    item: {
+        padding: [0, 8]
+    }
+};
+export const AppGrid = decorate(gridStyle)<AppGridProps>(sheet => props => {
+    let classNames = [];
+    if (props.item) {
+        classNames.push(sheet.classes.item);
+    }
+    if (props.className) {
+        classNames.push(props.className);
+    }
+    return (
+        <Grid {...props} className={classNames.join(' ')}>
+            {props.children}
+        </Grid>
+    );
+});
 export interface AppBarProps extends MuiAppBarProps {}
 export const AppBar: React.SFC<AppBarProps> = props => (
     <MuiAppBar {...props}>{props.children}</MuiAppBar>
@@ -96,4 +133,36 @@ export const AppBar: React.SFC<AppBarProps> = props => (
 export interface AppToolbarProps extends ToolbarProps {}
 export const AppToolbar: React.SFC<AppToolbarProps> = props => (
     <Toolbar {...props}>{props.children}</Toolbar>
+);
+export interface AppMenuProps extends MenuProps {}
+export const AppMenu: React.SFC<AppMenuProps> = props => (
+    <Menu {...props}>{props.children}</Menu>
+);
+export interface AppMenuItemProps extends MenuItemProps {}
+export const AppMenuItem: React.SFC<AppMenuItemProps> = props => (
+    <MenuItem {...props}>{props.children}</MenuItem>
+);
+export interface AppDividerProps extends DividerProps {}
+export const AppDivider: React.SFC<AppDividerProps> = props => (
+    <Divider {...props}>{props.children}</Divider>
+);
+export interface AppTableProps extends TableProps {}
+export const AppTable: React.SFC<AppTableProps> = props => (
+    <Table {...props}>{props.children}</Table>
+);
+export interface AppTableHeadProps extends TableHeadProps {}
+export const AppTableHead: React.SFC<AppTableHeadProps> = props => (
+    <TableHead {...props}>{props.children}</TableHead>
+);
+export interface AppTableRowProps extends TableRowProps {}
+export const AppTableRow: React.SFC<AppTableRowProps> = props => (
+    <TableRow {...props}>{props.children}</TableRow>
+);
+export interface AppTableCellProps extends TableCellProps {}
+export const AppTableCell: React.SFC<AppTableCellProps> = props => (
+    <TableCell {...props}>{props.children}</TableCell>
+);
+export interface AppTableBodyProps extends TableBodyProps {}
+export const AppTableBody: React.SFC<AppTableBodyProps> = props => (
+    <TableBody {...props}>{props.children}</TableBody>
 );

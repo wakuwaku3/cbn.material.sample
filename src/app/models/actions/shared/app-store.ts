@@ -5,6 +5,7 @@ import { AuthStore } from './auth';
 import { MessagesStore } from './messages';
 import { HomeIndexStore } from '../home';
 import { HomeAboutStore } from '../home/about';
+import { ProductsIndexStore } from '../products';
 
 export class AppStore {
     theme: ThemeStore = this.getByLocalStorage('theme');
@@ -13,7 +14,7 @@ export class AppStore {
     messages: MessagesStore = this.getNewValue('messages');
     homeIndex: HomeIndexStore = this.getNewValue('homeIndex');
     homeAbout: HomeAboutStore = this.getNewValue('homeAbout');
-    // productsIndex: ProductsIndex.Model = this.getNewValue('productsIndex');
+    productsIndex: ProductsIndexStore = this.getNewValue('productsIndex');
 
     private getNewValue<Key extends keyof AppStore>(key: Key): AppStore[Key] {
         return null;

@@ -23,6 +23,9 @@ export namespace Cbn {
         on<Key extends keyof T>(key: Key, lisner: (args?: T[Key]) => void) {
             this._inner.on(key, lisner);
         }
+        observe<TKey extends keyof T>(key: TKey) {
+            return Observable.fromEvent(this, key);
+        }
     }
     export abstract class PageAction<
         TStore extends object,
@@ -32,7 +35,7 @@ export namespace Cbn {
         protected abstract initialize();
         emitter = new EventEmitter<TEvent & Event>();
         constructor(public key: Key, protected store: Store<TStore>) {
-            Observable.fromEvent(this.emitter, 'reflesh').subscribe(() => {
+            this.observe('reflesh').subscribe(() => {
                 this.reflesh();
             });
             this.initialize();
@@ -45,6 +48,11 @@ export namespace Cbn {
         }
         private reflesh() {
             this.model = Object.assign({}, this.model);
+        }
+        observe<TKey extends keyof (TEvent & Event)>(
+            key: TKey
+        ): rxjs.Observable<(TEvent & Event)[TKey]> {
+            return this.emitter.observe(key);
         }
         emit<TKey extends keyof (TEvent & Event)>(
             key: TKey,
@@ -104,6 +112,7 @@ export namespace Cbn {
         window.addEventListener('resize', () => {
             emitter.emit('resize');
         });
+        export const observe = (key: keyof Event) => emitter.observe(key);
         export function getScrollBarWidth() {
             var inner = document.createElement('p');
             inner.style.width = '100%';
@@ -187,6 +196,31 @@ export namespace Cbn {
                 jss.setup(preset());
             }
             return jss.createStyleSheet(styles, { link: true }).attach();
+        };
+    }
+    export namespace DateHelper {
+        export const now = () => new Date(Date.now());
+        export const format = (date: Date, format: string) => {
+            if (!format) format = 'YYYY-MM-DD hh:mm:ss.SSS';
+            format = format.replace(/YYYY/g, date.getFullYear().toString());
+            format = format.replace(
+                /MM/g,
+                ('0' + (date.getMonth() + 1)).slice(-2)
+            );
+            format = format.replace(/DD/g, ('0' + date.getDate()).slice(-2));
+            format = format.replace(/hh/g, ('0' + date.getHours()).slice(-2));
+            format = format.replace(/mm/g, ('0' + date.getMinutes()).slice(-2));
+            format = format.replace(/ss/g, ('0' + date.getSeconds()).slice(-2));
+            if (format.match(/S/g)) {
+                var milliSeconds = ('00' + date.getMilliseconds()).slice(-3);
+                var length = format.match(/S/g).length;
+                for (var i = 0; i < length; i++)
+                    format = format.replace(
+                        /S/,
+                        milliSeconds.substring(i, i + 1)
+                    );
+            }
+            return format;
         };
     }
 }

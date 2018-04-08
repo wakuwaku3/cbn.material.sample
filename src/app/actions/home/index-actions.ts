@@ -12,22 +12,18 @@ namespace InnerScope {
             super(key);
         }
         protected initialize() {
-            Cbn.Observable.fromEvent(this.emitter, 'initialize').subscribe(
-                () => {
-                    this.model = { count: 0, name: 'test' };
-                    this.emitter.emit('reflesh');
-                }
-            );
-            Cbn.Observable.fromEvent(this.emitter, 'count').subscribe(() => {
+            this.observe('initialize').subscribe(() => {
+                this.model = { count: 0, name: 'test' };
+                this.emitter.emit('reflesh');
+            });
+            this.observe('count').subscribe(() => {
                 this.model.count++;
                 this.emitter.emit('reflesh');
             });
-            Cbn.Observable.fromEvent(this.emitter, 'setName').subscribe(
-                name => {
-                    this.model.name = name;
-                    this.emitter.emit('reflesh');
-                }
-            );
+            this.observe('setName').subscribe(name => {
+                this.model.name = name;
+                this.emitter.emit('reflesh');
+            });
             this.emitter.emit('initialize');
         }
     }

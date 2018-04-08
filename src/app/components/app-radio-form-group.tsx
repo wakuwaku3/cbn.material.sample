@@ -32,7 +32,7 @@ namespace InnerScope {
     type style = 'form-control-root';
     const style = {
         'form-control-root': {
-            padding: [16, 8, 0]
+            padding: [16, 0, 0]
         }
     };
     export const component = decorate(style)<Props>(sheet => props => (

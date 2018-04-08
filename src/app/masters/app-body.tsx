@@ -27,7 +27,8 @@ namespace InnerScope {
             paddingLeft: 10,
             paddingRight: 10,
             overflow: 'auto' as 'auto',
-            height: Cbn.Observable.fromEvent(browserAction.emitter, 'resize')
+            height: browserAction.emitter
+                .observe('resize')
                 .map(() => '')
                 .startWith('')
                 .map(() => {

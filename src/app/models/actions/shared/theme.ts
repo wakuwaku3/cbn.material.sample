@@ -13,7 +13,7 @@ export interface ThemeArgs {
 }
 export interface ThemeEvent {
     initialize: void;
-    setDefault: void;
+    reset: void;
     changeTheme: Partial<ThemeArgs>;
     changedTheme: Theme;
 }

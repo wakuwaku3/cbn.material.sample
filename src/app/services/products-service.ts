@@ -1,6 +1,10 @@
 import { Cbn } from '../../lib/shared/cbn';
 
 export namespace Products {
+    export interface InitializeAsyncResponse {
+        condition: Products.GetAsyncRequest;
+        items: Products.GetAsyncResponseItem[];
+    }
     export interface GetAsyncRequest {
         name?: string;
         status?: string;
@@ -14,10 +18,12 @@ export namespace Products {
         id: number;
         name: string;
         status: string;
+        price: number;
+        releaseDate: string;
     }
     class Service {
-        initializeAsync(): GetAsyncRequest {
-            return {
+        initializeAsync(): InitializeAsyncResponse {
+            let condition = {
                 name: '',
                 pager: {
                     display: 10,
@@ -25,16 +31,27 @@ export namespace Products {
                     total: 0
                 }
             };
+            let res = this.getAsync(condition);
+            condition.pager = res.pager;
+            return {
+                condition,
+                items: res.items
+            };
         }
         getAsync(req: GetAsyncRequest): GetAsyncResponse {
             let items = Array.from(
                 new Array(100 + new Date(Date.now()).getMilliseconds())
             )
-                .map((v, i) => {
+                .map((v, i): GetAsyncResponseItem => {
                     return {
                         id: i,
                         name: `name${i}`,
-                        status: `status${i}`
+                        status: `status${i}`,
+                        price: (i + 1) * 100,
+                        releaseDate: Cbn.DateHelper.format(
+                            new Date(Date.now() - (i + 1) * 100),
+                            'YYYY/MM/DD'
+                        )
                     };
                 })
                 .filter(x => {

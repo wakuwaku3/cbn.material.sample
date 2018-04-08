@@ -12,28 +12,22 @@ namespace InnerScope {
             super(key);
         }
         protected initialize() {
-            Cbn.Observable.fromEvent(this.emitter, 'initialize').subscribe(
-                () => {
-                    if (!this.model) {
-                        this.model = { isShow: false, errorMessage: '' };
-                    }
+            this.observe('initialize').subscribe(() => {
+                if (!this.model) {
+                    this.model = { isShow: false, errorMessage: '' };
                 }
-            );
-            Cbn.Observable.fromEvent(this.emitter, 'handleOpen').subscribe(
-                msg => {
-                    this.model = Object.assign({}, this.model, msg, {
-                        isShow: true
-                    });
+            });
+            this.observe('handleOpen').subscribe(msg => {
+                this.model = Object.assign({}, this.model, msg, {
+                    isShow: true
+                });
+            });
+            this.observe('handleClose').subscribe(reason => {
+                if (reason !== 'clickaway') {
+                    this.model.isShow = false;
+                    this.emitter.emit('reflesh');
                 }
-            );
-            Cbn.Observable.fromEvent(this.emitter, 'handleClose').subscribe(
-                reason => {
-                    if (reason !== 'clickaway') {
-                        this.model.isShow = false;
-                        this.emitter.emit('reflesh');
-                    }
-                }
-            );
+            });
             this.emitter.emit('initialize');
         }
     }

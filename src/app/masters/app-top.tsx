@@ -7,7 +7,10 @@ import {
     AppBar,
     AppToolbar,
     AppIconButton,
-    AppTypography
+    AppTypography,
+    AppMenu,
+    AppMenuItem,
+    AppDivider
 } from '../components/material-ui/wrapper';
 import { Url } from './app-router';
 import {
@@ -15,7 +18,6 @@ import {
     AccountCircleIcon,
     MenuIcon
 } from '../components/material-ui/icon-wrapper';
-import { Menu, MenuItem, Divider } from 'material-ui';
 
 namespace InnerScope {
     export const getHeight = () => {
@@ -95,7 +97,7 @@ namespace InnerScope {
                                                 >
                                                     <AccountCircleIcon />
                                                 </AppIconButton>
-                                                <Menu
+                                                <AppMenu
                                                     id="menu-appbar"
                                                     anchorEl={
                                                         this.state.profile
@@ -116,7 +118,7 @@ namespace InnerScope {
                                                         this.handleCloseProfile()
                                                     }
                                                 >
-                                                    <MenuItem
+                                                    <AppMenuItem
                                                         onClick={() => {
                                                             history.push(
                                                                 Url.homeSetting
@@ -125,9 +127,9 @@ namespace InnerScope {
                                                         }}
                                                     >
                                                         設定
-                                                    </MenuItem>
-                                                    <Divider />
-                                                    <MenuItem
+                                                    </AppMenuItem>
+                                                    <AppDivider />
+                                                    <AppMenuItem
                                                         onClick={() => {
                                                             this.handleCloseProfile();
                                                             authAction.emit(
@@ -136,8 +138,8 @@ namespace InnerScope {
                                                         }}
                                                     >
                                                         LogOut
-                                                    </MenuItem>
-                                                </Menu>
+                                                    </AppMenuItem>
+                                                </AppMenu>
                                                 <AppIconButton
                                                     className={
                                                         sheet.classes.menuButton
@@ -153,7 +155,7 @@ namespace InnerScope {
                                                 >
                                                     <MenuIcon />
                                                 </AppIconButton>
-                                                <Menu
+                                                <AppMenu
                                                     id="menu-appbar"
                                                     anchorEl={this.state.menu}
                                                     anchorOrigin={{
@@ -172,7 +174,7 @@ namespace InnerScope {
                                                         this.handleCloseMenu()
                                                     }
                                                 >
-                                                    <MenuItem
+                                                    <AppMenuItem
                                                         onClick={() => {
                                                             history.push(
                                                                 Url.homeAbout
@@ -181,8 +183,19 @@ namespace InnerScope {
                                                         }}
                                                     >
                                                         About
-                                                    </MenuItem>
-                                                </Menu>
+                                                    </AppMenuItem>
+                                                    <AppDivider />
+                                                    <AppMenuItem
+                                                        onClick={() => {
+                                                            history.push(
+                                                                Url.productsIndex
+                                                            );
+                                                            this.handleCloseMenu();
+                                                        }}
+                                                    >
+                                                        製品一覧
+                                                    </AppMenuItem>
+                                                </AppMenu>
                                             </div>
                                         )}
                                     </AppToolbar>

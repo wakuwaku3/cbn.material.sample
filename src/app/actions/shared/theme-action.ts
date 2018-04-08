@@ -17,57 +17,46 @@ namespace InnerScope {
         }
         theme: Theme;
         getThemeObservable(): Observable<Theme> {
-            return Cbn.Observable.fromEvent(
-                this.emitter,
-                'changedTheme'
-            ).startWith(this.theme);
+            return this.observe('changedTheme').startWith(this.theme);
         }
         protected initialize() {
-            Cbn.Observable.fromEvent(this.emitter, 'initialize').subscribe(
-                () => {
-                    if (!this.model || !this.model.args) {
-                        this.emitter.emit('setDefault');
-                        return;
+            this.observe('initialize').subscribe(() => {
+                if (!this.model || !this.model.args) {
+                    this.emitter.emit('reset');
+                    return;
+                }
+                this.emitter.emit('changeTheme');
+            });
+            this.observe('reset').subscribe(() => {
+                this.model = {
+                    args: {
+                        primary: Color.indigo,
+                        secondary: Color.pink,
+                        error: Color.red,
+                        type: 'light',
+                        fontSize: 14
                     }
-                    this.emitter.emit('changeTheme');
-                }
-            );
-            Cbn.Observable.fromEvent(this.emitter, 'setDefault').subscribe(
-                () => {
-                    this.model = {
-                        args: {
-                            primary: Color.indigo,
-                            secondary: Color.pink,
-                            error: Color.red,
-                            type: 'light',
-                            fontSize: 14
-                        }
-                    };
-                    this.emitter.emit('changeTheme');
-                }
-            );
-            Cbn.Observable.fromEvent(this.emitter, 'changeTheme').subscribe(
-                args => {
-                    this.model.args = Object.assign(
-                        this.model.args,
-                        args ? args : {}
-                    );
-                    this.theme = createMuiTheme({
-                        palette: {
-                            primary: convertToMuiColor(this.model.args.primary),
-                            secondary: convertToMuiColor(
-                                this.model.args.secondary
-                            ),
-                            error: convertToMuiColor(this.model.args.error),
-                            type: this.model.args.type
-                        },
-                        typography: { fontSize: this.model.args.fontSize }
-                    });
-                    this.emitter.emit('changedTheme', this.theme);
-                }
-            );
-            Cbn.Observable.fromEvent(this.emitter, 'changedTheme').subscribe(
-                () => this.emitter.emit('reflesh')
+                };
+                this.emitter.emit('changeTheme');
+            });
+            this.observe('changeTheme').subscribe(args => {
+                this.model.args = Object.assign(
+                    this.model.args,
+                    args ? args : {}
+                );
+                this.theme = createMuiTheme({
+                    palette: {
+                        primary: convertToMuiColor(this.model.args.primary),
+                        secondary: convertToMuiColor(this.model.args.secondary),
+                        error: convertToMuiColor(this.model.args.error),
+                        type: this.model.args.type
+                    },
+                    typography: { fontSize: this.model.args.fontSize }
+                });
+                this.emitter.emit('changedTheme', this.theme);
+            });
+            this.observe('changedTheme').subscribe(() =>
+                this.emitter.emit('reflesh')
             );
             this.emitter.emit('initialize');
         }

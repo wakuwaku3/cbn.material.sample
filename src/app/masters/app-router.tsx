@@ -5,7 +5,7 @@ import { BrowserRouter, Link } from 'react-router-dom';
 import { HomeIndex } from '../pages/home';
 import { HomeAbout } from '../pages/home/about';
 import { HomeSettings } from '../pages/home/setting';
-// import { ProductsIndex } from '../pages/products';
+import { ProductsIndex } from '../pages/products';
 
 export namespace Url {
     export const homeIndex = '/';
@@ -20,11 +20,11 @@ namespace InnerScope {
                 <Route exact path={Url.homeIndex} component={HomeIndex} />
                 <Route exact path={Url.homeAbout} component={HomeAbout} />
                 <Route exact path={Url.homeSetting} component={HomeSettings} />
-                {/* <Route
+                <Route
                     exact
-                    path={productsIndex}
+                    path={Url.productsIndex}
                     component={ProductsIndex}
-                /> */}
+                />
             </Switch>
         );
     };

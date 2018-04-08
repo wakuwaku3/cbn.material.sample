@@ -12,7 +12,7 @@ namespace InnerScope {
             super(key);
         }
         protected initialize() {
-            Cbn.Observable.fromEvent(this.emitter, 'login').subscribe(args => {
+            this.observe('login').subscribe(args => {
                 // ToDo 認証する
                 if (args.id === '') {
                     args.callBackHasError('認証に失敗しました。');
@@ -21,7 +21,7 @@ namespace InnerScope {
                     this.emitter.emit('reflesh');
                 }
             });
-            Cbn.Observable.fromEvent(this.emitter, 'logout').subscribe(() => {
+            this.observe('logout').subscribe(() => {
                 this.model.authenticated = false;
                 this.emitter.emit('reflesh');
             });

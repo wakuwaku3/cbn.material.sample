@@ -12,20 +12,14 @@ namespace InnerScope {
             super(key);
         }
         protected initialize() {
-            Cbn.Observable.fromEvent(this.emitter, 'initialize').subscribe(
-                () => {
-                    if (!this.model) {
-                        this.model = { windowHeight: window.innerHeight };
-                        Cbn.Window.emitter.emit('resize');
-                    }
+            Cbn.Window.observe('resize').subscribe(() => this.emit('resize'));
+            this.observe('initialize').subscribe(() => {
+                if (!this.model) {
+                    this.model = { windowHeight: window.innerHeight };
+                    this.emit('resize');
                 }
-            );
-            Cbn.Observable.fromEvent(Cbn.Window.emitter, 'resize').subscribe(
-                () => {
-                    this.emitter.emit('resize');
-                }
-            );
-            Cbn.Observable.fromEvent(this.emitter, 'resize').subscribe(() => {
+            });
+            this.observe('resize').subscribe(() => {
                 this.model.windowHeight = innerHeight;
                 this.emitter.emit('reflesh');
             });

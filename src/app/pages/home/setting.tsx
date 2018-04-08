@@ -101,10 +101,10 @@ namespace InnerScope {
                                         variant="raised"
                                         color="secondary"
                                         onClick={() =>
-                                            themeAction.emit('setDefault')
+                                            themeAction.emit('reset')
                                         }
                                     >
-                                        初期値に戻す
+                                        リセット
                                     </AppButton>
                                 </AppContainer>
                             </AppGrid>
