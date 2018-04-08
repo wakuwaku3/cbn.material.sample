@@ -22,8 +22,8 @@ export namespace AppForm {
             'margin-bottom': 10
         }
     };
-    export const component = AppStyle.decorate(styles)(
-        sheet => (props: Cbn.WithChildren<Props>) => {
+    export const component = AppStyle.decorate(styles)<Props>(
+        sheet => props => {
             let paperProps = Cbn.mergeClassNeme(
                 props.paperProps,
                 sheet.classes.paper

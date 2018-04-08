@@ -25,11 +25,19 @@ export const getColors = () => {
     return Object.keys(Color)
         .map(key => {
             let name = Color[key];
-            let color = convertToMuiColor(name);
+            let color = convertInner(name);
             return { key, name, color };
         })
         .filter(x => x.color);
 };
-export const convertToMuiColor = (color: Color): MuiColor => {
+
+const convertInner = (color: Color): MuiColor => {
     return colors[color.toString()];
+};
+export const convertToMuiColor = (color: Color): MuiColor => {
+    let mui = convertInner(color);
+    if (mui) {
+        return mui;
+    }
+    return convertInner(Color[color.toString()]);
 };

@@ -16,19 +16,13 @@ import { AppMain } from './app-main';
 import { AppStyle } from '../shared/app-style';
 import { AppRouter } from './app-router';
 import { Route } from 'react-router';
-import {
-    ChevronLeft,
-    AccountCircle,
-    Apps,
-    Menu as MenuIcon
-} from 'material-ui-icons';
-import { LogIn } from '../components/login';
 import { AuthAction } from '../actions/shared/auth-action';
 import {
     AppIconButton,
     AppTypography
 } from '../components/material-ui/wrapper';
 import { ThemeAction } from '../actions/shared/theme-action';
+import { AppIcon } from '../components/material-ui/icon-wrapper';
 
 export namespace AppTop {
     export const getHeight = () => {
@@ -87,7 +81,7 @@ export namespace AppTop {
                                                 );
                                             }}
                                         >
-                                            <Apps />
+                                            <AppIcon.AppsIcon />
                                         </AppIconButton.component>
                                         <AppTypography.component
                                             variant="title"
@@ -109,7 +103,7 @@ export namespace AppTop {
                                                         )
                                                     }
                                                 >
-                                                    <AccountCircle />
+                                                    <AppIcon.AccountCircleIcon />
                                                 </AppIconButton.component>
                                                 <Menu
                                                     id="menu-appbar"
@@ -167,7 +161,7 @@ export namespace AppTop {
                                                     }
                                                     aria-label="Menu"
                                                 >
-                                                    <MenuIcon />
+                                                    <AppIcon.MenuIcon />
                                                 </AppIconButton.component>
                                                 <Menu
                                                     id="menu-appbar"

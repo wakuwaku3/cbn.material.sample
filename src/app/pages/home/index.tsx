@@ -1,6 +1,5 @@
 import { Component } from 'react';
 import * as React from 'react';
-import { Counter } from '../../components/counter';
 import { Cbn } from '../../../lib/shared/cbn';
 import { AppStyle } from '../../shared/app-style';
 import { Typography, TextField } from 'material-ui';
@@ -9,6 +8,7 @@ import {
     AppTextField,
     AppTypography
 } from '../../components/material-ui/wrapper';
+import { Counter } from './components/counter';
 
 export namespace HomeIndex {
     const styles = {};

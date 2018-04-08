@@ -6,6 +6,7 @@ import { Store, createStore } from 'undux';
 import { StyleRules } from 'material-ui/styles';
 import { StyleRulesCallback, withStyles, Theme } from 'material-ui';
 import { WithStylesOptions } from 'material-ui/styles/withStyles';
+import * as createReactClass from 'create-react-class';
 
 export namespace Cbn {
     let index = 0;

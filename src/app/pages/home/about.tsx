@@ -4,8 +4,8 @@ import { Cbn } from '../../../lib/shared/cbn';
 import { Test } from '../../services/test-service';
 import { HomeAboutAction } from '../../actions/home/home-about-action';
 import { AppTypography, AppButton } from '../../components/material-ui/wrapper';
-import { Add, Remove } from 'material-ui-icons';
 import { AppStyle } from '../../shared/app-style';
+import { AppIcon } from '../../components/material-ui/icon-wrapper';
 
 export namespace HomeAbout {
     const styles = {
@@ -39,7 +39,7 @@ export namespace HomeAbout {
                     )
                 }
             >
-                <Add />
+                <AppIcon.AddIcon />
             </AppButton.component>
             <AppButton.component
                 variant="fab"
@@ -52,7 +52,7 @@ export namespace HomeAbout {
                     )
                 }
             >
-                <Remove />
+                <AppIcon.RemoveIcon />
             </AppButton.component>
         </div>
     ));

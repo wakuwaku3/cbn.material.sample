@@ -1,19 +1,19 @@
 import { Grid, TextField, Button } from 'material-ui';
-import { AppStyle } from '../shared/app-style';
 import * as React from 'react';
-import { MessagesAction } from '../actions/shared/messages-action';
-import { AppContainer } from './app-container';
-import { AppForm } from './app-form';
-import { AppTextField, AppButton } from './material-ui/wrapper';
+import {
+    AppGrid,
+    AppTextField,
+    AppButton
+} from '../../../components/material-ui/wrapper';
+import { AppStyle } from '../../../shared/app-style';
+import { MessagesAction } from '../../../actions/shared/messages-action';
+import { AppContainer } from '../../../components/app-container';
+import { AppForm } from '../../../components/app-form';
+import { AuthAction } from '../../../actions/shared/auth-action';
 
 export namespace LogIn {
-    export interface EventArgs {
-        id: string;
-        password: string;
-        callBackHasError: (message: string) => void;
-    }
     export interface Props {
-        onLogIn: (args: EventArgs) => void;
+        onLogIn: (args: AuthAction.LogInEventArgs) => void;
     }
     export interface State {
         id: string;
@@ -64,8 +64,8 @@ export namespace LogIn {
                                     className: sheet.classes.paper
                                 }}
                             >
-                                <Grid container>
-                                    <Grid item xs={12}>
+                                <AppGrid.component container>
+                                    <AppGrid.component item xs={12}>
                                         <AppTextField.component
                                             label="ユーザーId"
                                             value={this.state.id}
@@ -73,8 +73,8 @@ export namespace LogIn {
                                             fullWidth
                                             onChange={this.handleChange('id')}
                                         />
-                                    </Grid>
-                                    <Grid item xs={12}>
+                                    </AppGrid.component>
+                                    <AppGrid.component item xs={12}>
                                         <AppTextField.component
                                             label="パスワード"
                                             type="password"
@@ -85,8 +85,8 @@ export namespace LogIn {
                                                 'password'
                                             )}
                                         />
-                                    </Grid>
-                                    <Grid item xs={12}>
+                                    </AppGrid.component>
+                                    <AppGrid.component item xs={12}>
                                         <AppContainer.component
                                             vertical="center"
                                             horizontal="center"
@@ -104,8 +104,8 @@ export namespace LogIn {
                                                 ログイン
                                             </AppButton.component>
                                         </AppContainer.component>
-                                    </Grid>
-                                </Grid>
+                                    </AppGrid.component>
+                                </AppGrid.component>
                             </AppForm.component>
                         </AppContainer.component>
                     );

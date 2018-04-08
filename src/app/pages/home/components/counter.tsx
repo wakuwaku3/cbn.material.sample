@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { MouseEvent } from 'react';
-import { AppStyle } from '../shared/app-style';
-import { Cbn } from '../../lib/shared/cbn';
-import { Add } from 'material-ui-icons';
-import { AppButton, AppTypography } from './material-ui/wrapper';
+import {
+    AppTypography,
+    AppButton
+} from '../../../components/material-ui/wrapper';
+import { AppIcon } from '../../../components/material-ui/icon-wrapper';
 
 export namespace Counter {
     export interface Props {
@@ -27,7 +28,7 @@ export namespace Counter {
                     mini={true}
                     onClick={e => handleClick(e)}
                 >
-                    <Add />
+                    <AppIcon.AddIcon />
                 </AppButton.component>
             </div>
         );

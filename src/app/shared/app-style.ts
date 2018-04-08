@@ -3,8 +3,15 @@ import { ThemeAction } from '../actions/shared/theme-action';
 import { AppStore } from '../actions/app-store';
 import * as React from 'react';
 import { StyleSheet } from 'jss';
+import { WithStyles } from 'material-ui';
+import injectSheet from 'react-jss';
 
 export namespace AppStyle {
+    export const decorateWithProps = <T extends object>(style: T) => {
+        return <Props = {}>(
+            component: React.ComponentType<Props & WithStyles<keyof T>>
+        ): React.ComponentType<Props> => injectSheet(style)(component);
+    };
     export const decorate = <T extends object>(style: T) => {
         return <Props = {}>(
             generator: (sheet?: StyleSheet<T>) => React.ComponentType<Props>

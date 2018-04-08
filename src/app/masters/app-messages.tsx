@@ -9,12 +9,12 @@ import {
     Theme
 } from 'material-ui';
 import * as React from 'react';
-import { Note, Close } from 'material-ui-icons';
 import {
     AppIconButton,
     AppTypography
 } from '../components/material-ui/wrapper';
 import { ThemeAction } from '../actions/shared/theme-action';
+import { AppIcon } from '../components/material-ui/icon-wrapper';
 
 export namespace AppMessages {
     const styles = {
@@ -57,7 +57,7 @@ export namespace AppMessages {
                             MessagesAction.action.emitter.emit('handleClose')
                         }
                     >
-                        <Close />
+                        <AppIcon.CloseIcon />
                     </AppIconButton.component>
                 ]}
             />

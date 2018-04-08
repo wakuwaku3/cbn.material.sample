@@ -12,10 +12,10 @@ import {
 import { AppTop } from './app-top';
 import { StyleRules } from 'material-ui/styles';
 import { Store } from 'undux';
-import { LogIn } from '../components/login';
 import { BrowserAction } from '../actions/shared/browser-action';
 import { AuthAction } from '../actions/shared/auth-action';
 import { AppMessages } from './app-messages';
+import { LogIn } from '../pages/home/components/login';
 
 export namespace AppBody {
     let pt = 10;

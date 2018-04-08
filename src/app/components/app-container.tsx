@@ -16,6 +16,8 @@ export namespace AppContainer {
     interface StyledArgs {
         vertical?: vertical;
         horizontal?: horizontal;
+        height?: string | number;
+        width?: string | number;
     }
     const convertVertical = (args: StyledArgs): flexPosition => {
         if (!args || !args.vertical) {
@@ -47,18 +49,17 @@ export namespace AppContainer {
         container: (props: Props) => {
             let style = {
                 'align-items': convertVertical(props),
-                height: '100%',
-                width: '100%',
+                height: props && props.height ? props.height : '100%',
+                width: props && props.width ? props.width : '100%',
                 display: 'flex' as 'flex',
                 'justify-content': convertHorizontal(props)
             };
             return style;
         }
     };
-    export const component = AppStyle.decorate(styles)(
-        sheet => (props: Props) => {
-            sheet.update(props);
-            let merged = Cbn.mergeClassNeme(props, sheet.classes.container);
+    export const component = AppStyle.decorateWithProps(styles)<Props>(
+        props => {
+            let merged = Cbn.mergeClassNeme(props, props.classes.container);
             return <div {...merged}>{props.children}</div>;
         }
     );

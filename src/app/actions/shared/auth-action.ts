@@ -1,4 +1,3 @@
-import { LogIn } from '../../components/login';
 import { AppStore } from '../app-store';
 import { Cbn } from '../../../lib/shared/cbn';
 import { Store } from 'undux';
@@ -6,8 +5,13 @@ import { Store } from 'undux';
 export namespace AuthAction {
     export const key = 'auth';
     export type key = 'auth';
+    export interface LogInEventArgs {
+        id: string;
+        password: string;
+        callBackHasError: (message: string) => void;
+    }
     export interface Event {
-        login: LogIn.EventArgs;
+        login: LogInEventArgs;
         logout: void;
     }
     export interface Model {

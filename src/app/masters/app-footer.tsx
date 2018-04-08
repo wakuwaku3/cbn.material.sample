@@ -19,9 +19,9 @@ export namespace AppFotter {
             };
         })
     };
-    export const component = AppStyle.decorate(styles)(sheet => props => {
+    export const component = AppStyle.decorate(styles)(styles => props => {
         return (
-            <AppPaper.component className={sheet.classes.footer} elevation={3}>
+            <AppPaper.component className={styles.classes.footer} elevation={3}>
                 <AppTypography.component color="inherit">
                     &copy; 2018 - cbn.es2017.sample
                 </AppTypography.component>
