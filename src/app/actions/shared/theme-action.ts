@@ -11,6 +11,7 @@ export namespace ThemeAction {
     export type key = 'theme';
     export interface Event {
         initialize: void;
+        setDefault: void;
         changeTheme: Partial<Args>;
         changedTheme: Theme;
     }
@@ -39,16 +40,23 @@ export namespace ThemeAction {
             Cbn.Observable.fromEvent(this.emitter, 'initialize').subscribe(
                 () => {
                     if (!this.model || !this.model.args) {
-                        this.model = {
-                            args: {
-                                primary: Color.indigo,
-                                secondary: Color.pink,
-                                error: Color.red,
-                                type: 'light',
-                                fontSize: 14
-                            }
-                        };
+                        this.emitter.emit('setDefault');
+                        return;
                     }
+                    this.emitter.emit('changeTheme');
+                }
+            );
+            Cbn.Observable.fromEvent(this.emitter, 'setDefault').subscribe(
+                () => {
+                    this.model = {
+                        args: {
+                            primary: Color.indigo,
+                            secondary: Color.pink,
+                            error: Color.red,
+                            type: 'light',
+                            fontSize: 14
+                        }
+                    };
                     this.emitter.emit('changeTheme');
                 }
             );

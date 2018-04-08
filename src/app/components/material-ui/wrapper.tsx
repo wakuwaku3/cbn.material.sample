@@ -13,7 +13,8 @@ import {
     FormControl,
     FormLabel,
     FormControlLabel,
-    Switch
+    Switch,
+    Grid
 } from 'material-ui';
 import { TextFieldProps } from 'material-ui/TextField';
 import { ButtonProps } from 'material-ui/Button';
@@ -32,11 +33,14 @@ import {
     FormControlLabelProps
 } from 'material-ui/Form';
 import { SwitchProps } from 'material-ui/Switch';
+import { GridProps } from 'material-ui/Grid';
 
 export namespace AppTextField {
     export interface Props extends TextFieldProps {}
     export const component: React.SFC<Props> = props => (
-        <TextField {...props}>{props.children}</TextField>
+        <TextField margin="normal" {...props}>
+            {props.children}
+        </TextField>
     );
 }
 export namespace AppButton {
@@ -97,5 +101,11 @@ export namespace AppSwitch {
     export interface Props extends SwitchProps {}
     export const component: React.SFC<Props> = props => (
         <Switch {...props}>{props.children}</Switch>
+    );
+}
+export namespace AppGrid {
+    export interface Props extends GridProps {}
+    export const component: React.SFC<Props> = props => (
+        <Grid {...props}>{props.children}</Grid>
     );
 }
