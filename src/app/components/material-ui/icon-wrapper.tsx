@@ -10,14 +10,12 @@ import {
     ExpandMore
 } from 'material-ui-icons';
 
-export namespace AppIcon {
-    export const NoteIcon = Note;
-    export const CloseIcon = Close;
-    export const ChevronLeftIcon = ChevronLeft;
-    export const AccountCircleIcon = AccountCircle;
-    export const AppsIcon = Apps;
-    export const MenuIcon = Menu;
-    export const AddIcon = Add;
-    export const RemoveIcon = Remove;
-    export const ExpandMoreIcon = ExpandMore;
-}
+export const NoteIcon = Note;
+export const CloseIcon = Close;
+export const ChevronLeftIcon = ChevronLeft;
+export const AccountCircleIcon = AccountCircle;
+export const AppsIcon = Apps;
+export const MenuIcon = Menu;
+export const AddIcon = Add;
+export const RemoveIcon = Remove;
+export const ExpandMoreIcon = ExpandMore;

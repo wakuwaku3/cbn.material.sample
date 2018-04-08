@@ -1,22 +1,15 @@
 import { Cbn } from '../../../lib/shared/cbn';
-import { AppStore } from '../app-store';
 import { Store } from 'undux';
+import { ActionBase } from '../bases/action-base';
+import { HomeIndexEvent } from '../../models/actions/home';
 
-export namespace HomeIndexAction {
-    export const key = 'homeIndex';
-    export type key = 'homeIndex';
-    export interface Model {
-        name: string;
-        count: number;
-    }
-    export interface Event extends Cbn.Event {
-        setName: string;
-        initialize: void;
-        count: void;
-    }
-    export class Action extends Cbn.PageAction<AppStore.Model, key, Event> {
-        constructor(store: Store<AppStore.Model>) {
-            super(key, store);
+namespace InnerScope {
+    const key = 'homeIndex';
+    type key = 'homeIndex';
+    type event = HomeIndexEvent;
+    export class Action extends ActionBase<key, event> {
+        constructor() {
+            super(key);
         }
         protected initialize() {
             Cbn.Observable.fromEvent(this.emitter, 'initialize').subscribe(
@@ -38,5 +31,5 @@ export namespace HomeIndexAction {
             this.emitter.emit('initialize');
         }
     }
-    export const action = new Action(AppStore.getStore());
 }
+export const homeIndexAction = new InnerScope.Action();

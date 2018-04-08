@@ -1,25 +1,15 @@
 import { Cbn } from '../../../lib/shared/cbn';
-import { AppStore } from '../app-store';
 import { Store } from 'undux';
+import { MessagesEvent } from '../../models/actions/shared/messages';
+import { ActionBase } from '../bases/action-base';
 
-export namespace MessagesAction {
-    export const key = 'messages';
-    export type key = 'messages';
-    export interface Model {
-        isShow: boolean;
-        errorMessage: string;
-    }
-    export interface Message {
-        errorMessage: string;
-    }
-    export interface Event extends Cbn.Event {
-        initialize: void;
-        handleOpen: Message;
-        handleClose: string;
-    }
-    export class Action extends Cbn.PageAction<AppStore.Model, key, Event> {
-        constructor(store: Store<AppStore.Model>) {
-            super(key, store);
+namespace InnerScope {
+    const key = 'messages';
+    type key = 'messages';
+    type event = MessagesEvent;
+    export class Action extends ActionBase<key, event> {
+        constructor() {
+            super(key);
         }
         protected initialize() {
             Cbn.Observable.fromEvent(this.emitter, 'initialize').subscribe(
@@ -47,5 +37,5 @@ export namespace MessagesAction {
             this.emitter.emit('initialize');
         }
     }
-    export const action = new Action(AppStore.getStore());
 }
+export const messagesAction = new InnerScope.Action();

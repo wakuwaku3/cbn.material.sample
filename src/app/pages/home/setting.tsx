@@ -1,128 +1,118 @@
 import * as React from 'react';
-import { AppStyle } from '../../shared/app-style';
-import { ThemeAction } from '../../actions/shared/theme-action';
 import { AppForm } from '../../components/app-form';
 import { AppFieldSet } from '../../components/app-fieldset';
-import { AppGrid, AppSwitch, AppTextField, AppButton } from '../../components/material-ui/wrapper';
+import {
+    AppGrid,
+    AppSwitch,
+    AppTextField,
+    AppButton
+} from '../../components/material-ui/wrapper';
 import { ColorPalette } from '../../components/color-palette';
-import { MessagesAction } from '../../actions/shared/messages-action';
 import { AppSelectableContainer } from '../../components/app-selectable-container';
 import { AppContainer } from '../../components/app-container';
+import { decorateWithStore } from '../../helper/app-style-helper';
+import { themeAction } from '../../actions/shared/theme-action';
+import { messagesAction } from '../../actions/shared/messages-action';
 
-export namespace HomeSetting {
+namespace InnerScope {
     const styles = {};
-    export const component = AppStyle.decorateWithStore(
-        styles,
-        ThemeAction.key
-    )(styles => props => {
-        return (
-            <AppForm.component title="設定">
-                <AppFieldSet.component title="表示テーマ">
-                    <AppGrid.component container>
-                        <AppGrid.component item xs={12} md={6}>
-                            <ColorPalette.component
-                                title="メインカラー"
-                                value={ThemeAction.action.model.args.primary}
-                                onChange={(e, v) =>
-                                    ThemeAction.action.emitter.emit(
-                                        'changeTheme',
-                                        {
+    export const component = decorateWithStore(styles, themeAction.key)(
+        styles => props => {
+            return (
+                <AppForm title="設定">
+                    <AppFieldSet title="表示テーマ">
+                        <AppGrid container>
+                            <AppGrid item xs={12} md={6}>
+                                <ColorPalette
+                                    title="メインカラー"
+                                    value={themeAction.model.args.primary}
+                                    onChange={(e, v) =>
+                                        themeAction.emit('changeTheme', {
                                             primary: v
-                                        }
-                                    )
-                                }
-                            />
-                        </AppGrid.component>
-                        <AppGrid.component item xs={12} md={6}>
-                            <ColorPalette.component
-                                title="サブカラー"
-                                value={ThemeAction.action.model.args.secondary}
-                                onChange={(e, v) =>
-                                    ThemeAction.action.emitter.emit(
-                                        'changeTheme',
-                                        {
+                                        })
+                                    }
+                                />
+                            </AppGrid>
+                            <AppGrid item xs={12} md={6}>
+                                <ColorPalette
+                                    title="サブカラー"
+                                    value={themeAction.model.args.secondary}
+                                    onChange={(e, v) =>
+                                        themeAction.emit('changeTheme', {
                                             secondary: v
-                                        }
-                                    )
-                                }
-                            />
-                        </AppGrid.component>
-                        <AppGrid.component item xs={12} md={6}>
-                            <ColorPalette.component
-                                title="エラーカラー"
-                                value={ThemeAction.action.model.args.error}
-                                onChange={(e, v) => {
-                                    ThemeAction.action.emitter.emit(
-                                        'changeTheme',
-                                        {
+                                        })
+                                    }
+                                />
+                            </AppGrid>
+                            <AppGrid item xs={12} md={6}>
+                                <ColorPalette
+                                    title="エラーカラー"
+                                    value={themeAction.model.args.error}
+                                    onChange={(e, v) => {
+                                        themeAction.emit('changeTheme', {
                                             error: v
-                                        }
-                                    );
-                                    MessagesAction.action.emitter.emit(
-                                        'handleOpen',
-                                        {
+                                        });
+                                        messagesAction.emit('handleOpen', {
                                             errorMessage:
                                                 'エラーカラーを変更しました。'
-                                        }
-                                    );
-                                }}
-                            />
-                        </AppGrid.component>
-                        <AppGrid.component item xs={12} md={6} />
-                        <AppGrid.component item xs={4}>
-                            <AppSelectableContainer.component
-                                control={
-                                    <AppSwitch.component
-                                        checked={
-                                            ThemeAction.action.model.args
-                                                .type === 'dark'
-                                        }
-                                        onChange={(e, v) =>
-                                            ThemeAction.action.emitter.emit(
-                                                'changeTheme',
-                                                {
-                                                    type: v ? 'dark' : 'light'
-                                                }
-                                            )
-                                        }
-                                    />
-                                }
-                                label="ダークテーマを使用する"
-                            />
-                        </AppGrid.component>
-                        <AppGrid.component item xs={8}>
-                            <AppTextField.component
-                                label="フォントサイズ"
-                                value={ThemeAction.action.model.args.fontSize}
-                                onChange={e => {
-                                    ThemeAction.action.emitter.emit(
-                                        'changeTheme',
-                                        {
-                                            fontSize: Number(e.target.value)
-                                        }
-                                    );
-                                }}
-                                type="number"
-                            />
-                        </AppGrid.component>
-                        <AppGrid.component item xs={12}>
-                            <AppContainer.component horizontal="right">
-                                <AppButton.component
-                                    variant="raised"
-                                    color="secondary"
-                                    onClick={() =>
-                                        ThemeAction.action.emitter.emit(
-                                            'setDefault'
-                                        )
+                                        });
+                                    }}
+                                />
+                            </AppGrid>
+                            <AppGrid item xs={12} md={6} />
+                            <AppGrid item xs={4}>
+                                <AppSelectableContainer
+                                    control={
+                                        <AppSwitch
+                                            checked={
+                                                themeAction.model.args.type ===
+                                                'dark'
+                                            }
+                                            onChange={(e, v) =>
+                                                themeAction.emit(
+                                                    'changeTheme',
+                                                    {
+                                                        type: v
+                                                            ? 'dark'
+                                                            : 'light'
+                                                    }
+                                                )
+                                            }
+                                        />
                                     }
-                                >
-                                    初期値に戻す
-                                </AppButton.component>
-                            </AppContainer.component>
-                        </AppGrid.component>
-                    </AppGrid.component>
-                </AppFieldSet.component>
-            </AppForm.component>
-        );
-    });
+                                    label="ダークテーマを使用する"
+                                />
+                            </AppGrid>
+                            <AppGrid item xs={8}>
+                                <AppTextField
+                                    label="フォントサイズ"
+                                    value={themeAction.model.args.fontSize}
+                                    onChange={e => {
+                                        themeAction.emit('changeTheme', {
+                                            fontSize: Number(e.target.value)
+                                        });
+                                    }}
+                                    type="number"
+                                />
+                            </AppGrid>
+                            <AppGrid item xs={12}>
+                                <AppContainer horizontal="right">
+                                    <AppButton
+                                        variant="raised"
+                                        color="secondary"
+                                        onClick={() =>
+                                            themeAction.emit('setDefault')
+                                        }
+                                    >
+                                        初期値に戻す
+                                    </AppButton>
+                                </AppContainer>
+                            </AppGrid>
+                        </AppGrid>
+                    </AppFieldSet>
+                </AppForm>
+            );
+        }
+    );
 }
+export const HomeSettings = InnerScope.component;

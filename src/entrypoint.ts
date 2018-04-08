@@ -8,7 +8,7 @@ import { AppMain } from './app/masters/app-main';
 
 namespace EntryPoint {
     export const render = () => {
-        const rootComponent = React.createElement(AppMain.component);
+        const rootComponent = React.createElement(AppMain);
         const target = document.getElementById('app');
         ReactDOM.render(rootComponent, target);
     };

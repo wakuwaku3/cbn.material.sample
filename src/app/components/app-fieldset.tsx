@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { ThemeAction } from '../actions/shared/theme-action';
-import { AppStyle } from '../shared/app-style';
+import { themeAction } from '../actions/shared/theme-action';
 import {
     ExpansionPanel,
     ExpansionPanelSummary,
     ExpansionPanelDetails,
     Theme
 } from 'material-ui';
-import { AppIcon } from './material-ui/icon-wrapper';
 import { AppTypography } from './material-ui/wrapper';
+import { ExpandMoreIcon } from './material-ui/icon-wrapper';
+import { decorate } from '../helper/app-style-helper';
 
-export namespace AppFieldSet {
+namespace InnerScope {
     export interface Props {
         defaultExpanded?: boolean;
         title: string;
@@ -25,37 +25,35 @@ export namespace AppFieldSet {
         details: {
             'flex-direction': 'column'
         },
-        header: ThemeAction.action.getThemeObservable().map((theme: Theme) => {
+        header: themeAction.getThemeObservable().map((theme: Theme) => {
             return {
                 background: theme.palette.primary.light,
                 color: theme.palette.primary.contrastText
             };
         })
     };
-    export const component = AppStyle.decorate(styles)<Props>(
-        sheet => props => {
-            return (
-                <ExpansionPanel defaultExpanded={props.defaultExpanded}>
-                    <ExpansionPanelSummary
-                        expandIcon={<AppIcon.ExpandMoreIcon />}
-                        className={sheet.classes.header}
-                        classes={{
-                            root: sheet.classes['summary-root'],
-                            content: sheet.classes['summary-content']
-                        }}
-                    >
-                        <AppTypography.component>
-                            {props.title}
-                        </AppTypography.component>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails className={sheet.classes.details}>
-                        {props.children}
-                    </ExpansionPanelDetails>
-                </ExpansionPanel>
-            );
-        }
-    );
+    export const component = decorate(styles)<Props>(sheet => props => {
+        return (
+            <ExpansionPanel defaultExpanded={props.defaultExpanded}>
+                <ExpansionPanelSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    className={sheet.classes.header}
+                    classes={{
+                        root: sheet.classes['summary-root'],
+                        content: sheet.classes['summary-content']
+                    }}
+                >
+                    <AppTypography>{props.title}</AppTypography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails className={sheet.classes.details}>
+                    {props.children}
+                </ExpansionPanelDetails>
+            </ExpansionPanel>
+        );
+    });
     component.defaultProps = {
         defaultExpanded: true
     };
 }
+export type AppFieldSetProps = InnerScope.Props;
+export const AppFieldSet = InnerScope.component;

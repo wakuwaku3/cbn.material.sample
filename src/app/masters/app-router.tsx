@@ -4,30 +4,29 @@ import { Route, Switch } from 'react-router';
 import { BrowserRouter, Link } from 'react-router-dom';
 import { HomeIndex } from '../pages/home';
 import { HomeAbout } from '../pages/home/about';
-import { HomeSetting } from '../pages/home/setting';
+import { HomeSettings } from '../pages/home/setting';
 // import { ProductsIndex } from '../pages/products';
 
-export namespace AppRouter {
+export namespace Url {
     export const homeIndex = '/';
     export const homeAbout = '/home/about';
     export const homeSetting = '/home/setting';
     export const productsIndex = '/products';
+}
+namespace InnerScope {
     export const component: React.SFC = () => {
         return (
             <Switch>
-                <Route exact path={homeIndex} component={HomeIndex.component} />
-                <Route exact path={homeAbout} component={HomeAbout.component} />
-                <Route
-                    exact
-                    path={homeSetting}
-                    component={HomeSetting.component}
-                />
+                <Route exact path={Url.homeIndex} component={HomeIndex} />
+                <Route exact path={Url.homeAbout} component={HomeAbout} />
+                <Route exact path={Url.homeSetting} component={HomeSettings} />
                 {/* <Route
                     exact
                     path={productsIndex}
-                    component={ProductsIndex.component}
+                    component={ProductsIndex}
                 /> */}
             </Switch>
         );
     };
 }
+export const AppRouter = InnerScope.component;

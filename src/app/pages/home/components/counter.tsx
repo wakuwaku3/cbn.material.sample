@@ -4,9 +4,9 @@ import {
     AppTypography,
     AppButton
 } from '../../../components/material-ui/wrapper';
-import { AppIcon } from '../../../components/material-ui/icon-wrapper';
+import { AddIcon } from '../../../components/material-ui/icon-wrapper';
 
-export namespace Counter {
+namespace InnerScope {
     export interface Props {
         name: string;
         count: number;
@@ -20,17 +20,19 @@ export namespace Counter {
         };
         return (
             <div>
-                <AppTypography.component>{props.name}</AppTypography.component>
-                <AppTypography.component>{props.count}</AppTypography.component>
-                <AppButton.component
+                <AppTypography>{props.name}</AppTypography>
+                <AppTypography>{props.count}</AppTypography>
+                <AppButton
                     variant="fab"
                     color="primary"
                     mini={true}
                     onClick={e => handleClick(e)}
                 >
-                    <AppIcon.AddIcon />
-                </AppButton.component>
+                    <AddIcon />
+                </AppButton>
             </div>
         );
     };
 }
+export type CounterProps = InnerScope.Props;
+export const Counter = InnerScope.component;

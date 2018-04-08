@@ -1,38 +1,31 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { Cbn } from '../../lib/shared/cbn';
-import {
-    Divider,
-    AppBar,
-    MenuItem,
-    Drawer,
-    withStyles,
-    Theme,
-    Toolbar,
-    WithStyles,
-    Menu
-} from 'material-ui';
-import { AppMain } from './app-main';
-import { AppStyle } from '../shared/app-style';
-import { AppRouter } from './app-router';
+import { themeAction } from '../actions/shared/theme-action';
+import { decorateWithStore } from '../helper/app-style-helper';
+import { authAction } from '../actions/shared/auth-action';
 import { Route } from 'react-router';
-import { AuthAction } from '../actions/shared/auth-action';
 import {
+    AppBar,
+    AppToolbar,
     AppIconButton,
     AppTypography
 } from '../components/material-ui/wrapper';
-import { ThemeAction } from '../actions/shared/theme-action';
-import { AppIcon } from '../components/material-ui/icon-wrapper';
+import { Url } from './app-router';
+import {
+    AppsIcon,
+    AccountCircleIcon,
+    MenuIcon
+} from '../components/material-ui/icon-wrapper';
+import { Menu, MenuItem, Divider } from 'material-ui';
 
-export namespace AppTop {
+namespace InnerScope {
     export const getHeight = () => {
-        const theme = ThemeAction.action.theme;
+        const theme = themeAction.theme;
         if (window.innerWidth >= theme.breakpoints.values.sm) {
             return theme.mixins.toolbar[theme.breakpoints.up('sm')].minHeight;
         }
         return theme.mixins.toolbar.minHeight;
     };
-    export const styles = {
+    const styles = {
         bar: {
             padding: 0
         },
@@ -48,7 +41,7 @@ export namespace AppTop {
         profile: HTMLElement;
         menu: HTMLElement;
     }
-    export const component = AppStyle.decorateWithStore(styles, AuthAction.key)(
+    export const component = decorateWithStore(styles, authAction.key)(
         sheet =>
             class extends React.Component<{}, State> {
                 constructor(props: {}) {
@@ -72,28 +65,25 @@ export namespace AppTop {
                         <Route
                             render={({ history, location }) => (
                                 <AppBar position="static">
-                                    <Toolbar className={sheet.classes.bar}>
-                                        <AppIconButton.component
+                                    <AppToolbar className={sheet.classes.bar}>
+                                        <AppIconButton
                                             color="inherit"
                                             onClick={e => {
-                                                history.push(
-                                                    AppRouter.homeIndex
-                                                );
+                                                history.push(Url.homeIndex);
                                             }}
                                         >
-                                            <AppIcon.AppsIcon />
-                                        </AppIconButton.component>
-                                        <AppTypography.component
+                                            <AppsIcon />
+                                        </AppIconButton>
+                                        <AppTypography
                                             variant="title"
                                             color="inherit"
                                             className={sheet.classes.title}
                                         >
                                             Title
-                                        </AppTypography.component>
-                                        {AuthAction.action.model
-                                            .authenticated && (
+                                        </AppTypography>
+                                        {authAction.model.authenticated && (
                                             <div>
-                                                <AppIconButton.component
+                                                <AppIconButton
                                                     aria-owns="menu-appbar"
                                                     aria-haspopup="true"
                                                     color="inherit"
@@ -103,8 +93,8 @@ export namespace AppTop {
                                                         )
                                                     }
                                                 >
-                                                    <AppIcon.AccountCircleIcon />
-                                                </AppIconButton.component>
+                                                    <AccountCircleIcon />
+                                                </AppIconButton>
                                                 <Menu
                                                     id="menu-appbar"
                                                     anchorEl={
@@ -129,7 +119,7 @@ export namespace AppTop {
                                                     <MenuItem
                                                         onClick={() => {
                                                             history.push(
-                                                                AppRouter.homeSetting
+                                                                Url.homeSetting
                                                             );
                                                             this.handleCloseProfile();
                                                         }}
@@ -140,7 +130,7 @@ export namespace AppTop {
                                                     <MenuItem
                                                         onClick={() => {
                                                             this.handleCloseProfile();
-                                                            AuthAction.action.emitter.emit(
+                                                            authAction.emit(
                                                                 'logout'
                                                             );
                                                         }}
@@ -148,7 +138,7 @@ export namespace AppTop {
                                                         LogOut
                                                     </MenuItem>
                                                 </Menu>
-                                                <AppIconButton.component
+                                                <AppIconButton
                                                     className={
                                                         sheet.classes.menuButton
                                                     }
@@ -161,8 +151,8 @@ export namespace AppTop {
                                                     }
                                                     aria-label="Menu"
                                                 >
-                                                    <AppIcon.MenuIcon />
-                                                </AppIconButton.component>
+                                                    <MenuIcon />
+                                                </AppIconButton>
                                                 <Menu
                                                     id="menu-appbar"
                                                     anchorEl={this.state.menu}
@@ -185,7 +175,7 @@ export namespace AppTop {
                                                     <MenuItem
                                                         onClick={() => {
                                                             history.push(
-                                                                AppRouter.homeAbout
+                                                                Url.homeAbout
                                                             );
                                                             this.handleCloseMenu();
                                                         }}
@@ -195,7 +185,7 @@ export namespace AppTop {
                                                 </Menu>
                                             </div>
                                         )}
-                                    </Toolbar>
+                                    </AppToolbar>
                                 </AppBar>
                             )}
                         />
@@ -204,3 +194,5 @@ export namespace AppTop {
             }
     );
 }
+export const getTopHeight = InnerScope.getHeight;
+export const AppTop = InnerScope.component;

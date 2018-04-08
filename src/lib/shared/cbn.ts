@@ -9,9 +9,6 @@ import { WithStylesOptions } from 'material-ui/styles/withStyles';
 import * as createReactClass from 'create-react-class';
 
 export namespace Cbn {
-    let index = 0;
-    export const getKey = () => index++;
-
     export interface Event {
         reflesh: void;
     }
@@ -34,7 +31,7 @@ export namespace Cbn {
     > {
         protected abstract initialize();
         emitter = new EventEmitter<TEvent & Event>();
-        constructor(protected key: Key, protected store: Store<TStore>) {
+        constructor(public key: Key, protected store: Store<TStore>) {
             Observable.fromEvent(this.emitter, 'reflesh').subscribe(() => {
                 this.reflesh();
             });
@@ -48,6 +45,12 @@ export namespace Cbn {
         }
         private reflesh() {
             this.model = Object.assign({}, this.model);
+        }
+        emit<TKey extends keyof (TEvent & Event)>(
+            key: TKey,
+            args?: (TEvent & Event)[TKey]
+        ) {
+            this.emitter.emit(key, args);
         }
     }
     interface StyledProps {
@@ -132,43 +135,6 @@ export namespace Cbn {
         current: number;
         total: number;
     }
-    export namespace TwoWay {
-        export interface EventArgs {
-            object: object;
-            name: string;
-            value: any;
-        }
-        export interface Event {
-            valueChange: EventArgs;
-        }
-        export interface Props {
-            defaultValue: any;
-            onChange: (e, val) => void;
-        }
-        export const createProps = <T extends object, TKey extends keyof T>(
-            emitter: EventEmitter<Event>,
-            object: T,
-            name: TKey,
-            marge?: object
-        ) => {
-            let p = {
-                defaultValue: object[name],
-                value: object[name],
-                onChange: (e, value) => {
-                    object[name] = value;
-                    emitter.emit('valueChange', {
-                        object,
-                        name: name,
-                        value
-                    });
-                }
-            };
-            if (marge) {
-                return Object.assign(p, marge);
-            }
-            return p;
-        };
-    }
     export namespace Material {
         export const decorate = <ClassKey extends string>(
             style: StyleRules<ClassKey> | StyleRulesCallback<ClassKey>,
@@ -223,5 +189,4 @@ export namespace Cbn {
             return jss.createStyleSheet(styles, { link: true }).attach();
         };
     }
-    export type WithChildren<Props> = Props & { children?: React.ReactNode };
 }

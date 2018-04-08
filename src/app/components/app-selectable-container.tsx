@@ -1,14 +1,19 @@
-import { AppStyle } from '../shared/app-style';
-import { AppFormControlLabel } from './material-ui/wrapper';
+import {
+    AppFormControlLabel,
+    AppFormControlLabelProps
+} from './material-ui/wrapper';
 import * as React from 'react';
 import { AppContainer } from './app-container';
+import { decorate } from '../helper/app-style-helper';
 
-export namespace AppSelectableContainer {
-    export interface Props extends AppFormControlLabel.Props {}
+namespace InnerScope {
+    export interface Props extends AppFormControlLabelProps {}
     const style = {};
-    export const component = AppStyle.decorate(style)<Props>(sheet => props => (
-        <AppContainer.component vertical="center" width="inherit">
-            <AppFormControlLabel.component {...props} />
-        </AppContainer.component>
+    export const component = decorate(style)<Props>(sheet => props => (
+        <AppContainer vertical="center" width="inherit">
+            <AppFormControlLabel {...props} />
+        </AppContainer>
     ));
 }
+export type AppSelectableContainerProps = InnerScope.Props;
+export const AppSelectableContainer = InnerScope.component;

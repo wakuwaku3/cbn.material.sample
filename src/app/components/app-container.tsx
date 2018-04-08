@@ -1,8 +1,8 @@
 import { Cbn } from '../../lib/shared/cbn';
 import * as React from 'react';
-import { AppStyle } from '../shared/app-style';
+import { decorateWithProps } from '../helper/app-style-helper';
 
-export namespace AppContainer {
+namespace InnerScope {
     export interface Props
         extends StyledArgs,
             React.DetailedHTMLProps<
@@ -45,7 +45,7 @@ export namespace AppContainer {
                 return 'flex-end';
         }
     };
-    export const styles = {
+    const styles = {
         container: (props: Props) => {
             let style = {
                 'align-items': convertVertical(props),
@@ -57,10 +57,10 @@ export namespace AppContainer {
             return style;
         }
     };
-    export const component = AppStyle.decorateWithProps(styles)<Props>(
-        props => {
-            let merged = Cbn.mergeClassNeme(props, props.classes.container);
-            return <div {...merged}>{props.children}</div>;
-        }
-    );
+    export const component = decorateWithProps(styles)<Props>(props => {
+        let merged = Cbn.mergeClassNeme(props, props.classes.container);
+        return <div {...merged}>{props.children}</div>;
+    });
 }
+export type AppContainerProps = InnerScope.Props;
+export const AppContainer = InnerScope.component;

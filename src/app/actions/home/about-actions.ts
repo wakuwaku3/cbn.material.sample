@@ -1,24 +1,17 @@
 import { Cbn } from '../../../lib/shared/cbn';
 import { Test } from '../../services/test-service';
 import { Observable } from 'rxjs';
-import { AppStore } from '../app-store';
 import { Store } from 'undux';
+import { ActionBase } from '../bases/action-base';
+import { HomeAboutEvent } from '../../models/actions/home/about';
 
-export namespace HomeAboutAction {
-    export const key = 'homeAbout';
-    export type key = 'homeAbout';
-    export interface Model {
-        counter: number;
-        header: string;
-    }
-    export interface Event extends Cbn.Event {
-        initialize: void;
-        clickOperateCounterButton: boolean;
-        counterChanged: number;
-    }
-    export class Action extends Cbn.PageAction<AppStore.Model, key, Event> {
-        constructor(store: Store<AppStore.Model>) {
-            super(key, store);
+namespace InnerScope {
+    const key = 'homeAbout';
+    type key = 'homeAbout';
+    type event = HomeAboutEvent;
+    export class Action extends ActionBase<key, event> {
+        constructor() {
+            super(key);
         }
         paddingObservable: Observable<number>;
         protected initialize() {
@@ -51,5 +44,5 @@ export namespace HomeAboutAction {
             this.emitter.emit('initialize');
         }
     }
-    export const action = new Action(AppStore.getStore());
 }
+export const homeAboutAction = new InnerScope.Action();

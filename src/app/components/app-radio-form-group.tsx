@@ -4,15 +4,18 @@ import {
     AppRadio,
     AppFormControlLabel,
     AppFormControl,
-    AppFormLabel
+    AppFormLabel,
+    AppRadioGroupProps,
+    AppFormControlLabelProps,
+    AppRadioProps
 } from './material-ui/wrapper';
-import { AppStyle } from '../shared/app-style';
 import { AppSelectableContainer } from './app-selectable-container';
+import { decorate } from '../helper/app-style-helper';
 
-export namespace AppRadioFormGroup {
+namespace InnerScope {
     export interface Props {
         title: string;
-        radioGroupProps?: AppRadioGroup.Props;
+        radioGroupProps?: AppRadioGroupProps;
         items: ItemProps[];
         onChange?: (event?: React.ChangeEvent<{}>, value?: string) => void;
         value?: string;
@@ -20,8 +23,8 @@ export namespace AppRadioFormGroup {
     export interface ItemProps {
         label: string;
         value: string;
-        labelProps?: Partial<AppFormControlLabel.Props>;
-        radioProps?: AppRadio.Props;
+        labelProps?: Partial<AppFormControlLabelProps>;
+        radioProps?: AppRadioProps;
     }
     export interface State {
         value: string;
@@ -32,30 +35,32 @@ export namespace AppRadioFormGroup {
             padding: [16, 8, 0]
         }
     };
-    export const component = AppStyle.decorate(style)<Props>(sheet => props => (
-        <AppFormControl.component
+    export const component = decorate(style)<Props>(sheet => props => (
+        <AppFormControl
             component="fieldset"
             classes={{
                 root: sheet.classes['form-control-root']
             }}
         >
-            <AppFormLabel.component>{props.title}</AppFormLabel.component>
-            <AppRadioGroup.component
+            <AppFormLabel>{props.title}</AppFormLabel>
+            <AppRadioGroup
                 row={true}
                 {...props.radioGroupProps}
                 value={props.value}
                 onChange={props.onChange}
             >
                 {props.items.map((item, i) => (
-                    <AppSelectableContainer.component
+                    <AppSelectableContainer
                         key={i}
                         {...item.labelProps}
                         label={item.label}
                         value={item.value}
-                        control={<AppRadio.component {...item.radioProps} />}
+                        control={<AppRadio {...item.radioProps} />}
                     />
                 ))}
-            </AppRadioGroup.component>
-        </AppFormControl.component>
+            </AppRadioGroup>
+        </AppFormControl>
     ));
 }
+export type AppRadioFormGroupProps = InnerScope.Props;
+export const AppRadioFormGroup = InnerScope.component;

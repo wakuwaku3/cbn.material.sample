@@ -1,25 +1,15 @@
-import { AppStore } from '../app-store';
 import { Cbn } from '../../../lib/shared/cbn';
 import { Store } from 'undux';
+import { AuthEvent } from '../../models/actions/shared/auth';
+import { ActionBase } from '../bases/action-base';
 
-export namespace AuthAction {
-    export const key = 'auth';
-    export type key = 'auth';
-    export interface LogInEventArgs {
-        id: string;
-        password: string;
-        callBackHasError: (message: string) => void;
-    }
-    export interface Event {
-        login: LogInEventArgs;
-        logout: void;
-    }
-    export interface Model {
-        authenticated: boolean;
-    }
-    export class Action extends Cbn.PageAction<AppStore.Model, key, Event> {
-        constructor(store: Store<AppStore.Model>) {
-            super(key, store);
+namespace InnerScope {
+    const key = 'auth';
+    type key = 'auth';
+    type event = AuthEvent;
+    export class Action extends ActionBase<key, event> {
+        constructor() {
+            super(key);
         }
         protected initialize() {
             Cbn.Observable.fromEvent(this.emitter, 'login').subscribe(args => {
@@ -40,5 +30,5 @@ export namespace AuthAction {
             }
         }
     }
-    export const action = new Action(AppStore.getStore());
 }
+export const authAction = new InnerScope.Action();

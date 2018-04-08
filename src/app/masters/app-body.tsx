@@ -1,23 +1,23 @@
 import * as React from 'react';
 import { Cbn } from '../../lib/shared/cbn';
 import { AppRouter } from './app-router';
-import { AppFotter } from './app-footer';
-import { AppStyle } from '../shared/app-style';
 import {
     withStyles,
     WithStyles,
     StyleRulesCallback,
     Button
 } from 'material-ui';
-import { AppTop } from './app-top';
+import { AppTop, getTopHeight } from './app-top';
 import { StyleRules } from 'material-ui/styles';
 import { Store } from 'undux';
-import { BrowserAction } from '../actions/shared/browser-action';
-import { AuthAction } from '../actions/shared/auth-action';
-import { AppMessages } from './app-messages';
 import { LogIn } from '../pages/home/components/login';
+import { getFooterHeight } from './app-footer';
+import { AppMessages } from './app-messages';
+import { authAction } from '../actions/shared/auth-action';
+import { browserAction } from '../actions/shared/browser-action';
+import { decorateWithStore } from '../helper/app-style-helper';
 
-export namespace AppBody {
+namespace InnerScope {
     let pt = 10;
     let pb = 10;
     const styles = {
@@ -27,38 +27,30 @@ export namespace AppBody {
             paddingLeft: 10,
             paddingRight: 10,
             overflow: 'auto' as 'auto',
-            height: Cbn.Observable.fromEvent(
-                BrowserAction.action.emitter,
-                'resize'
-            )
+            height: Cbn.Observable.fromEvent(browserAction.emitter, 'resize')
                 .map(() => '')
                 .startWith('')
                 .map(() => {
-                    let top = AppTop.getHeight();
-                    return window.innerHeight - AppFotter.height - top;
+                    let top = getTopHeight();
+                    return window.innerHeight - getFooterHeight() - top;
                 })
         }
     };
-    export const component = AppStyle.decorateWithStore(
+    export const component = decorateWithStore(
         styles,
-        BrowserAction.key,
-        AuthAction.key
+        browserAction.key,
+        authAction.key
     )(sheet => props => {
         return (
             <div className={sheet.classes.body}>
-                <AppMessages.component />
+                <AppMessages />
                 {(() => {
-                    if (AuthAction.action.model.authenticated) {
-                        return <AppRouter.component />;
+                    if (authAction.model.authenticated) {
+                        return <AppRouter />;
                     } else {
                         return (
-                            <LogIn.component
-                                onLogIn={args =>
-                                    AuthAction.action.emitter.emit(
-                                        'login',
-                                        args
-                                    )
-                                }
+                            <LogIn
+                                onLogIn={args => authAction.emit('login', args)}
                             />
                         );
                     }
@@ -67,3 +59,4 @@ export namespace AppBody {
         );
     });
 }
+export const AppBody = InnerScope.component;

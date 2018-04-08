@@ -5,15 +5,15 @@ import {
     AppTextField,
     AppButton
 } from '../../../components/material-ui/wrapper';
-import { AppStyle } from '../../../shared/app-style';
-import { MessagesAction } from '../../../actions/shared/messages-action';
 import { AppContainer } from '../../../components/app-container';
 import { AppForm } from '../../../components/app-form';
-import { AuthAction } from '../../../actions/shared/auth-action';
+import { LogInEventArgs } from '../../../models/actions/shared/auth';
+import { decorate } from '../../../helper/app-style-helper';
+import { messagesAction } from '../../../actions/shared/messages-action';
 
-export namespace LogIn {
+namespace InnerScope {
     export interface Props {
-        onLogIn: (args: AuthAction.LogInEventArgs) => void;
+        onLogIn: (args: LogInEventArgs) => void;
     }
     export interface State {
         id: string;
@@ -27,7 +27,7 @@ export namespace LogIn {
             padding: [18, 0, 4]
         }
     };
-    export const component = AppStyle.decorate(styles)(
+    export const component = decorate(styles)(
         sheet =>
             class extends React.Component<Props, State> {
                 constructor(props: Props) {
@@ -49,33 +49,30 @@ export namespace LogIn {
                     this.props.onLogIn(args);
                 };
                 private showError(message: string) {
-                    MessagesAction.action.emitter.emit('handleOpen', {
+                    messagesAction.emit('handleOpen', {
                         errorMessage: message
                     });
                 }
                 render() {
                     return (
-                        <AppContainer.component
-                            vertical="center"
-                            horizontal="center"
-                        >
-                            <AppForm.component
+                        <AppContainer vertical="center" horizontal="center">
+                            <AppForm
                                 paperProps={{
                                     className: sheet.classes.paper
                                 }}
                             >
-                                <AppGrid.component container>
-                                    <AppGrid.component item xs={12}>
-                                        <AppTextField.component
+                                <AppGrid container>
+                                    <AppGrid item xs={12}>
+                                        <AppTextField
                                             label="ユーザーId"
                                             value={this.state.id}
                                             margin="normal"
                                             fullWidth
                                             onChange={this.handleChange('id')}
                                         />
-                                    </AppGrid.component>
-                                    <AppGrid.component item xs={12}>
-                                        <AppTextField.component
+                                    </AppGrid>
+                                    <AppGrid item xs={12}>
+                                        <AppTextField
                                             label="パスワード"
                                             type="password"
                                             value={this.state.password}
@@ -85,9 +82,9 @@ export namespace LogIn {
                                                 'password'
                                             )}
                                         />
-                                    </AppGrid.component>
-                                    <AppGrid.component item xs={12}>
-                                        <AppContainer.component
+                                    </AppGrid>
+                                    <AppGrid item xs={12}>
+                                        <AppContainer
                                             vertical="center"
                                             horizontal="center"
                                             className={
@@ -96,20 +93,22 @@ export namespace LogIn {
                                                 ]
                                             }
                                         >
-                                            <AppButton.component
+                                            <AppButton
                                                 variant="raised"
                                                 color="primary"
                                                 onClick={this.handleLogIn}
                                             >
                                                 ログイン
-                                            </AppButton.component>
-                                        </AppContainer.component>
-                                    </AppGrid.component>
-                                </AppGrid.component>
-                            </AppForm.component>
-                        </AppContainer.component>
+                                            </AppButton>
+                                        </AppContainer>
+                                    </AppGrid>
+                                </AppGrid>
+                            </AppForm>
+                        </AppContainer>
                     );
                 }
             }
     );
 }
+export type LogInProps = InnerScope.Props;
+export const LogIn = InnerScope.component;
