@@ -4,4 +4,5 @@ export interface BrowserStore {
 export interface BrowserEvent {
     initialize: void;
     resize: void;
+    resizeWindowItem: void;
 }

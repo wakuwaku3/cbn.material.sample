@@ -14,7 +14,7 @@ namespace InnerScope {
             HTMLFormElement
         >;
     }
-    export const styles = {
+    const styles = {
         paper: {
             padding: 20
         },
