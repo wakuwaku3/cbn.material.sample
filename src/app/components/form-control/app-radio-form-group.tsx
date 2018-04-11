@@ -8,9 +8,9 @@ import {
     AppRadioGroupProps,
     AppFormControlLabelProps,
     AppRadioProps
-} from './material-ui/wrapper';
-import { AppSelectableContainer } from './app-selectable-container';
-import { decorate } from '../helper/app-style-helper';
+} from '../material-ui/wrapper';
+import { decorate } from '../../helper/app-style-helper';
+import { SelectableContainer } from './app-selectable-container';
 
 namespace InnerScope {
     export interface Props {
@@ -43,14 +43,9 @@ namespace InnerScope {
             }}
         >
             <AppFormLabel>{props.title}</AppFormLabel>
-            <AppRadioGroup
-                row={true}
-                {...props.radioGroupProps}
-                value={props.value}
-                onChange={props.onChange}
-            >
+            <AppRadioGroup row={true} {...props.radioGroupProps} value={props.value} onChange={props.onChange}>
                 {props.items.map((item, i) => (
-                    <AppSelectableContainer
+                    <SelectableContainer
                         key={i}
                         {...item.labelProps}
                         label={item.label}
@@ -62,5 +57,5 @@ namespace InnerScope {
         </AppFormControl>
     ));
 }
-export type AppRadioFormGroupProps = InnerScope.Props;
-export const AppRadioFormGroup = InnerScope.component;
+export type RadioFormGroupProps = InnerScope.Props;
+export const RadioFormGroup = InnerScope.component;

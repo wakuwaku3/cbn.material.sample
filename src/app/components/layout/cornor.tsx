@@ -1,6 +1,6 @@
-import { Vertical, Horizontal, DivProps } from '../models/shared/types';
+import { Vertical, Horizontal, DivProps } from '../../models/shared/types';
 import * as React from 'react';
-import { decorate } from '../helper/app-style-helper';
+import { decorate } from '../../helper/app-style-helper';
 
 namespace InnerScope {
     const size = 5;
@@ -41,16 +41,14 @@ namespace InnerScope {
         vertical: Vertical;
         horizontal: Horizontal;
     }
-    export const component = decorate(styles)<Props & DivProps>(
-        sheet => props => {
-            let key = `cornor-${props.vertical.toLowerCase()}-${props.horizontal.toLowerCase()}`;
-            let className = `${sheet.classes.cornor} ${sheet.classes[key]}`;
-            if (props.className) {
-                className += ' ' + props.className;
-            }
-            return <div {...props} className={className} />;
+    export const component = decorate(styles)<Props & DivProps>(sheet => props => {
+        let key = `cornor-${props.vertical.toLowerCase()}-${props.horizontal.toLowerCase()}`;
+        let className = `${sheet.classes.cornor} ${sheet.classes[key]}`;
+        if (props.className) {
+            className += ' ' + props.className;
         }
-    );
+        return <div {...props} className={className} />;
+    });
 }
 export type CornorProps = InnerScope.Props;
 export const Cornor = InnerScope.component;

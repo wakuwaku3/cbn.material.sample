@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { AppRadioFormGroup } from './app-radio-form-group';
-import { getColors, Color } from '../models/shared/color';
-import { decorate } from '../helper/app-style-helper';
+import { RadioFormGroup } from './app-radio-form-group';
+import { getColors, Color } from '../../models/shared/color';
+import { decorate } from '../../helper/app-style-helper';
 
 namespace InnerScope {
     const getItems = (classes: object) =>
@@ -42,7 +42,7 @@ namespace InnerScope {
             props.onChange(e, v);
         };
         return (
-            <AppRadioFormGroup
+            <RadioFormGroup
                 title={props.title}
                 value={props.value.toString()}
                 onChange={handleChange}

@@ -24,9 +24,20 @@ namespace InnerScope {
                 this.model = Products.service.initializeAsync();
             });
             this.observe('search').subscribe(condition => {
-                let res = Products.service.getAsync(Object.assign(this.model.condition, condition));
+                if (condition) {
+                    this.model.condition = Object.assign(this.model.condition, condition);
+                }
+                let res = Products.service.getAsync(this.model.condition);
                 this.model.condition.pagination = res.pager;
                 this.model.items = res.items;
+                this.emit('reflesh');
+            });
+            this.observe('selectAll').subscribe(value => {
+                this.model.items.forEach(x => (x.isSelected = value));
+                this.emit('reflesh');
+            });
+            this.observe('select').subscribe(({ value, id }) => {
+                this.model.items.find(x => x.id === id).isSelected = value;
                 this.emit('reflesh');
             });
             this.emit('initialize');

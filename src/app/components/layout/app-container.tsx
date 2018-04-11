@@ -1,14 +1,11 @@
-import { Cbn } from '../../lib/shared/cbn';
+import { Cbn } from '../../../lib/shared/cbn';
 import * as React from 'react';
-import { decorateWithProps } from '../helper/app-style-helper';
+import { decorateWithProps } from '../../helper/app-style-helper';
 
 namespace InnerScope {
     export interface Props
         extends StyledArgs,
-            React.DetailedHTMLProps<
-                React.FormHTMLAttributes<HTMLDivElement>,
-                HTMLDivElement
-            > {}
+            React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLDivElement>, HTMLDivElement> {}
 
     type vertical = 'top' | 'center' | 'bottom';
     type horizontal = 'left' | 'center' | 'right';
@@ -49,7 +46,7 @@ namespace InnerScope {
         container: (props: Props) => {
             let style = {
                 'align-items': convertVertical(props),
-                height: props && props.height ? props.height : '100%',
+                height: props && props.height ? props.height : 'inherit',
                 width: props && props.width ? props.width : '100%',
                 display: 'flex' as 'flex',
                 'justify-content': convertHorizontal(props)
@@ -62,5 +59,5 @@ namespace InnerScope {
         return <div {...merged}>{props.children}</div>;
     });
 }
-export type AppContainerProps = InnerScope.Props;
-export const AppContainer = InnerScope.component;
+export type AdjusterProps = InnerScope.Props;
+export const Adjuster = InnerScope.component;

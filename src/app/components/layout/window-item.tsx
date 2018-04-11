@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { decorate } from '../helper/app-style-helper';
-import { AppPaperProps, AppPaper } from './material-ui/wrapper';
+import { decorate } from '../../helper/app-style-helper';
+import { AppPaperProps, AppPaper } from '../material-ui/wrapper';
 import { MouseEventHandler } from 'react';
 import { findDOMNode } from 'react-dom';
-import { browserAction } from '../actions/shared/browser-action';
-import { Positioning, Vertical, Horizontal, DivProps } from '../models/shared/types';
+import { browserAction } from '../../actions/shared/browser-action';
+import { Positioning, Vertical, Horizontal, DivProps } from '../../models/shared/types';
 import { Cornor } from './cornor';
 import { DividerLine, getDividerLineWidth } from './divider-line';
 import { Subscription } from 'rxjs';

@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { themeAction } from '../actions/shared/theme-action';
 import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Theme } from 'material-ui';
-import { AppTypography } from './material-ui/wrapper';
-import { ExpandMoreIcon } from './material-ui/icon-wrapper';
-import { decorate } from '../helper/app-style-helper';
+import { themeAction } from '../../actions/shared/theme-action';
+import { decorate } from '../../helper/app-style-helper';
+import { ExpandMoreIcon } from '../material-ui/icon-wrapper';
+import { AppTypography } from '../material-ui/wrapper';
 
 namespace InnerScope {
     export interface Props {
@@ -50,5 +50,5 @@ namespace InnerScope {
         defaultExpanded: true
     };
 }
-export type AppFieldSetProps = InnerScope.Props;
-export const AppFieldSet = InnerScope.component;
+export type FieldSetProps = InnerScope.Props;
+export const FieldSet = InnerScope.component;

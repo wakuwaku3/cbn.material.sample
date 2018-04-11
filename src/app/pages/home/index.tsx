@@ -6,9 +6,9 @@ import { AppTextField, AppTypography, AppPaper } from '../../components/material
 import { Counter } from './components/counter';
 import { decorateWithStore } from '../../helper/app-style-helper';
 import { homeIndexAction } from '../../actions/home/index-actions';
-import { WindowItem, WindowContainer } from '../../components/window-item';
+import { WindowItem, WindowContainer } from '../../components/layout/window-item';
 import { findDOMNode } from 'react-dom';
-import { DividerContainer } from '../../components/divider-container';
+import { DividerContainer } from '../../components/layout/divider-container';
 
 namespace InnerScope {
     const styles = {};

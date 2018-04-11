@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { decorate } from '../helper/app-style-helper';
+import { decorate } from '../../helper/app-style-helper';
 import { Direction } from 'material-ui/styles';
-import { DivProps, Positioning } from '../models/shared/types';
+import { DivProps, Positioning } from '../../models/shared/types';
 
 namespace InnerScope {
     export const lineWidth = 5;

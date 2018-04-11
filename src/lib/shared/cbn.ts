@@ -13,6 +13,9 @@ export namespace Cbn {
         reflesh: void;
     }
     export class EventEmitter<T> {
+        constructor() {
+            this._inner.setMaxListeners(0);
+        }
         private _inner = new events.EventEmitter();
         get inner() {
             return this._inner;

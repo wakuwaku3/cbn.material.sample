@@ -8,7 +8,11 @@ import {
     Add,
     Remove,
     ExpandMore,
-    Refresh
+    Refresh,
+    FirstPage,
+    KeyboardArrowLeft,
+    KeyboardArrowRight,
+    LastPage
 } from 'material-ui-icons';
 
 export const NoteIcon = Note;
@@ -21,3 +25,7 @@ export const AddIcon = Add;
 export const RemoveIcon = Remove;
 export const ExpandMoreIcon = ExpandMore;
 export const RefreshIcon = Refresh;
+export const FirstPageIcon = FirstPage;
+export const KeyboardArrowLeftIcon = KeyboardArrowLeft;
+export const KeyboardArrowRightIcon = KeyboardArrowRight;
+export const LastPageIcon = LastPage;

@@ -1,15 +1,11 @@
 import { Grid, TextField, Button } from 'material-ui';
 import * as React from 'react';
-import {
-    AppGrid,
-    AppTextField,
-    AppButton
-} from '../../../components/material-ui/wrapper';
-import { AppContainer } from '../../../components/app-container';
-import { AppForm } from '../../../components/app-form';
+import { AppGrid, AppTextField, AppButton, AppPaper } from '../../../components/material-ui/wrapper';
 import { LogInEventArgs } from '../../../models/actions/shared/auth';
 import { decorate } from '../../../helper/app-style-helper';
 import { messagesAction } from '../../../actions/shared/messages-action';
+import { Adjuster } from '../../../components/layout/app-container';
+import { Title } from '../../../components/layout/app-title';
 
 namespace InnerScope {
     export interface Props {
@@ -24,7 +20,7 @@ namespace InnerScope {
             width: 400
         },
         'button-container': {
-            padding: [18, 0, 4]
+            padding: [10, 0]
         }
     };
     export const component = decorate(styles)(
@@ -55,56 +51,45 @@ namespace InnerScope {
                 }
                 render() {
                     return (
-                        <AppContainer vertical="center" horizontal="center">
-                            <AppForm
-                                paperProps={{
-                                    className: sheet.classes.paper
-                                }}
-                            >
-                                <AppGrid container>
-                                    <AppGrid item xs={12}>
-                                        <AppTextField
-                                            label="ユーザーId"
-                                            value={this.state.id}
-                                            margin="normal"
-                                            fullWidth
-                                            onChange={this.handleChange('id')}
-                                        />
-                                    </AppGrid>
-                                    <AppGrid item xs={12}>
-                                        <AppTextField
-                                            label="パスワード"
-                                            type="password"
-                                            value={this.state.password}
-                                            margin="normal"
-                                            fullWidth
-                                            onChange={this.handleChange(
-                                                'password'
-                                            )}
-                                        />
-                                    </AppGrid>
-                                    <AppGrid item xs={12}>
-                                        <AppContainer
-                                            vertical="center"
-                                            horizontal="center"
-                                            className={
-                                                sheet.classes[
-                                                    'button-container'
-                                                ]
-                                            }
-                                        >
-                                            <AppButton
-                                                variant="raised"
-                                                color="primary"
-                                                onClick={this.handleLogIn}
+                        <Adjuster vertical="center" horizontal="center">
+                            <Title displayTitle={false}>ログイン</Title>
+                            <AppPaper className={sheet.classes.paper}>
+                                <form>
+                                    <AppGrid container>
+                                        <AppGrid item xs={12}>
+                                            <AppTextField
+                                                label="ユーザーId"
+                                                value={this.state.id}
+                                                margin="normal"
+                                                fullWidth
+                                                onChange={this.handleChange('id')}
+                                            />
+                                        </AppGrid>
+                                        <AppGrid item xs={12}>
+                                            <AppTextField
+                                                label="パスワード"
+                                                type="password"
+                                                value={this.state.password}
+                                                margin="normal"
+                                                fullWidth
+                                                onChange={this.handleChange('password')}
+                                            />
+                                        </AppGrid>
+                                        <AppGrid item xs={12}>
+                                            <Adjuster
+                                                vertical="center"
+                                                horizontal="center"
+                                                className={sheet.classes['button-container']}
                                             >
-                                                ログイン
-                                            </AppButton>
-                                        </AppContainer>
+                                                <AppButton variant="raised" color="primary" onClick={this.handleLogIn}>
+                                                    ログイン
+                                                </AppButton>
+                                            </Adjuster>
+                                        </AppGrid>
                                     </AppGrid>
-                                </AppGrid>
-                            </AppForm>
-                        </AppContainer>
+                                </form>
+                            </AppPaper>
+                        </Adjuster>
                     );
                 }
             }

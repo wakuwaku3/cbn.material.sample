@@ -25,7 +25,11 @@ import {
     TableRow,
     TableCell,
     TableBody,
-    Tooltip
+    Tooltip,
+    Select,
+    Input,
+    InputLabel,
+    Checkbox
 } from 'material-ui';
 import { TextFieldProps } from 'material-ui/TextField';
 import { ButtonProps } from 'material-ui/Button';
@@ -48,6 +52,9 @@ import { DividerProps } from 'material-ui/Divider';
 import { decorateWithProps, decorate } from '../../helper/app-style-helper';
 import { TableProps, TableHeadProps, TableRowProps, TableCellProps, TableBodyProps } from 'material-ui/Table';
 import { TooltipProps } from 'material-ui/Tooltip';
+import { SelectProps } from 'material-ui/Select';
+import { InputProps, InputLabelProps } from 'material-ui/Input';
+import { CheckboxProps } from 'material-ui/Checkbox';
 
 export interface AppTextFieldProps extends TextFieldProps {}
 export const AppTextField: React.SFC<AppTextFieldProps> = props => (
@@ -120,3 +127,13 @@ export interface AppDividerProps extends DividerProps {}
 export const AppDivider: React.SFC<AppDividerProps> = props => <Divider {...props}>{props.children}</Divider>;
 export interface AppTooltipProps extends TooltipProps {}
 export const AppTooltip: React.SFC<AppTooltipProps> = props => <Tooltip {...props}>{props.children}</Tooltip>;
+export interface AppSelectProps extends SelectProps {}
+export const AppSelect: React.SFC<AppSelectProps> = props => <Select {...props}>{props.children}</Select>;
+export interface AppInputProps extends InputProps {}
+export const AppInput: React.SFC<AppInputProps> = props => <Input {...props}>{props.children}</Input>;
+export interface AppInputLabelProps extends InputLabelProps {}
+export const AppInputLabel: React.SFC<AppInputLabelProps> = props => (
+    <InputLabel {...props}>{props.children}</InputLabel>
+);
+export interface AppCheckboxProps extends CheckboxProps {}
+export const AppCheckbox: React.SFC<AppCheckboxProps> = props => <Checkbox {...props}>{props.children}</Checkbox>;

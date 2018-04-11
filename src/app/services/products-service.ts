@@ -1,6 +1,7 @@
 import { Cbn } from '../../lib/shared/cbn';
 import { Pagination } from '../models/shared/pagination';
 import { Sorting } from '../models/shared/sorting';
+import { Selectable } from '../models/shared/selectable';
 
 export namespace Products {
     export interface InitializeAsyncResponse {
@@ -17,7 +18,7 @@ export namespace Products {
         pager: Pagination;
         items: GetAsyncResponseItem[];
     }
-    export interface GetAsyncResponseItem {
+    export interface GetAsyncResponseItem extends Selectable {
         id: number;
         name: string;
         status: string;
@@ -46,9 +47,10 @@ export namespace Products {
             };
         }
         getAsync(req: GetAsyncRequest): GetAsyncResponse {
-            let items = Array.from(new Array(100 + new Date(Date.now()).getMilliseconds()))
+            let items = Array.from(new Array(100 + new Date(Date.now()).getSeconds()))
                 .map((v, i): GetAsyncResponseItem => {
                     return {
+                        isSelected: false,
                         id: i,
                         name: `name${i}`,
                         status: `status${i}`,

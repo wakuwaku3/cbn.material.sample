@@ -5,4 +5,6 @@ export interface ProductsIndexEvent {
     reset: void;
     initialize: void;
     search: Partial<Products.GetAsyncRequest>;
+    select: { value: boolean; id: number };
+    selectAll: boolean;
 }
