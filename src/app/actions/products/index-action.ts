@@ -24,10 +24,8 @@ namespace InnerScope {
                 this.model = Products.service.initializeAsync();
             });
             this.observe('search').subscribe(condition => {
-                let res = Products.service.getAsync(
-                    Object.assign(this.model.condition, condition)
-                );
-                this.model.condition.pager = res.pager;
+                let res = Products.service.getAsync(Object.assign(this.model.condition, condition));
+                this.model.condition.pagination = res.pager;
                 this.model.items = res.items;
                 this.emit('reflesh');
             });

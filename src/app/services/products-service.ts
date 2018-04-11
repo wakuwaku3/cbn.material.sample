@@ -1,4 +1,6 @@
 import { Cbn } from '../../lib/shared/cbn';
+import { Pagination } from '../models/shared/pagination';
+import { Sorting } from '../models/shared/sorting';
 
 export namespace Products {
     export interface InitializeAsyncResponse {
@@ -8,10 +10,11 @@ export namespace Products {
     export interface GetAsyncRequest {
         name?: string;
         status?: string;
-        pager?: Cbn.Pager;
+        pagination: Pagination;
+        sorting: Sorting;
     }
     export interface GetAsyncResponse {
-        pager: Cbn.Pager;
+        pager: Pagination;
         items: GetAsyncResponseItem[];
     }
     export interface GetAsyncResponseItem {
@@ -23,35 +26,34 @@ export namespace Products {
     }
     class Service {
         initializeAsync(): InitializeAsyncResponse {
-            let condition = {
+            let condition: GetAsyncRequest = {
                 name: '',
-                pager: {
+                pagination: {
                     display: 10,
                     current: 0,
                     total: 0
+                },
+                sorting: {
+                    name: '',
+                    direction: 'asc'
                 }
             };
             let res = this.getAsync(condition);
-            condition.pager = res.pager;
+            condition.pagination = res.pager;
             return {
                 condition,
                 items: res.items
             };
         }
         getAsync(req: GetAsyncRequest): GetAsyncResponse {
-            let items = Array.from(
-                new Array(100 + new Date(Date.now()).getMilliseconds())
-            )
+            let items = Array.from(new Array(100 + new Date(Date.now()).getMilliseconds()))
                 .map((v, i): GetAsyncResponseItem => {
                     return {
                         id: i,
                         name: `name${i}`,
                         status: `status${i}`,
                         price: (i + 1) * 100,
-                        releaseDate: Cbn.DateHelper.format(
-                            new Date(Date.now() - (i + 1) * 100),
-                            'YYYY/MM/DD'
-                        )
+                        releaseDate: Cbn.DateHelper.format(new Date(Date.now() - (i + 1) * 100), 'YYYY/MM/DD')
                     };
                 })
                 .filter(x => {
@@ -65,17 +67,17 @@ export namespace Products {
                     return res;
                 });
             let total = items.length;
-            if (req.pager.current * req.pager.display > total) {
-                req.pager.current = Math.floor(total / req.pager.display);
+            if (req.pagination.current * req.pagination.display > total) {
+                req.pagination.current = Math.floor(total / req.pagination.display);
             }
-            let skip = req.pager.current * req.pager.display;
+            let skip = req.pagination.current * req.pagination.display;
 
-            items = items.slice(skip, skip + req.pager.display);
+            items = items.slice(skip, skip + req.pagination.display);
             return {
                 pager: {
                     total,
-                    current: req.pager.current,
-                    display: req.pager.display
+                    current: req.pagination.current,
+                    display: req.pagination.display
                 },
                 items
             };

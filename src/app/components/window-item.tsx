@@ -7,6 +7,7 @@ import { browserAction } from '../actions/shared/browser-action';
 import { Positioning, Vertical, Horizontal, DivProps } from '../models/shared/types';
 import { Cornor } from './cornor';
 import { DividerLine, getDividerLineWidth } from './divider-line';
+import { Subscription } from 'rxjs';
 
 namespace InnerScope {
     const containerStyle = {
@@ -100,6 +101,7 @@ namespace InnerScope {
     export const component = decorate(styles)<Props>(
         sheet =>
             class extends React.Component<Props, State> {
+                resizeSubscription: Subscription;
                 node: HTMLDivElement;
                 constructor(props: Props) {
                     super(props);
@@ -120,9 +122,6 @@ namespace InnerScope {
                         width: this.props.width,
                         height: this.props.height
                     };
-                    browserAction.observe('resize').subscribe(() => {
-                        this.handleResize();
-                    });
                 }
                 getParent = () => {
                     if (this.props.findParent) {
@@ -134,6 +133,9 @@ namespace InnerScope {
                     return document.body;
                 };
                 componentDidMount() {
+                    this.resizeSubscription = browserAction.observe('resize').subscribe(() => {
+                        this.handleResize();
+                    });
                     let elm = this.getParent();
                     elm.addEventListener('mousedown', this.resetZIndex);
                     elm.addEventListener('mousemove', this.handleMove);
@@ -141,6 +143,7 @@ namespace InnerScope {
                     elm.addEventListener('mouseup', this.handleUp);
                 }
                 componentWillUnmount() {
+                    this.resizeSubscription.unsubscribe();
                     let elm = this.getParent();
                     elm.removeEventListener('mousedown', this.resetZIndex);
                     elm.removeEventListener('mousemove', this.handleMove);

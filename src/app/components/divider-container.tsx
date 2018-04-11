@@ -7,6 +7,7 @@ import { browserAction } from '../actions/shared/browser-action';
 import { Positioning, Vertical, Horizontal, DivProps, Axis } from '../models/shared/types';
 import { Cornor } from './cornor';
 import { DividerLine, getDividerLineWidth } from './divider-line';
+import { Subscription } from 'rxjs';
 
 namespace InnerScope {
     export interface Props {
@@ -68,6 +69,7 @@ namespace InnerScope {
     export const containerComponent = decorate(style)<Props & DivProps>(
         sheet =>
             class extends React.Component<Props & DivProps, State> {
+                resizeSubscription: Subscription;
                 constructor(props: Props) {
                     super(props);
                     this.state = {
@@ -80,9 +82,6 @@ namespace InnerScope {
                         widths: this.getwidths(),
                         heights: this.getheights()
                     };
-                    browserAction.observe('resize').subscribe(() => {
-                        this.handleResize();
-                    });
                 }
                 container: HTMLDivElement;
                 itemElements: HTMLElement[] = [];
@@ -90,12 +89,16 @@ namespace InnerScope {
                     return this.props.axis === 'Horizontal';
                 }
                 componentDidMount() {
+                    this.resizeSubscription = browserAction.observe('resize').subscribe(() => {
+                        this.handleResize();
+                    });
                     this.container.addEventListener('mousemove', this.handleMove);
                     this.container.addEventListener('mouseleave', this.handleUp);
                     this.container.addEventListener('mouseup', this.handleUp);
                     this.handleResize();
                 }
                 componentWillUnmount() {
+                    this.resizeSubscription.unsubscribe();
                     this.container.removeEventListener('mousemove', this.handleMove);
                     this.container.removeEventListener('mouseleave', this.handleUp);
                     this.container.removeEventListener('mouseup', this.handleUp);

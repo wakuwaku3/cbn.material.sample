@@ -7,7 +7,8 @@ import {
     Menu,
     Add,
     Remove,
-    ExpandMore
+    ExpandMore,
+    Refresh
 } from 'material-ui-icons';
 
 export const NoteIcon = Note;
@@ -19,3 +20,4 @@ export const MenuIcon = Menu;
 export const AddIcon = Add;
 export const RemoveIcon = Remove;
 export const ExpandMoreIcon = ExpandMore;
+export const RefreshIcon = Refresh;

@@ -27,11 +27,7 @@ export namespace Cbn {
             return Observable.fromEvent(this, key);
         }
     }
-    export abstract class PageAction<
-        TStore extends object,
-        Key extends keyof TStore,
-        TEvent
-    > {
+    export abstract class PageAction<TStore extends object, Key extends keyof TStore, TEvent> {
         protected abstract initialize();
         emitter = new EventEmitter<TEvent & Event>();
         constructor(public key: Key, protected store: Store<TStore>) {
@@ -49,30 +45,20 @@ export namespace Cbn {
         private reflesh() {
             this.model = Object.assign({}, this.model);
         }
-        observe<TKey extends keyof (TEvent & Event)>(
-            key: TKey
-        ): rxjs.Observable<(TEvent & Event)[TKey]> {
+        observe<TKey extends keyof (TEvent & Event)>(key: TKey): rxjs.Observable<(TEvent & Event)[TKey]> {
             return this.emitter.observe(key);
         }
-        emit<TKey extends keyof (TEvent & Event)>(
-            key: TKey,
-            args?: (TEvent & Event)[TKey]
-        ) {
+        emit<TKey extends keyof (TEvent & Event)>(key: TKey, args?: (TEvent & Event)[TKey]) {
             this.emitter.emit(key, args);
         }
     }
     interface StyledProps {
         className?: string;
     }
-    export const mergeClassNeme = <T extends StyledProps>(
-        props: T,
-        ...classNames: string[]
-    ) => {
+    export const mergeClassNeme = <T extends StyledProps>(props: T, ...classNames: string[]) => {
         if (props) {
             let assign: StyledProps = {
-                className: [props.className, ...classNames]
-                    .filter(x => x)
-                    .join(' ')
+                className: [props.className, ...classNames].filter(x => x).join(' ')
             };
             return Object.assign({}, props, assign);
         }
@@ -80,17 +66,36 @@ export namespace Cbn {
             className: [...classNames].filter(x => x).join(' ')
         };
     };
+    export const mergeClasses = <Style>(...classesList: Partial<Record<keyof Style, string>>[]) => {
+        let copy = {} as Record<keyof Style, string>;
+        let x = 'x';
+        x += 'a';
+        classesList.filter(c => c).forEach(c => {
+            Object.keys(c)
+                .filter(key => c[key])
+                .forEach(key => {
+                    if (copy[key]) {
+                        copy[key] += ' ' + c[key];
+                    } else {
+                        copy[key] = c[key];
+                    }
+                });
+        });
+        return copy;
+    };
+    export const pick = <T extends object & PickType, PickType>(obj: T) => {
+        let copy = {} as Pick<T, keyof PickType>;
+        Object.keys(obj)
+            .filter(key => key as keyof PickType)
+            .forEach(key => (copy[key] = obj[key]));
+        return copy;
+    };
 
     export namespace Observable {
-        export const fromEvent = <T, Key extends keyof T>(
-            emitter: EventEmitter<T>,
-            key: Key
-        ) => {
-            return rxjs.Observable.fromEvent(emitter.inner, key).map(
-                (v: any) => {
-                    return v as T[Key];
-                }
-            );
+        export const fromEvent = <T, Key extends keyof T>(emitter: EventEmitter<T>, key: Key) => {
+            return rxjs.Observable.fromEvent(emitter.inner, key).map((v: any) => {
+                return v as T[Key];
+            });
         };
     }
     export function createPromise<T>() {}
@@ -139,11 +144,6 @@ export namespace Cbn {
             return w1 - w2;
         }
     }
-    export interface Pager {
-        display: number;
-        current: number;
-        total: number;
-    }
     export namespace Material {
         export const decorate = <ClassKey extends string>(
             style: StyleRules<ClassKey> | StyleRulesCallback<ClassKey>,
@@ -167,11 +167,7 @@ export namespace Cbn {
             withLocalStorage: (keyof TStore)[]
         ): Store<TStore> => {
             withLocalStorage.forEach(key => {
-                store
-                    .before(key)
-                    .subscribe(p =>
-                        localStorage.setItem(key, JSON.stringify(p.value))
-                    );
+                store.before(key).subscribe(p => localStorage.setItem(key, JSON.stringify(p.value)));
             });
             return store;
         };
@@ -203,10 +199,7 @@ export namespace Cbn {
         export const format = (date: Date, format: string) => {
             if (!format) format = 'YYYY-MM-DD hh:mm:ss.SSS';
             format = format.replace(/YYYY/g, date.getFullYear().toString());
-            format = format.replace(
-                /MM/g,
-                ('0' + (date.getMonth() + 1)).slice(-2)
-            );
+            format = format.replace(/MM/g, ('0' + (date.getMonth() + 1)).slice(-2));
             format = format.replace(/DD/g, ('0' + date.getDate()).slice(-2));
             format = format.replace(/hh/g, ('0' + date.getHours()).slice(-2));
             format = format.replace(/mm/g, ('0' + date.getMinutes()).slice(-2));
@@ -214,11 +207,7 @@ export namespace Cbn {
             if (format.match(/S/g)) {
                 var milliSeconds = ('00' + date.getMilliseconds()).slice(-3);
                 var length = format.match(/S/g).length;
-                for (var i = 0; i < length; i++)
-                    format = format.replace(
-                        /S/,
-                        milliSeconds.substring(i, i + 1)
-                    );
+                for (var i = 0; i < length; i++) format = format.replace(/S/, milliSeconds.substring(i, i + 1));
             }
             return format;
         };

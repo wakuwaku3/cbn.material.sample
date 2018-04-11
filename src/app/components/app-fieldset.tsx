@@ -1,11 +1,6 @@
 import * as React from 'react';
 import { themeAction } from '../actions/shared/theme-action';
-import {
-    ExpansionPanel,
-    ExpansionPanelSummary,
-    ExpansionPanelDetails,
-    Theme
-} from 'material-ui';
+import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Theme } from 'material-ui';
 import { AppTypography } from './material-ui/wrapper';
 import { ExpandMoreIcon } from './material-ui/icon-wrapper';
 import { decorate } from '../helper/app-style-helper';
@@ -27,8 +22,10 @@ namespace InnerScope {
         },
         header: themeAction.getThemeObservable().map((theme: Theme) => {
             return {
-                background: theme.palette.primary.light,
-                color: theme.palette.primary.contrastText
+                background: theme.palette.secondary[theme.palette.type],
+                '& p': {
+                    color: theme.palette.secondary.contrastText
+                }
             };
         })
     };
@@ -45,9 +42,7 @@ namespace InnerScope {
                 >
                     <AppTypography>{props.title}</AppTypography>
                 </ExpansionPanelSummary>
-                <ExpansionPanelDetails className={sheet.classes.details}>
-                    {props.children}
-                </ExpansionPanelDetails>
+                <ExpansionPanelDetails className={sheet.classes.details}>{props.children}</ExpansionPanelDetails>
             </ExpansionPanel>
         );
     });
