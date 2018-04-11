@@ -8,7 +8,7 @@ import { decorateWithStore } from '../../helper/app-style-helper';
 import { homeIndexAction } from '../../actions/home/index-actions';
 import { WindowItem, WindowContainer } from '../../components/layout/window-item';
 import { findDOMNode } from 'react-dom';
-import { DividerContainer } from '../../components/layout/divider-container';
+import { PaneContainer } from '../../components/layout/pane-container';
 
 namespace InnerScope {
     const styles = {};
@@ -37,10 +37,10 @@ namespace InnerScope {
                     return (
                         <WindowContainer ref="parent">
                             <WindowItem findParent={() => findDOMNode(this.refs.parent)}>
-                                <DividerContainer elements={[getitem(), getitem(), getitem()]} />
+                                <PaneContainer elements={[getitem(), getitem(), getitem()]} />
                             </WindowItem>
                             <WindowItem findParent={() => findDOMNode(this.refs.parent)}>
-                                <DividerContainer axis="Vertical" elements={[getitem(), getitem(), getitem()]} />
+                                <PaneContainer axis="Vertical" elements={[getitem(), getitem(), getitem()]} />
                             </WindowItem>
                         </WindowContainer>
                     );

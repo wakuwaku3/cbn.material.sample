@@ -12,7 +12,9 @@ namespace InnerScope {
             super(key);
         }
         protected initialize() {
-            Cbn.Window.observe('resize').subscribe(() => this.emit('resize'));
+            Cbn.Window.observe('resize').subscribe(() => {
+                this.emit('resize');
+            });
             this.observe('initialize').subscribe(() => {
                 if (!this.model) {
                     this.model = { windowHeight: window.innerHeight };

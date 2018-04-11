@@ -1,7 +1,7 @@
 import { AppFormControlLabel, AppFormControlLabelProps } from '../material-ui/wrapper';
 import * as React from 'react';
 import { decorate } from '../../helper/app-style-helper';
-import { Adjuster } from '../layout/app-container';
+import { Adjuster } from '../layout/adjuster';
 
 namespace InnerScope {
     export interface Props extends AppFormControlLabelProps {}

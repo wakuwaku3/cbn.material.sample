@@ -10,7 +10,7 @@ import {
     AppRadioProps
 } from '../material-ui/wrapper';
 import { decorate } from '../../helper/app-style-helper';
-import { SelectableContainer } from './app-selectable-container';
+import { SelectableContainer } from './selectable-container';
 
 namespace InnerScope {
     export interface Props {

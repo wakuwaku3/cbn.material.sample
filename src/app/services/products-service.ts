@@ -26,7 +26,7 @@ export namespace Products {
         releaseDate: string;
     }
     class Service {
-        initializeAsync(): InitializeAsyncResponse {
+        initializeAsync = async () => {
             let condition: GetAsyncRequest = {
                 name: '',
                 pagination: {
@@ -39,14 +39,15 @@ export namespace Products {
                     direction: 'asc'
                 }
             };
-            let res = this.getAsync(condition);
+            let res = await this.getAsync(condition);
             condition.pagination = res.pager;
             return {
                 condition,
                 items: res.items
             };
-        }
-        getAsync(req: GetAsyncRequest): GetAsyncResponse {
+        };
+        getAsync = async (req: GetAsyncRequest) => {
+            await Cbn.delay(1000);
             let items = Array.from(new Array(100 + new Date(Date.now()).getSeconds()))
                 .map((v, i): GetAsyncResponseItem => {
                     return {
@@ -83,7 +84,7 @@ export namespace Products {
                 },
                 items
             };
-        }
+        };
     }
     export const service = new Service();
 }

@@ -101,7 +101,7 @@ export namespace Cbn {
             });
         };
     }
-    export function createPromise<T>() {}
+    export const delay = (ms: number) => new Promise(r => setTimeout(() => r(), ms));
     export namespace Ajax {
         export const getText = async (url: string) => {
             let response = await fetch(url);

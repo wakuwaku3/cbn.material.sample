@@ -7,7 +7,7 @@ import { decorate } from '../../helper/app-style-helper';
 import { Subscription } from 'rxjs';
 import { Cbn } from '../../../lib/shared/cbn';
 import { browserAction } from '../../actions/shared/browser-action';
-import { Adjuster } from '../layout/app-container';
+import { Adjuster } from '../layout/adjuster';
 import { Pager } from './pager';
 import { TableHead, TableBody, TableFooter, Table } from 'material-ui';
 

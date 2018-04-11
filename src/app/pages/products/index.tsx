@@ -8,9 +8,9 @@ import { CheckedCell } from '../../components/table-control/checked-cell';
 import { HeadCell } from '../../components/table-control/head-cell';
 import { Cell } from '../../components/table-control/cell';
 import { TableContainer } from '../../components/table-control/table-container';
-import { Adjuster } from '../../components/layout/app-container';
-import { Page } from '../../components/layout/app-page';
-import { FieldSet } from '../../components/form-control/app-fieldset';
+import { Adjuster } from '../../components/layout/adjuster';
+import { Page } from '../../components/layout/page';
+import { FieldSet } from '../../components/form-control/fieldset';
 
 namespace InnerScope {
     const SearchResult = decorate({
@@ -174,7 +174,7 @@ namespace InnerScope {
     export const component = decorateWithStore(styles, productsIndexAction.key)(sheet => props => (
         <AppGrid container>
             <AppGrid item xs={12}>
-                <Page title="製品一覧">
+                <Page title="製品一覧" loading={!productsIndexAction.model}>
                     <FieldSet title="検索条件" defaultExpanded={false}>
                         <Condition />
                     </FieldSet>

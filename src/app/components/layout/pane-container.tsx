@@ -287,4 +287,4 @@ namespace InnerScope {
     };
 }
 export type DividerContainerProps = InnerScope.Props;
-export const DividerContainer = InnerScope.containerComponent;
+export const PaneContainer = InnerScope.containerComponent;

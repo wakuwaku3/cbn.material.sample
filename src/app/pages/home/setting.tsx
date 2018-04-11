@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Page } from '../../components/layout/app-page';
-import { FieldSet } from '../../components/form-control/app-fieldset';
+import { Page } from '../../components/layout/page';
+import { FieldSet } from '../../components/form-control/fieldset';
 import { AppGrid, AppSwitch, AppTextField, AppButton } from '../../components/material-ui/wrapper';
 import { ColorPalette } from '../../components/form-control/color-palette';
-import { SelectableContainer } from '../../components/form-control/app-selectable-container';
-import { Adjuster } from '../../components/layout/app-container';
+import { SelectableContainer } from '../../components/form-control/selectable-container';
+import { Adjuster } from '../../components/layout/adjuster';
 import { decorateWithStore } from '../../helper/app-style-helper';
 import { themeAction } from '../../actions/shared/theme-action';
 import { messagesAction } from '../../actions/shared/messages-action';

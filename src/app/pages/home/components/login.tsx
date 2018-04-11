@@ -4,8 +4,8 @@ import { AppGrid, AppTextField, AppButton, AppPaper } from '../../../components/
 import { LogInEventArgs } from '../../../models/actions/shared/auth';
 import { decorate } from '../../../helper/app-style-helper';
 import { messagesAction } from '../../../actions/shared/messages-action';
-import { Adjuster } from '../../../components/layout/app-container';
-import { Title } from '../../../components/layout/app-title';
+import { Adjuster } from '../../../components/layout/adjuster';
+import { Title } from '../../../components/layout/title';
 
 namespace InnerScope {
     export interface Props {
