@@ -6,12 +6,15 @@ import {
     ProductsIndexStoreCondition,
     ProductsIndexStore,
     ProductsIndexStoreItem,
-    Product
+    Product,
+    ProductVersion
 } from '../models/actions/products';
 import { LocalStorageRepository } from '../../lib/services/local-storage-repository';
 
 export namespace Products {
-    let storage = new LocalStorageRepository<Product>('products-storage', p1 => p2 => p1.productId === p2.productId);
+    const storage = new LocalStorageRepository<Product<ProductVersion>>('products-storage', p1 => p2 =>
+        p1.productId === p2.productId
+    );
     class Service {
         initializeIndexAsync = async () => {
             let condition: ProductsIndexStoreCondition = {
@@ -41,7 +44,7 @@ export namespace Products {
                     return res;
                 })
                 .map((v): ProductsIndexStoreItem => {
-                    let version = v.ProductVersions.sort(Cbn.sort(v => v.date, 'desc'));
+                    let version = v.productVersions.sort(Cbn.sort(v => v.date, 'desc'));
                     let latestVersion = version[0] ? version[0].version : null;
                     return {
                         isSelected: false,
@@ -77,6 +80,17 @@ export namespace Products {
                 condition,
                 items
             };
+        };
+        createAsync = async (product: Product<ProductVersion>) => {
+            let list = await storage.getAsync();
+            product.productId = list.length ? Math.max(...list.map(x => x.productId)) + 1 : 0;
+            let did = Math.max(...list.map(x => Math.max(...x.productVersions.map(y => y.productVersionId)))) + 1;
+            product.productVersions.forEach(x => {
+                x.productId = product.productId;
+                x.productVersionId = did++;
+            });
+            await storage.pushAsync(product);
+            return product.productId;
         };
     }
     export const service = new Service();

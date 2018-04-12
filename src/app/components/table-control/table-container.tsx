@@ -54,6 +54,7 @@ namespace InnerScope2 {
             overflow: 'hidden'
         },
         table: themeAction.getThemeObservable().map(theme => ({
+            width: 0,
             'table-layout': 'fixed',
             '& th': {
                 background: theme.palette.primary[theme.palette.type],
@@ -107,9 +108,13 @@ namespace InnerScope2 {
                 tableContainerBody: HTMLDivElement;
                 tableContainerFoot: HTMLDivElement;
                 get classes() {
-                    return Cbn.mergeClasses<Style>(sheet.classes, this.props.classes, {
-                        root: this.props.className
-                    });
+                    return Cbn.mergeClasses<Style>(
+                        sheet.classes,
+                        this.props.classes,
+                        {
+                            root: this.props.className
+                        }
+                    );
                 }
                 get isFix() {
                     return this.props.height && this.props.fixHeader;
@@ -123,9 +128,11 @@ namespace InnerScope2 {
                 }
                 componentDidMount() {
                     if (this.isFix) {
-                        this.resizeSubscription = browserAction.observe('resize').subscribe(() => {
-                            this.handleResize();
-                        });
+                        this.resizeSubscription = browserAction
+                            .observe('resize')
+                            .subscribe(() => {
+                                this.handleResize();
+                            });
                         this.handleResize();
                     }
                 }
@@ -138,8 +145,14 @@ namespace InnerScope2 {
                 }
                 componentDidUpdate() {
                     if (this.isFix) {
-                        this.setScrollX(this.tableContainerHead, this.state.scrollLeft);
-                        this.setScrollX(this.tableContainerFoot, this.state.scrollLeft);
+                        this.setScrollX(
+                            this.tableContainerHead,
+                            this.state.scrollLeft
+                        );
+                        this.setScrollX(
+                            this.tableContainerFoot,
+                            this.state.scrollLeft
+                        );
                     }
                 }
                 handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -154,7 +167,11 @@ namespace InnerScope2 {
                 };
                 getAction = () => (
                     <div className={this.classes['action-container']}>
-                        <Adjuster horizontal="left" vertical="center" className={this.classes['button-container']}>
+                        <Adjuster
+                            horizontal="left"
+                            vertical="center"
+                            className={this.classes['button-container']}
+                        >
                             {(() => {
                                 if (this.props.actionElement) {
                                     return this.props.actionElement;
@@ -164,11 +181,15 @@ namespace InnerScope2 {
                         {(() => {
                             if (this.props.pagination) {
                                 return (
-                                    <Adjuster horizontal="right" vertical="center">
+                                    <Adjuster
+                                        horizontal="right"
+                                        vertical="center"
+                                    >
                                         <Pager
                                             pagination={this.props.pagination}
                                             onChange={e => {
-                                                if (this.props.onPaging) this.props.onPaging(e);
+                                                if (this.props.onPaging)
+                                                    this.props.onPaging(e);
                                             }}
                                         />
                                     </Adjuster>
@@ -180,12 +201,16 @@ namespace InnerScope2 {
                 getColGroup = () => <ColGroup columns={this.props.columns} />;
                 getHead = () => <TableHead>{this.props.headElement}</TableHead>;
                 getBody = () => <TableBody>{this.props.children}</TableBody>;
-                getFoot = () => <TableFooter>{this.props.footElement}</TableFooter>;
+                getFoot = () => (
+                    <TableFooter>{this.props.footElement}</TableFooter>
+                );
                 getFixContent = () => (
                     <div className={this.classes.root}>
                         {this.getAction()}
                         <div
-                            className={`${this.classes['table-container']} ${this.classes['table-container-head']}`}
+                            className={`${this.classes['table-container']} ${
+                                this.classes['table-container-head']
+                            }`}
                             ref={e => (this.tableContainerHead = e)}
                             onScroll={this.handleScroll}
                             style={{ width: this.state.adjustWidth }}
@@ -193,7 +218,11 @@ namespace InnerScope2 {
                             {(() => {
                                 if (this.props.headElement) {
                                     return (
-                                        <Table className={`${this.classes.table} ${this.classes['head-table']}`}>
+                                        <Table
+                                            className={`${this.classes.table} ${
+                                                this.classes['head-table']
+                                            }`}
+                                        >
                                             {this.getColGroup()}
                                             {this.getHead()}
                                         </Table>
@@ -202,20 +231,28 @@ namespace InnerScope2 {
                             })()}
                         </div>
                         <div
-                            className={`${this.classes['table-container']} ${this.classes['table-container-body']}`}
+                            className={`${this.classes['table-container']} ${
+                                this.classes['table-container-body']
+                            }`}
                             ref={e => (this.tableContainerBody = e)}
                             onScroll={this.handleScroll}
                             style={{
                                 height: this.props.height
                             }}
                         >
-                            <Table className={`${this.classes.table} ${this.classes['body-table']}`}>
+                            <Table
+                                className={`${this.classes.table} ${
+                                    this.classes['body-table']
+                                }`}
+                            >
                                 {this.getColGroup()}
                                 {this.getBody()}
                             </Table>
                         </div>
                         <div
-                            className={`${this.classes['table-container']} ${this.classes['table-container-foot']}`}
+                            className={`${this.classes['table-container']} ${
+                                this.classes['table-container-foot']
+                            }`}
                             ref={e => (this.tableContainerFoot = e)}
                             onScroll={this.handleScroll}
                             style={{
@@ -225,7 +262,11 @@ namespace InnerScope2 {
                             {(() => {
                                 if (this.props.footElement) {
                                     return (
-                                        <Table className={`${this.classes.table} ${this.classes['foot-table']}`}>
+                                        <Table
+                                            className={`${this.classes.table} ${
+                                                this.classes['foot-table']
+                                            }`}
+                                        >
                                             {this.getColGroup()}
                                             {this.getFoot()}
                                         </Table>
@@ -238,8 +279,16 @@ namespace InnerScope2 {
                 getFlowContent = () => (
                     <div className={this.classes.root}>
                         {this.getAction()}
-                        <div className={`${this.classes['table-container']} ${this.classes['table-container-body']}`}>
-                            <Table className={`${this.classes.table} ${this.classes['body-table']}`}>
+                        <div
+                            className={`${this.classes['table-container']} ${
+                                this.classes['table-container-body']
+                            }`}
+                        >
+                            <Table
+                                className={`${this.classes.table} ${
+                                    this.classes['body-table']
+                                }`}
+                            >
                                 {this.getColGroup()}
                                 {(() => {
                                     if (this.props.headElement) {

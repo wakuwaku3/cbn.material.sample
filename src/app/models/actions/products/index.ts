@@ -2,15 +2,16 @@ import { Products } from '../../../services/products-service';
 import { Selectable } from '../../../../lib/models/selectable';
 import { Condition } from '../../../../lib/models/condition';
 
-export interface Product {
+export interface Product<T extends ProductVersion> {
     productId: number;
     name: string;
     status: string;
     price: number;
-    ProductVersions: ProductVersion[];
+    productVersions: T[];
 }
 export interface ProductVersion {
     productVersionId: number;
+    productId: number;
     version: string;
     date: string;
     notes: string;

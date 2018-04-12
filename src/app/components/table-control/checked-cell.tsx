@@ -24,7 +24,7 @@ namespace InnerScope {
             <Cell classes={{ root: sheet.classes.root }}>
                 {(() => {
                     if (!props.hidden) {
-                        <AppCheckbox checked={props.checked} onChange={props.onChange} />;
+                        return <AppCheckbox checked={props.checked} onChange={props.onChange} />;
                     }
                     return '';
                 })()}

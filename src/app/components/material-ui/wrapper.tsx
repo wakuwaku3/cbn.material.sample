@@ -57,12 +57,9 @@ import { InputProps, InputLabelProps } from 'material-ui/Input';
 import { CheckboxProps } from 'material-ui/Checkbox';
 
 export interface AppTextFieldProps extends TextFieldProps {}
-export const AppTextField: React.SFC<AppTextFieldProps> = props => (
-    <TextField margin="normal" {...props}>
-        {props.children}
-    </TextField>
-);
+export const AppTextField: React.SFC<AppTextFieldProps> = props => <TextField {...props}>{props.children}</TextField>;
 AppTextField.defaultProps = {
+    margin: 'normal',
     fullWidth: true
 };
 export interface AppButtonProps extends ButtonProps {}
@@ -102,6 +99,7 @@ const gridStyle = {
     }
 };
 export const AppGrid = decorate(gridStyle)<AppGridProps>(sheet => props => {
+    let p = Object.assign({}, props);
     let classNames = [];
     if (props.item) {
         classNames.push(sheet.classes.item);
@@ -109,8 +107,11 @@ export const AppGrid = decorate(gridStyle)<AppGridProps>(sheet => props => {
     if (props.className) {
         classNames.push(props.className);
     }
+    if (p.item && !p.xs) {
+        p.xs = 12;
+    }
     return (
-        <Grid {...props} className={classNames.join(' ')}>
+        <Grid {...p} className={classNames.join(' ')}>
             {props.children}
         </Grid>
     );
@@ -129,6 +130,9 @@ export interface AppTooltipProps extends TooltipProps {}
 export const AppTooltip: React.SFC<AppTooltipProps> = props => <Tooltip {...props}>{props.children}</Tooltip>;
 export interface AppSelectProps extends SelectProps {}
 export const AppSelect: React.SFC<AppSelectProps> = props => <Select {...props}>{props.children}</Select>;
+AppSelect.defaultProps = {
+    autoWidth: true
+};
 export interface AppInputProps extends InputProps {}
 export const AppInput: React.SFC<AppInputProps> = props => <Input {...props}>{props.children}</Input>;
 export interface AppInputLabelProps extends InputLabelProps {}

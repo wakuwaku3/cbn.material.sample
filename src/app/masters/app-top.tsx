@@ -73,7 +73,7 @@ namespace InnerScope {
                             <AppIconButton
                                 color="inherit"
                                 onClick={e => {
-                                    history.push(Url.homeIndex);
+                                    history.push(Url.root);
                                 }}
                             >
                                 <AppsIcon />

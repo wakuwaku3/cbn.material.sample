@@ -13,15 +13,21 @@ import { Page } from '../../components/layout/page';
 import { FieldSet } from '../../components/form-control/fieldset';
 import { Products } from '../../services/products-service';
 import { ProductsIndexStoreItem } from '../../models/actions/products';
+import { RouteComponentProps } from 'react-router';
+import { Url } from '../../masters/app-router';
 
 namespace InnerScope {
-    const SearchResult = decorate({
+    interface Style {
+        action;
+    }
+    const style: Style = {
         action: {
             display: 'flex'
         }
-    })(
+    };
+    const SearchResult = decorate(style)<RouteComponentProps<{}>>(
         sheet =>
-            class extends React.Component<{}, { columns: number[] }> {
+            class extends React.Component<RouteComponentProps<{}>, { columns: number[] }> {
                 constructor(props) {
                     super(props);
                     this.state = { columns: [50, 100, 300, 300, 300, 300] };
@@ -33,7 +39,12 @@ namespace InnerScope {
                 };
                 getActionElement = () => (
                     <div className={sheet.classes.action}>
-                        <AppButton variant="raised" size="small" color="primary">
+                        <AppButton
+                            variant="raised"
+                            size="small"
+                            color="primary"
+                            onClick={() => this.props.history.push(Url.productsCreate)}
+                        >
                             <AddIcon />
                         </AppButton>
                         <AppButton variant="raised" size="small" color="secondary">
@@ -68,10 +79,10 @@ namespace InnerScope {
                             onChange={e => productsIndexAction.emit('selectAll', e.target.checked)}
                         />
                         {this.getHead(1, 'id', 'ID')}
-                        {this.getHead(1, 'name', '製品名')}
-                        {this.getHead(1, 'status', '状態')}
-                        {this.getHead(1, 'price', '価格', { cellProps: { numeric: true } })}
-                        {this.getHead(1, 'latestVersion', '最新バージョン')}
+                        {this.getHead(2, 'name', '製品名')}
+                        {this.getHead(3, 'status', '状態')}
+                        {this.getHead(4, 'price', '価格', { cellProps: { numeric: true } })}
+                        {this.getHead(5, 'latestVersion', '最新バージョン')}
                     </TableRow>
                 );
                 getBodyElement = () =>
@@ -170,19 +181,23 @@ namespace InnerScope {
     );
 
     const styles = {};
-    export const component = decorateWithStore(styles, productsIndexAction.key)(sheet => props => (
-        <AppGrid container>
-            <AppGrid item xs={12}>
-                <Page title="製品一覧" loading={!productsIndexAction.model}>
-                    <FieldSet title="検索条件" defaultExpanded={false}>
-                        <Condition />
-                    </FieldSet>
-                    <FieldSet title="検索結果">
-                        <SearchResult />
-                    </FieldSet>
-                </Page>
-            </AppGrid>
-        </AppGrid>
-    ));
+    export const component = decorateWithStore(styles, productsIndexAction.key)<RouteComponentProps<{}>>(
+        sheet => props => {
+            return (
+                <AppGrid container>
+                    <AppGrid item xs={12}>
+                        <Page title="製品一覧" loading={!productsIndexAction.model}>
+                            <FieldSet title="検索条件" defaultExpanded={false}>
+                                <Condition />
+                            </FieldSet>
+                            <FieldSet title="検索結果">
+                                <SearchResult {...props} />
+                            </FieldSet>
+                        </Page>
+                    </AppGrid>
+                </AppGrid>
+            );
+        }
+    );
 }
 export const ProductsIndex = InnerScope.component;

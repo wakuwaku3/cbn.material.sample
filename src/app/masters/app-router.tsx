@@ -9,24 +9,26 @@ import { ProductsIndex } from '../pages/products';
 import { ProductsEdit } from '../pages/products/edit';
 
 export namespace Url {
-    export const homeIndex = '/';
-    export const homeAbout = '/home/about';
-    export const homeSetting = '/home/setting';
-    export const productsIndex = '/products';
-    export const productsCreate = '/products/create';
-    export const productsEdit = '/products/:mode/:id';
+    export const root = '/';
+    const home = `${root}home`;
+    export const homeAbout = `${home}/about`;
+    export const homeSetting = `${home}/setting`;
+    export const productsIndex = `${root}products`;
+    export const productsCreate = `${productsIndex}/create`;
+    export const productsUpdate = (id: number) => `${productsIndex}/update/${id}`;
+    export const productsDetail = (id: number) => `${productsIndex}/detail/${id}`;
+    export const productsEditTemplate = `${productsIndex}/:mode/:id?`;
 }
 namespace InnerScope {
     export const component: React.SFC = () => {
         return (
             <Switch>
-                <Route exact path={Url.homeIndex} component={HomeIndex} />
+                <Route exact path={Url.root} component={HomeIndex} />
                 <Route exact path={Url.homeAbout} component={HomeAbout} />
                 <Route exact path={Url.homeSetting} component={HomeSettings} />
                 <Route exact path={Url.productsIndex} component={ProductsIndex} />
-                <Route exact path={Url.productsCreate} component={ProductsEdit} />
-                <Route exact path={Url.productsEdit} component={ProductsEdit} />
-                <Redirect to={Url.homeIndex} />
+                <Route exact path={Url.productsEditTemplate} component={ProductsEdit} />
+                <Redirect to={Url.root} />
             </Switch>
         );
     };

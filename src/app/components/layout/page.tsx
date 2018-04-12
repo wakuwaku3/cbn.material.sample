@@ -21,7 +21,7 @@ namespace InnerScope {
             'align-items': 'center',
             display: 'flex',
             'justify-content': 'center',
-            position: 'fixed',
+            position: 'absolute',
             top: 0,
             left: 0,
             right: 0,
