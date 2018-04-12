@@ -1,6 +1,6 @@
-import { Vertical, Horizontal, DivProps } from '../../models/shared/types';
 import * as React from 'react';
 import { decorate } from '../../helper/app-style-helper';
+import { Vertical, Horizontal, DivProps } from '../../../lib/models/types';
 
 namespace InnerScope {
     const size = 5;

@@ -7,6 +7,9 @@ import { StyleRules } from 'material-ui/styles';
 import { StyleRulesCallback, withStyles, Theme } from 'material-ui';
 import { WithStylesOptions } from 'material-ui/styles/withStyles';
 import * as createReactClass from 'create-react-class';
+import { SortDirection } from '../models/types';
+import { Pagination } from '../models/pagination';
+import { Sorting } from '../models/sorting';
 
 export namespace Cbn {
     export interface Event {
@@ -20,15 +23,15 @@ export namespace Cbn {
         get inner() {
             return this._inner;
         }
-        emit<Key extends keyof T>(key: Key, args?: T[Key]) {
+        emit = <Key extends keyof T>(key: Key, args?: T[Key]) => {
             this._inner.emit(key, args);
-        }
-        on<Key extends keyof T>(key: Key, lisner: (args?: T[Key]) => void) {
+        };
+        on = <Key extends keyof T>(key: Key, lisner: (args?: T[Key]) => void) => {
             this._inner.on(key, lisner);
-        }
-        observe<TKey extends keyof T>(key: TKey) {
+        };
+        observe = <TKey extends keyof T>(key: TKey): rxjs.Observable<T[TKey]> => {
             return Observable.fromEvent(this, key);
-        }
+        };
     }
     export abstract class PageAction<TStore extends object, Key extends keyof TStore, TEvent> {
         protected abstract initialize();
@@ -58,6 +61,14 @@ export namespace Cbn {
     interface StyledProps {
         className?: string;
     }
+    export const compare = (v1, v2, d: SortDirection) => {
+        if (v1 === v2) return 0;
+        if (v1 >= v2) return d === 'asc' ? 1 : -1;
+        if (v1 <= v2) return d === 'asc' ? -1 : 1;
+    };
+    export const sort = <T>(selector: (v: T) => any, d: SortDirection) => (v1: T, v2: T) => {
+        return compare(selector(v1), selector(v2), d);
+    };
     export const mergeClassNeme = <T extends StyledProps>(props: T, ...classNames: string[]) => {
         if (props) {
             let assign: StyledProps = {

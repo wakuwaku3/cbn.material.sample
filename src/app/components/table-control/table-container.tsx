@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { themeAction } from '../../actions/shared/theme-action';
-import { Classes } from '../../models/shared/types';
-import { Pagination } from '../../models/shared/pagination';
 import { ColGroupProps, ColGroup } from './col-group';
 import { decorate } from '../../helper/app-style-helper';
 import { Subscription } from 'rxjs';
@@ -10,6 +8,8 @@ import { browserAction } from '../../actions/shared/browser-action';
 import { Adjuster } from '../layout/adjuster';
 import { Pager } from './pager';
 import { TableHead, TableBody, TableFooter, Table } from 'material-ui';
+import { Classes } from '../../../lib/models/types';
+import { Pagination } from '../../../lib/models/pagination';
 
 namespace InnerScope2 {
     export interface Style {

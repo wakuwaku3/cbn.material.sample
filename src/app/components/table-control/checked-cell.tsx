@@ -15,13 +15,19 @@ namespace InnerScope {
         }
     };
     export interface Props {
+        hidden?: boolean;
         checked: boolean;
         onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     }
     export const component = decorate(style)<Props>(sheet => props => {
         return (
             <Cell classes={{ root: sheet.classes.root }}>
-                <AppCheckbox checked={props.checked} onChange={props.onChange} />
+                {(() => {
+                    if (!props.hidden) {
+                        <AppCheckbox checked={props.checked} onChange={props.onChange} />;
+                    }
+                    return '';
+                })()}
             </Cell>
         );
     });

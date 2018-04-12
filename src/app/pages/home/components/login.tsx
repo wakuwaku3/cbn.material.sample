@@ -52,7 +52,7 @@ namespace InnerScope {
                 render() {
                     return (
                         <Adjuster vertical="center" horizontal="center">
-                            <Title displayTitle={false}>ログイン</Title>
+                            <Title hiddenTitle={true}>ログイン</Title>
                             <AppPaper className={sheet.classes.paper}>
                                 <form>
                                     <AppGrid container>

@@ -5,7 +5,7 @@ import { WithStyles } from 'material-ui';
 
 namespace InnerScope {
     export interface Props {
-        displayTitle?: boolean;
+        hiddenTitle?: boolean;
     }
     export interface Style {
         root;
@@ -22,19 +22,19 @@ namespace InnerScope {
                     document.title = `cbn.undux.sample - ${this.props.children.toString()}`;
                 }
                 render() {
-                    if (this.props.displayTitle) {
-                        return (
-                            <AppTypography variant="display1" className={sheet.classes.title}>
-                                {this.props.children}
-                            </AppTypography>
-                        );
+                    if (this.props.hiddenTitle) {
+                        return '';
                     }
-                    return <div />;
+                    return (
+                        <AppTypography variant="display1" className={sheet.classes.title}>
+                            {this.props.children}
+                        </AppTypography>
+                    );
                 }
             }
     );
     component.defaultProps = {
-        displayTitle: true
+        hiddenTitle: false
     };
 }
 export type TitleProps = InnerScope.Props;

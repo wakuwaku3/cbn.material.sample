@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { CellProps, Cell } from './cell';
-import { Sorting } from '../../models/shared/sorting';
-import { Classes } from '../../models/shared/types';
 import { decorate } from '../../helper/app-style-helper';
 import { DividerLine } from '../layout/divider-line';
 import { TableSortLabel } from 'material-ui';
 import { Cbn } from '../../../lib/shared/cbn';
+import { Sorting } from '../../../lib/models/sorting';
+import { Classes } from '../../../lib/models/types';
 
 namespace InnerScope {
     export interface Props {

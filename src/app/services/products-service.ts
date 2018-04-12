@@ -1,34 +1,20 @@
 import { Cbn } from '../../lib/shared/cbn';
-import { Pagination } from '../models/shared/pagination';
-import { Sorting } from '../models/shared/sorting';
-import { Selectable } from '../models/shared/selectable';
+import { Pagination } from '../../lib/models/pagination';
+import { Sorting } from '../../lib/models/sorting';
+import { Selectable } from '../../lib/models/selectable';
+import {
+    ProductsIndexStoreCondition,
+    ProductsIndexStore,
+    ProductsIndexStoreItem,
+    Product
+} from '../models/actions/products';
+import { LocalStorageRepository } from '../../lib/services/local-storage-repository';
 
 export namespace Products {
-    export interface InitializeAsyncResponse {
-        condition: Products.GetAsyncRequest;
-        items: Products.GetAsyncResponseItem[];
-    }
-    export interface GetAsyncRequest {
-        name?: string;
-        status?: string;
-        pagination: Pagination;
-        sorting: Sorting;
-    }
-    export interface GetAsyncResponse {
-        pager: Pagination;
-        items: GetAsyncResponseItem[];
-    }
-    export interface GetAsyncResponseItem extends Selectable {
-        id: number;
-        name: string;
-        status: string;
-        price: number;
-        releaseDate: string;
-    }
+    let storage = new LocalStorageRepository<Product>('products-storage', p1 => p2 => p1.productId === p2.productId);
     class Service {
-        initializeAsync = async () => {
-            let condition: GetAsyncRequest = {
-                name: '',
+        initializeIndexAsync = async () => {
+            let condition: ProductsIndexStoreCondition = {
                 pagination: {
                     display: 10,
                     current: 0,
@@ -39,26 +25,11 @@ export namespace Products {
                     direction: 'asc'
                 }
             };
-            let res = await this.getAsync(condition);
-            condition.pagination = res.pager;
-            return {
-                condition,
-                items: res.items
-            };
+            return await this.getIndexAsync(condition);
         };
-        getAsync = async (req: GetAsyncRequest) => {
-            await Cbn.delay(1000);
-            let items = Array.from(new Array(100 + new Date(Date.now()).getSeconds()))
-                .map((v, i): GetAsyncResponseItem => {
-                    return {
-                        isSelected: false,
-                        id: i,
-                        name: `name${i}`,
-                        status: `status${i}`,
-                        price: (i + 1) * 100,
-                        releaseDate: Cbn.DateHelper.format(new Date(Date.now() - (i + 1) * 100), 'YYYY/MM/DD')
-                    };
-                })
+        getIndexAsync = async (req: ProductsIndexStoreCondition) => {
+            await Cbn.delay(500);
+            let items = (await storage.getAsync())
                 .filter(x => {
                     let res = true;
                     if (req.name) {
@@ -68,6 +39,25 @@ export namespace Products {
                         res = res && x.status.includes(req.status);
                     }
                     return res;
+                })
+                .map((v): ProductsIndexStoreItem => {
+                    let version = v.ProductVersions.sort(Cbn.sort(v => v.date, 'desc'));
+                    let latestVersion = version[0] ? version[0].version : null;
+                    return {
+                        isSelected: false,
+                        id: v.productId,
+                        name: v.name,
+                        status: v.status,
+                        price: v.price,
+                        latestVersion
+                    };
+                })
+                .sort((v1, v2) => {
+                    let key =
+                        req.sorting && req.sorting.name && Object.keys(v1).indexOf(req.sorting.name)
+                            ? req.sorting.name
+                            : 'id';
+                    return Cbn.sort(v => v[key], req.sorting.direction)(v1, v2);
                 });
             let total = items.length;
             if (req.pagination.current * req.pagination.display > total) {
@@ -76,12 +66,15 @@ export namespace Products {
             let skip = req.pagination.current * req.pagination.display;
 
             items = items.slice(skip, skip + req.pagination.display);
-            return {
+            let condition = Object.assign({}, req, {
                 pager: {
                     total,
                     current: req.pagination.current,
                     display: req.pagination.display
-                },
+                }
+            });
+            return {
+                condition,
                 items
             };
         };

@@ -5,12 +5,14 @@ import { AddIcon, RemoveIcon, RefreshIcon } from '../../components/material-ui/i
 import { productsIndexAction } from '../../actions/products/index-action';
 import { TableRow } from 'material-ui';
 import { CheckedCell } from '../../components/table-control/checked-cell';
-import { HeadCell } from '../../components/table-control/head-cell';
+import { HeadCell, HeadCellProps } from '../../components/table-control/head-cell';
 import { Cell } from '../../components/table-control/cell';
 import { TableContainer } from '../../components/table-control/table-container';
 import { Adjuster } from '../../components/layout/adjuster';
 import { Page } from '../../components/layout/page';
 import { FieldSet } from '../../components/form-control/fieldset';
+import { Products } from '../../services/products-service';
+import { ProductsIndexStoreItem } from '../../models/actions/products';
 
 namespace InnerScope {
     const SearchResult = decorate({
@@ -42,37 +44,34 @@ namespace InnerScope {
                         </AppButton>
                     </div>
                 );
+                getHead = (
+                    index: number,
+                    name: keyof ProductsIndexStoreItem,
+                    text: string,
+                    props?: Partial<HeadCellProps>
+                ) => (
+                    <HeadCell
+                        {...props}
+                        sorting={productsIndexAction.model.condition.sorting}
+                        onSizeChange={this.handleSizeChange(index)}
+                        name={name}
+                        onSort={(e, s) => productsIndexAction.emit('search', { sorting: s })}
+                    >
+                        {text}
+                    </HeadCell>
+                );
                 getHeadElement = () => (
                     <TableRow>
                         <CheckedCell
+                            hidden={!productsIndexAction.model.items.length}
                             checked={productsIndexAction.model.items.every(x => x.isSelected)}
                             onChange={e => productsIndexAction.emit('selectAll', e.target.checked)}
                         />
-                        <HeadCell onSizeChange={this.handleSizeChange(1)}>ID</HeadCell>
-                        <HeadCell
-                            sorting={productsIndexAction.model.condition.sorting}
-                            name="name"
-                            onSort={(e, s) => {
-                                productsIndexAction.emit('search', {
-                                    sorting: s
-                                });
-                            }}
-                        >
-                            製品名
-                        </HeadCell>
-                        <HeadCell
-                            sorting={productsIndexAction.model.condition.sorting}
-                            name="status"
-                            onSort={(e, s) => {
-                                productsIndexAction.emit('search', {
-                                    sorting: s
-                                });
-                            }}
-                        >
-                            状態
-                        </HeadCell>
-                        <HeadCell cellProps={{ numeric: true }}>価格</HeadCell>
-                        <HeadCell>発売日</HeadCell>
+                        {this.getHead(1, 'id', 'ID')}
+                        {this.getHead(1, 'name', '製品名')}
+                        {this.getHead(1, 'status', '状態')}
+                        {this.getHead(1, 'price', '価格', { cellProps: { numeric: true } })}
+                        {this.getHead(1, 'latestVersion', '最新バージョン')}
                     </TableRow>
                 );
                 getBodyElement = () =>
@@ -101,7 +100,7 @@ namespace InnerScope {
                                 <Cell>{n.name}</Cell>
                                 <Cell>{n.status}</Cell>
                                 <Cell numeric>{n.price}</Cell>
-                                <Cell>{n.releaseDate}</Cell>
+                                <Cell>{n.latestVersion}</Cell>
                             </TableRow>
                         );
                     });
@@ -112,7 +111,7 @@ namespace InnerScope {
                         <Cell>製品名</Cell>
                         <Cell>状態</Cell>
                         <Cell numeric>価格</Cell>
-                        <Cell>発売日</Cell>
+                        <Cell>最新バージョン</Cell>
                     </TableRow>
                 );
                 render() {

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { themeAction } from '../../actions/shared/theme-action';
-import { Pagination } from '../../models/shared/pagination';
 import { decorate } from '../../helper/app-style-helper';
 import { AppTypography, AppFormControl, AppSelect, AppMenuItem, AppIconButton } from '../material-ui/wrapper';
 import {
@@ -9,6 +8,7 @@ import {
     KeyboardArrowRightIcon,
     LastPageIcon
 } from '../material-ui/icon-wrapper';
+import { Pagination } from '../../../lib/models/pagination';
 namespace InnerScope {
     export interface Style {
         root;

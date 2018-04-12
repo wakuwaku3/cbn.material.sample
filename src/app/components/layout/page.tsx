@@ -10,7 +10,7 @@ namespace InnerScope {
     export interface Props {
         title: string;
         loading?: boolean;
-        displayTitle?: boolean;
+        hiddenTitle?: boolean;
         paperProps?: AppPaperProps;
     }
     const styles = {
@@ -39,15 +39,11 @@ namespace InnerScope {
         }
         return (
             <AppPaper {...paperProps}>
-                <Title displayTitle>{props.title}</Title>
+                <Title hiddenTitle={props.hiddenTitle}>{props.title}</Title>
                 {props.children}
             </AppPaper>
         );
     });
-    component.defaultProps = {
-        loading: false,
-        displayTitle: true
-    };
 }
 export type PageProps = InnerScope.Props;
 export const Page = InnerScope.component;

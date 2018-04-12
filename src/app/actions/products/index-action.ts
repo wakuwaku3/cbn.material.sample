@@ -1,13 +1,19 @@
 import { Cbn } from '../../../lib/shared/cbn';
 import { Store } from 'undux';
 import { ActionBase } from '../bases/action-base';
-import { ProductsIndexEvent } from '../../models/actions/products';
+import { ProductsIndexEvent, ProductsIndexStoreCondition } from '../../models/actions/products';
 import { Products } from '../../services/products-service';
 
 namespace InnerScope {
     const key = 'productsIndex';
     type key = 'productsIndex';
-    type event = ProductsIndexEvent;
+    export interface event {
+        reset: void;
+        initialize: void;
+        search: Partial<ProductsIndexStoreCondition>;
+        select: { value: boolean; id: number };
+        selectAll: boolean;
+    }
     export class Action extends ActionBase<key, event> {
         constructor() {
             super(key);
@@ -21,17 +27,14 @@ namespace InnerScope {
                 this.emit('search', this.model.condition);
             });
             this.observe('reset').subscribe(async () => {
-                this.model = await Products.service.initializeAsync();
+                this.model = await Products.service.initializeIndexAsync();
             });
             this.observe('search').subscribe(async condition => {
                 if (condition) {
                     this.model.condition = Object.assign(this.model.condition, condition);
                 }
                 this.emit('reflesh');
-                let res = await Products.service.getAsync(this.model.condition);
-                this.model.condition.pagination = res.pager;
-                this.model.items = res.items;
-                this.emit('reflesh');
+                this.model = await Products.service.getIndexAsync(this.model.condition);
             });
             this.observe('selectAll').subscribe(value => {
                 this.model.items.forEach(x => (x.isSelected = value));
