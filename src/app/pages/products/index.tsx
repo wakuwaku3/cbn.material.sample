@@ -128,7 +128,7 @@ namespace InnerScope {
                                 selected={n.isSelected}
                                 onDoubleClick={e =>
                                     this.props.history.push(
-                                        Url.productsUpdate(n.id)
+                                        Url.productsDetail(n.id)
                                     )
                                 }
                                 onClick={e => {

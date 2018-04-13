@@ -33,7 +33,7 @@ export namespace Products {
         };
         getIndexAsync = async (req: ProductsIndexStoreCondition) => {
             await Cbn.delay(500);
-            let items = (await storage.getAsync())
+            let items = (await storage.getAllAsync())
                 .filter(x => {
                     let res = true;
                     if (req.name) {
@@ -89,7 +89,7 @@ export namespace Products {
             };
         };
         createAsync = async (product: Product<ProductVersion>) => {
-            let list = await storage.getAsync();
+            let list = await storage.getAllAsync();
             product.productId = list.length
                 ? Math.max(...list.map(x => x.productId)) + 1
                 : 0;
@@ -108,6 +108,12 @@ export namespace Products {
             await storage.pushAsync(product);
             return product.productId;
         };
+        updateAsync = async (product: Product<ProductVersion>) => {
+            await storage.updateAsync(product);
+        };
+        async getAsync(id: number) {
+            return (await storage.getAllAsync()).find(x => x.productId === id);
+        }
     }
     export const service = new Service();
 }

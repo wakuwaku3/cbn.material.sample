@@ -1,42 +1,55 @@
 import { Cbn } from '../shared/cbn';
 
-export class LocalStorageRepository<T> {
+export class LocalStorageRepository<T extends object> {
     private _store: T[];
-    constructor(private _key: string, private _equal: (model1: T) => (model2: T) => boolean) {
+    constructor(
+        private _key: string,
+        private _equal: (model1: T) => (model2: T) => boolean
+    ) {
         this.load();
     }
     private load = () => {
         let json = localStorage.getItem(this._key);
         this._store = json ? JSON.parse(json) : [];
     };
-    private update = () => {
+    private reset = () => {
         localStorage.setItem(this._key, JSON.stringify(this._store));
     };
-    private updateAsync = async () => {
+    private resetAsync = async () => {
         await Cbn.delay(0);
-        this.update();
+        this.reset();
     };
-    get = () => {
-        return this._store;
+    getAll = () => {
+        return this._store.map(x => Object.assign({}, x));
     };
-    getAsync = async () => {
+    getAllAsync = async () => {
         await Cbn.delay(0);
-        return this.get();
+        return this.getAll();
     };
     push = async (model: T) => {
-        this._store.push(model);
-        this.update();
+        this._store.push(Object.assign({}, model));
+        this.reset();
     };
     pushAsync = async (model: T) => {
-        this._store.push(model);
-        await this.updateAsync();
+        this._store.push(Object.assign({}, model));
+        await this.resetAsync();
+    };
+    update = async (model: T) => {
+        let id = this._store.findIndex(this._equal(model));
+        this._store[id] = Object.assign(this._store[id], model);
+        this.reset();
+    };
+    updateAsync = async (model: T) => {
+        let id = this._store.findIndex(this._equal(model));
+        this._store[id] = Object.assign(this._store[id], model);
+        await this.resetAsync();
     };
     remove = (model: T) => {
         this._store.splice(this._store.findIndex(this._equal(model)), 1);
-        this.update();
+        this.reset();
     };
     removeAsync = async (model: T) => {
         this._store.splice(this._store.findIndex(this._equal(model)), 1);
-        await this.updateAsync();
+        await this.resetAsync();
     };
 }

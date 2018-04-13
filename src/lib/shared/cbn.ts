@@ -24,7 +24,7 @@ export namespace Cbn {
             return this._inner;
         }
         emit = <Key extends keyof T>(key: Key, args?: T[Key]) => {
-            this._inner.emit(key, args);
+            return this._inner.emit(key, args);
         };
         on = <Key extends keyof T>(
             key: Key,
@@ -155,11 +155,15 @@ export namespace Cbn {
     }
     export namespace Window {
         interface Event {
-            resize: void;
+            resize: UIEvent;
+            beforeunload: BeforeUnloadEvent;
         }
         export const emitter = new EventEmitter<Event>();
-        window.addEventListener('resize', () => {
-            emitter.emit('resize');
+        window.addEventListener('resize', e => {
+            emitter.emit('resize', e);
+        });
+        window.addEventListener('beforeunload', e => {
+            emitter.emit('beforeunload', e);
         });
         export const observe = (key: keyof Event) => emitter.observe(key);
         export function getScrollBarWidth() {

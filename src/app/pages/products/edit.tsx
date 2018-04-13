@@ -32,6 +32,7 @@ import { messagesAction } from '../../actions/shared/messages-action';
 import { Url } from '../../masters/app-router';
 import { productsIndexAction } from '../../actions/products/index-action';
 import { dialogAction } from '../../actions/shared/dialog-action';
+import { Subscription } from 'rxjs';
 
 namespace InnerScope {
     interface Style {
@@ -59,7 +60,7 @@ namespace InnerScope {
     };
     interface RouteParams {
         mode: 'create' | 'update' | 'detail';
-        id?: number;
+        id?: string;
     }
     interface Props {}
     interface Event {
@@ -68,6 +69,7 @@ namespace InnerScope {
     interface State {
         columns: number[];
         product?: Product<Version>;
+        preProduct?: string;
     }
     interface Version extends ProductVersion, Selectable {}
 
@@ -77,6 +79,7 @@ namespace InnerScope {
                 Props & RouteComponentProps<RouteParams>,
                 State
             > {
+                beforeUnloadSubscription: Subscription;
                 constructor(props) {
                     super(props);
                     this.state = { columns: [50, 200, 200, 200] };
@@ -84,6 +87,29 @@ namespace InnerScope {
                 componentWillMount() {
                     this.handleClickReset();
                 }
+                componentDidMount() {
+                    this.beforeUnloadSubscription = Cbn.Window.observe(
+                        'beforeunload'
+                    ).subscribe(this.handleBeforeUnload);
+                }
+                componentWillUnmount() {
+                    this.beforeUnloadSubscription.unsubscribe();
+                }
+                handleBeforeUnload = e => {
+                    let value = this.checkChanged();
+                    if (value) {
+                        e.returnValue = value;
+                    }
+                };
+                checkChanged = () => {
+                    if (
+                        this.state.preProduct &&
+                        JSON.stringify(this.state.product) !==
+                            this.state.preProduct
+                    ) {
+                        return '変更中の情報は破棄されます。移動しますか？';
+                    }
+                };
                 handleSizeChange = (index: number) => (width: number) => {
                     let columns = this.state.columns;
                     columns[index] = width;
@@ -118,12 +144,18 @@ namespace InnerScope {
                     );
                     this.setState({ product: this.state.product });
                 };
+                handleClickRemove = () => {
+                    this.state.product.productVersions = this.state.product.productVersions.filter(
+                        x => !x.isSelected
+                    );
+                    this.setState({ product: this.state.product });
+                };
                 handleClickExecute = async () => {
                     switch (this.mode) {
                         case 'create':
                             dialogAction.emit('showYesNo', {
-                                title: '製品登録',
-                                text: '製品を登録します。よろしいですか？',
+                                title: '製品情報登録',
+                                text: '製品情報を登録します。よろしいですか？',
                                 callBack: async yes => {
                                     if (yes) {
                                         await Products.service.createAsync(
@@ -133,29 +165,94 @@ namespace InnerScope {
                                             text: '製品を登録しました。',
                                             level: 'info'
                                         });
-                                        this.handleClickReturn();
+                                        this.handleNavigationDetail();
+                                    }
+                                }
+                            });
+                            break;
+                        case 'update':
+                            dialogAction.emit('showYesNo', {
+                                title: '製品情報更新',
+                                text: '製品情報を更新します。よろしいですか？',
+                                callBack: async yes => {
+                                    if (yes) {
+                                        await Products.service.updateAsync(
+                                            this.state.product
+                                        );
+                                        messagesAction.emit('showMessage', {
+                                            text: '製品を更新しました。',
+                                            level: 'info'
+                                        });
+                                        this.handleNavigationDetail();
                                     }
                                 }
                             });
                             break;
                     }
                 };
-                handleClickReset = () => {
-                    if (this.mode === 'create') {
+                handleClickReset = async () => {
+                    let product =
+                        this.mode === 'create'
+                            ? {
+                                  name: '',
+                                  price: null,
+                                  productId: null,
+                                  status: '',
+                                  productVersions: [this.createNewVersion()]
+                              }
+                            : await this.getAsync();
+                    if (product) {
                         this.setState({
-                            product: {
-                                name: '',
-                                price: null,
-                                productId: null,
-                                status: '',
-                                productVersions: [this.createNewVersion()]
-                            }
+                            product,
+                            preProduct: JSON.stringify(product)
                         });
+                    } else {
+                        messagesAction.emit('showMessage', {
+                            text: '製品が存在しません。',
+                            level: 'error'
+                        });
+                        this.handleNavigationIndex();
                     }
                 };
-                handleClickReturn = () => {
-                    productsIndexAction.emit('search');
-                    this.props.history.push(Url.productsIndex);
+                getAsync = async () => {
+                    let p = await Products.service.getAsync(this.id);
+                    if (!p) {
+                        return null;
+                    }
+                    if (p.productVersions) {
+                        p.productVersions = p.productVersions.map(x => {
+                            return Object.assign({ isSelected: false }, x);
+                        });
+                    } else {
+                        p.productVersions = [];
+                    }
+                    return p as Product<Version>;
+                };
+                handleNavigationIndex = () => {
+                    let navigate = () => {
+                        productsIndexAction.emit('search');
+                        this.props.history.push(Url.productsIndex);
+                    };
+                    let text = this.checkChanged();
+                    if (!text) {
+                        navigate();
+                        return;
+                    }
+                    dialogAction.emit('showYesNo', {
+                        title: '製品情報',
+                        text,
+                        callBack: yes => {
+                            if (yes) {
+                                navigate();
+                            }
+                        }
+                    });
+                };
+                handleNavigationUpdate = () => {
+                    this.props.history.push(Url.productsUpdate(this.id));
+                };
+                handleNavigationDetail = () => {
+                    this.props.history.push(Url.productsDetail(this.id));
                 };
                 createNewVersion = (): Version => ({
                     isSelected: false,
@@ -166,92 +263,123 @@ namespace InnerScope {
                     productVersionId: null
                 });
                 render() {
-                    return this.getElement();
-                }
-                getElement = () => {
                     return (
                         <Page title={this.title} loading={!this.state.product}>
-                            <AppGrid container>
-                                <AppGrid item xs={12} sm={6} lg={4}>
-                                    <AppTextField
-                                        label="製品名"
-                                        value={this.state.product.name}
-                                        onChange={this.handleChangeProduct(
-                                            'name'
-                                        )}
-                                    />
-                                </AppGrid>
-                                <AppGrid item xs={12} sm={6} lg={4}>
-                                    <AppTextField
-                                        type="number"
-                                        label="価格"
-                                        value={
-                                            this.state.product.price
-                                                ? this.state.product.price
-                                                : ''
-                                        }
-                                        onChange={this.handleChangeProduct(
-                                            'price'
-                                        )}
-                                    />
-                                </AppGrid>
-                                <AppGrid item xs={12} sm={6} lg={4}>
-                                    <RadioFormGroup
-                                        title="状態"
-                                        value={this.state.product.status}
-                                        onChange={this.handleChangeProduct(
-                                            'status'
-                                        )}
-                                        items={[
-                                            { label: '発売中', value: '' },
-                                            { label: '製造終了', value: '1' }
-                                        ]}
-                                    />
-                                </AppGrid>
-                                <AppGrid item xs={12}>
-                                    <FieldSet title="製品バージョン">
-                                        {this.getVersionElement()}
-                                    </FieldSet>
-                                </AppGrid>
-                                <AppGrid
-                                    item
-                                    xs={12}
-                                    className={sheet.classes.action}
-                                >
-                                    <Adjuster>
-                                        <AppButton
-                                            variant="raised"
-                                            onClick={this.handleClickReturn}
-                                        >
-                                            戻る
-                                        </AppButton>
-                                    </Adjuster>
-                                    <Adjuster horizontal="right">
-                                        <AppButton
-                                            variant="raised"
-                                            color="primary"
-                                            onClick={this.handleClickExecute}
-                                        >
-                                            {this.executeButtonName}
-                                        </AppButton>
-                                        <AppButton
-                                            variant="raised"
-                                            color="secondary"
-                                            onClick={this.handleClickReset}
-                                        >
-                                            リセット
-                                        </AppButton>
-                                    </Adjuster>
-                                </AppGrid>
-                            </AppGrid>
+                            {this.getElement()}
                         </Page>
+                    );
+                }
+                getElement = () => {
+                    if (!this.state.product) {
+                        return '';
+                    }
+                    return (
+                        <AppGrid container>
+                            <AppGrid item xs={12} sm={6} lg={4}>
+                                <AppTextField
+                                    label="製品名"
+                                    value={this.state.product.name}
+                                    disabled={this.isReadOnly}
+                                    onChange={this.handleChangeProduct('name')}
+                                />
+                            </AppGrid>
+                            <AppGrid item xs={12} sm={6} lg={4}>
+                                <AppTextField
+                                    type="number"
+                                    label="価格"
+                                    value={
+                                        this.state.product.price
+                                            ? this.state.product.price
+                                            : ''
+                                    }
+                                    disabled={this.isReadOnly}
+                                    onChange={this.handleChangeProduct('price')}
+                                />
+                            </AppGrid>
+                            <AppGrid item xs={12} sm={6} lg={4}>
+                                <RadioFormGroup
+                                    title="状態"
+                                    value={this.state.product.status}
+                                    onChange={this.handleChangeProduct(
+                                        'status'
+                                    )}
+                                    disabled={this.isReadOnly}
+                                    items={[
+                                        { label: '発売中', value: '' },
+                                        { label: '製造終了', value: '1' }
+                                    ]}
+                                />
+                            </AppGrid>
+                            <AppGrid item xs={12}>
+                                <FieldSet title="製品バージョン">
+                                    {this.getVersionElement()}
+                                </FieldSet>
+                            </AppGrid>
+                            <AppGrid
+                                item
+                                xs={12}
+                                className={sheet.classes.action}
+                            >
+                                <Adjuster>
+                                    <AppButton
+                                        variant="raised"
+                                        onClick={this.handleNavigationIndex}
+                                    >
+                                        戻る
+                                    </AppButton>
+                                </Adjuster>
+                                {(() => {
+                                    if (!this.isReadOnly) {
+                                        return (
+                                            <Adjuster horizontal="right">
+                                                <AppButton
+                                                    variant="raised"
+                                                    color="primary"
+                                                    onClick={
+                                                        this.handleClickExecute
+                                                    }
+                                                >
+                                                    {this.executeButtonName}
+                                                </AppButton>
+                                                <AppButton
+                                                    variant="raised"
+                                                    color="secondary"
+                                                    onClick={
+                                                        this.handleClickReset
+                                                    }
+                                                >
+                                                    リセット
+                                                </AppButton>
+                                            </Adjuster>
+                                        );
+                                    }
+                                    return (
+                                        <Adjuster horizontal="right">
+                                            <AppButton
+                                                variant="raised"
+                                                color="primary"
+                                                onClick={
+                                                    this.handleNavigationUpdate
+                                                }
+                                            >
+                                                編集
+                                            </AppButton>
+                                        </Adjuster>
+                                    );
+                                })()}
+                            </AppGrid>
+                        </AppGrid>
                     );
                 };
                 getVersionElement = () => {
                     return (
                         <TableContainer
                             columns={this.state.columns}
-                            actionElement={this.getVersionActionElement()}
+                            actionElement={
+                                this.isReadOnly
+                                    ? null
+                                    : this.getVersionActionElement()
+                            }
                             headElement={this.getVersionHeadElement()}
                         >
                             {this.getVersionBodyElement()}
@@ -273,6 +401,7 @@ namespace InnerScope {
                                 variant="raised"
                                 size="small"
                                 color="secondary"
+                                onClick={this.handleClickRemove}
                             >
                                 <RemoveIcon />
                             </AppButton>
@@ -296,6 +425,7 @@ namespace InnerScope {
                 getVersionHeadElement = () => (
                     <TableRow>
                         <CheckedCell
+                            disabled={this.isReadOnly}
                             hidden={!this.state.product.productVersions.length}
                             checked={this.state.product.productVersions.every(
                                 x => x.isSelected
@@ -313,6 +443,7 @@ namespace InnerScope {
                             <TableRow key={i} selected={item.isSelected}>
                                 <CheckedCell
                                     checked={item.isSelected}
+                                    disabled={this.isReadOnly}
                                     onChange={this.handleSelectRow(
                                         !item.isSelected,
                                         i
@@ -321,6 +452,7 @@ namespace InnerScope {
                                 <Cell>
                                     <AppTextField
                                         value={item.version}
+                                        disabled={this.isReadOnly}
                                         onChange={this.handleChangeVersion(
                                             'version',
                                             i
@@ -331,6 +463,7 @@ namespace InnerScope {
                                     <AppTextField
                                         type="date"
                                         value={item.date}
+                                        disabled={this.isReadOnly}
                                         onChange={this.handleChangeVersion(
                                             'date',
                                             i
@@ -340,6 +473,7 @@ namespace InnerScope {
                                 <Cell>
                                     <AppTextField
                                         value={item.notes}
+                                        disabled={this.isReadOnly}
                                         onChange={this.handleChangeVersion(
                                             'notes',
                                             i
@@ -349,6 +483,12 @@ namespace InnerScope {
                             </TableRow>
                         );
                     });
+                get id() {
+                    return Number(this.routeParams.id);
+                }
+                get isReadOnly() {
+                    return this.mode === 'detail';
+                }
                 get routeParams() {
                     return this.props.match.params;
                 }

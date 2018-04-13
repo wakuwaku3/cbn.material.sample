@@ -59,8 +59,9 @@ namespace InnerScope {
                 anchorOrigin={props.anchorOrigin}
                 open={true}
                 onClose={(event, reason) => {
-                    if (reason !== 'clickaway' && props.onClose)
-                        props.onClose();
+                    // if (reason !== 'clickaway' && props.onClose)
+                    //     props.onClose();
+                    if (props.onClose) props.onClose();
                 }}
                 message={<MessageField message={props.message} />}
                 action={[

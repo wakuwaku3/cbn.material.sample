@@ -19,10 +19,12 @@ namespace InnerScope {
         items: ItemProps[];
         onChange?: (event?: React.ChangeEvent<{}>, value?: string) => void;
         value?: string;
+        disabled?: boolean;
     }
     export interface ItemProps {
         label: string;
         value: string;
+        disabled?: boolean;
         labelProps?: Partial<AppFormControlLabelProps>;
         radioProps?: AppRadioProps;
     }
@@ -43,13 +45,19 @@ namespace InnerScope {
             }}
         >
             <AppFormLabel>{props.title}</AppFormLabel>
-            <AppRadioGroup row={true} {...props.radioGroupProps} value={props.value} onChange={props.onChange}>
+            <AppRadioGroup
+                row={true}
+                {...props.radioGroupProps}
+                value={props.value}
+                onChange={props.onChange}
+            >
                 {props.items.map((item, i) => (
                     <SelectableContainer
                         key={i}
                         {...item.labelProps}
                         label={item.label}
                         value={item.value}
+                        disabled={item.disabled || props.disabled}
                         control={<AppRadio {...item.radioProps} />}
                     />
                 ))}
