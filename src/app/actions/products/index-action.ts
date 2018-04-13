@@ -16,6 +16,7 @@ namespace InnerScope {
         search: Partial<ProductsIndexStoreCondition>;
         select: { value: boolean; id: number };
         selectAll: boolean;
+        remove: number[];
     }
     export class Action extends ActionBase<key, event> {
         constructor() {
@@ -51,6 +52,10 @@ namespace InnerScope {
             this.observe('select').subscribe(({ value, id }) => {
                 this.model.items.find(x => x.id === id).isSelected = value;
                 this.emit('reflesh');
+            });
+            this.observe('remove').subscribe(async ids => {
+                await Products.service.removeRangeAsync(...ids);
+                this.emit('search');
             });
             this.emit('initialize');
         }

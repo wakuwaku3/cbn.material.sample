@@ -26,6 +26,7 @@ import { Products } from '../../services/products-service';
 import { ProductsIndexStoreItem } from '../../models/actions/products';
 import { RouteComponentProps } from 'react-router';
 import { Url } from '../../masters/app-router';
+import { dialogAction } from '../../actions/shared/dialog-action';
 
 namespace InnerScope {
     interface Style {
@@ -51,6 +52,23 @@ namespace InnerScope {
                     columns[index] = width;
                     this.setState({ columns });
                 };
+                handleRemove = () => {
+                    let ids = productsIndexAction.model.items
+                        .filter(x => x.isSelected)
+                        .map(x => x.id);
+                    let text =
+                        ids.length +
+                        '件の製品情報を削除します。よろしいですか？';
+                    dialogAction.emit('showYesNo', {
+                        title: '製品情報',
+                        text,
+                        callBack: yes => {
+                            if (yes) {
+                                productsIndexAction.emit('remove', ids);
+                            }
+                        }
+                    });
+                };
                 getActionElement = () => (
                     <div className={sheet.classes.action}>
                         <AppButton
@@ -67,6 +85,12 @@ namespace InnerScope {
                             variant="raised"
                             size="small"
                             color="secondary"
+                            disabled={
+                                !productsIndexAction.model.items.filter(
+                                    x => x.isSelected
+                                ).length
+                            }
+                            onClick={this.handleRemove}
                         >
                             <RemoveIcon />
                         </AppButton>

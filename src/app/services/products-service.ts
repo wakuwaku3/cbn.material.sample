@@ -111,9 +111,15 @@ export namespace Products {
         updateAsync = async (product: Product<ProductVersion>) => {
             await storage.updateAsync(product);
         };
-        async getAsync(id: number) {
+        getAsync = async (id: number) => {
             return (await storage.getAllAsync()).find(x => x.productId === id);
-        }
+        };
+        removeRangeAsync = async (...ids: number[]) => {
+            for (const id of ids) {
+                let model = await this.getAsync(id);
+                await storage.removeAsync(model);
+            }
+        };
     }
     export const service = new Service();
 }
