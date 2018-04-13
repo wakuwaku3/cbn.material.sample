@@ -1,12 +1,16 @@
 import { Cbn } from '../../../lib/shared/cbn';
 import { Store } from 'undux';
-import { MessagesEvent } from '../../models/actions/shared/messages';
+import { Message } from '../../models/actions/shared/messages';
 import { ActionBase } from '../bases/action-base';
 
 namespace InnerScope {
     const key = 'messages';
     type key = 'messages';
-    type event = MessagesEvent;
+    export interface event {
+        initialize: void;
+        showMessage: Message;
+        removeMessage: number;
+    }
     export class Action extends ActionBase<key, event> {
         constructor() {
             super(key);
@@ -14,19 +18,16 @@ namespace InnerScope {
         protected initialize() {
             this.observe('initialize').subscribe(() => {
                 if (!this.model) {
-                    this.model = { isShow: false, errorMessage: '' };
+                    this.model = { messages: [] };
                 }
             });
-            this.observe('handleOpen').subscribe(msg => {
-                this.model = Object.assign({}, this.model, msg, {
-                    isShow: true
-                });
+            this.observe('showMessage').subscribe(msg => {
+                this.model.messages.push(msg);
+                this.emitter.emit('reflesh');
             });
-            this.observe('handleClose').subscribe(reason => {
-                if (reason !== 'clickaway') {
-                    this.model.isShow = false;
-                    this.emitter.emit('reflesh');
-                }
+            this.observe('removeMessage').subscribe(i => {
+                this.model.messages.splice(i, 1);
+                this.emitter.emit('reflesh');
             });
             this.emitter.emit('initialize');
         }

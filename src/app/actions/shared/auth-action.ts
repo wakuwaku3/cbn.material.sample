@@ -2,7 +2,7 @@ import { Cbn } from '../../../lib/shared/cbn';
 import { Store } from 'undux';
 import { AuthEvent } from '../../models/actions/shared/auth';
 import { ActionBase } from '../bases/action-base';
-
+let i = 0;
 namespace InnerScope {
     const key = 'auth';
     type key = 'auth';
@@ -15,7 +15,10 @@ namespace InnerScope {
             this.observe('login').subscribe(args => {
                 // ToDo 認証する
                 if (args.id === '') {
-                    args.callBackHasError('認証に失敗しました。');
+                    args.callBackHasError({
+                        text: '認証に失敗しました。',
+                        level: 'error'
+                    });
                 } else {
                     this.model.authenticated = true;
                     this.emitter.emit('reflesh');

@@ -1,21 +1,28 @@
-import { Grid, TextField, Button } from 'material-ui';
 import * as React from 'react';
-import { AppGrid, AppTextField, AppButton, AppPaper } from '../../../components/material-ui/wrapper';
-import { LogInEventArgs } from '../../../models/actions/shared/auth';
-import { decorate } from '../../../helper/app-style-helper';
-import { messagesAction } from '../../../actions/shared/messages-action';
-import { Adjuster } from '../../../components/layout/adjuster';
-import { Title } from '../../../components/layout/title';
+import { LogInEventArgs } from '../../models/actions/shared/auth';
+import { decorate } from '../../helper/app-style-helper';
+import { messagesAction } from '../../actions/shared/messages-action';
+import {
+    AppGrid,
+    AppTextField,
+    AppButton,
+    AppPaper
+} from '../../components/material-ui/wrapper';
+import { Adjuster } from '../../components/layout/adjuster';
+import { Title } from '../../components/layout/title';
+import { authAction } from '../../actions/shared/auth-action';
+import { Message } from '../../models/actions/shared/messages';
 
 namespace InnerScope {
-    export interface Props {
-        onLogIn: (args: LogInEventArgs) => void;
-    }
+    export interface Props {}
     export interface State {
         id: string;
         password: string;
     }
     export const styles = {
+        root: {
+            height: '100%'
+        },
         paper: {
             width: 400
         },
@@ -42,16 +49,18 @@ namespace InnerScope {
                         },
                         this.state
                     );
-                    this.props.onLogIn(args);
+                    authAction.emit('login', args);
                 };
-                private showError(message: string) {
-                    messagesAction.emit('handleOpen', {
-                        errorMessage: message
-                    });
+                private showError(message: Message) {
+                    messagesAction.emit('showMessage', message);
                 }
                 render() {
                     return (
-                        <Adjuster vertical="center" horizontal="center">
+                        <Adjuster
+                            vertical="center"
+                            horizontal="center"
+                            className={sheet.classes.root}
+                        >
                             <Title hiddenTitle={true}>ログイン</Title>
                             <AppPaper className={sheet.classes.paper}>
                                 <form>
@@ -62,7 +71,9 @@ namespace InnerScope {
                                                 value={this.state.id}
                                                 margin="normal"
                                                 fullWidth
-                                                onChange={this.handleChange('id')}
+                                                onChange={this.handleChange(
+                                                    'id'
+                                                )}
                                             />
                                         </AppGrid>
                                         <AppGrid item xs={12}>
@@ -72,16 +83,26 @@ namespace InnerScope {
                                                 value={this.state.password}
                                                 margin="normal"
                                                 fullWidth
-                                                onChange={this.handleChange('password')}
+                                                onChange={this.handleChange(
+                                                    'password'
+                                                )}
                                             />
                                         </AppGrid>
                                         <AppGrid item xs={12}>
                                             <Adjuster
                                                 vertical="center"
                                                 horizontal="center"
-                                                className={sheet.classes['button-container']}
+                                                className={
+                                                    sheet.classes[
+                                                        'button-container'
+                                                    ]
+                                                }
                                             >
-                                                <AppButton variant="raised" color="primary" onClick={this.handleLogIn}>
+                                                <AppButton
+                                                    variant="raised"
+                                                    color="primary"
+                                                    onClick={this.handleLogIn}
+                                                >
                                                     ログイン
                                                 </AppButton>
                                             </Adjuster>

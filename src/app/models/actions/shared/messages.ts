@@ -1,11 +1,9 @@
-export interface Messages {
-    errorMessage: string;
+import { MessageLevel } from '../../../../lib/models/types';
+
+export interface Message {
+    text: string;
+    level: MessageLevel;
 }
-export interface MessagesStore extends Messages {
-    isShow: boolean;
-}
-export interface MessagesEvent {
-    initialize: void;
-    handleOpen: Messages;
-    handleClose: string;
+export interface MessagesStore {
+    messages: Message[];
 }

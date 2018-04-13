@@ -12,7 +12,10 @@ import {
     FirstPage,
     KeyboardArrowLeft,
     KeyboardArrowRight,
-    LastPage
+    LastPage,
+    Error,
+    Warning,
+    Info
 } from 'material-ui-icons';
 
 export const NoteIcon = Note;
@@ -29,3 +32,6 @@ export const FirstPageIcon = FirstPage;
 export const KeyboardArrowLeftIcon = KeyboardArrowLeft;
 export const KeyboardArrowRightIcon = KeyboardArrowRight;
 export const LastPageIcon = LastPage;
+export const ErrorIcon = Error;
+export const WarningIcon = Warning;
+export const InfoIcon = Info;

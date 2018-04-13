@@ -123,8 +123,9 @@ namespace InnerScope {
                             await Products.service.createAsync(
                                 this.state.product
                             );
-                            messagesAction.emit('handleOpen', {
-                                errorMessage: '製品を登録しました。'
+                            messagesAction.emit('showMessage', {
+                                text: '製品を登録しました。',
+                                level: 'info'
                             });
                             break;
                     }
