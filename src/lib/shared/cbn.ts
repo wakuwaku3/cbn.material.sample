@@ -26,14 +26,23 @@ export namespace Cbn {
         emit = <Key extends keyof T>(key: Key, args?: T[Key]) => {
             this._inner.emit(key, args);
         };
-        on = <Key extends keyof T>(key: Key, lisner: (args?: T[Key]) => void) => {
+        on = <Key extends keyof T>(
+            key: Key,
+            lisner: (args?: T[Key]) => void
+        ) => {
             this._inner.on(key, lisner);
         };
-        observe = <TKey extends keyof T>(key: TKey): rxjs.Observable<T[TKey]> => {
+        observe = <TKey extends keyof T>(
+            key: TKey
+        ): rxjs.Observable<T[TKey]> => {
             return Observable.fromEvent(this, key);
         };
     }
-    export abstract class PageAction<TStore extends object, Key extends keyof TStore, TEvent> {
+    export abstract class PageAction<
+        TStore extends object,
+        Key extends keyof TStore,
+        TEvent
+    > {
         protected abstract initialize();
         emitter = new EventEmitter<TEvent & Event>();
         constructor(public key: Key, protected store: Store<TStore>) {
@@ -51,10 +60,15 @@ export namespace Cbn {
         private reflesh() {
             this.model = Object.assign({}, this.model);
         }
-        observe<TKey extends keyof (TEvent & Event)>(key: TKey): rxjs.Observable<(TEvent & Event)[TKey]> {
+        observe<TKey extends keyof (TEvent & Event)>(
+            key: TKey
+        ): rxjs.Observable<(TEvent & Event)[TKey]> {
             return this.emitter.observe(key);
         }
-        emit<TKey extends keyof (TEvent & Event)>(key: TKey, args?: (TEvent & Event)[TKey]) {
+        emit<TKey extends keyof (TEvent & Event)>(
+            key: TKey,
+            args?: (TEvent & Event)[TKey]
+        ) {
             this.emitter.emit(key, args);
         }
     }
@@ -66,13 +80,21 @@ export namespace Cbn {
         if (v1 >= v2) return d === 'asc' ? 1 : -1;
         if (v1 <= v2) return d === 'asc' ? -1 : 1;
     };
-    export const sort = <T>(selector: (v: T) => any, d: SortDirection) => (v1: T, v2: T) => {
+    export const sort = <T>(selector: (v: T) => any, d: SortDirection) => (
+        v1: T,
+        v2: T
+    ) => {
         return compare(selector(v1), selector(v2), d);
     };
-    export const mergeClassNeme = <T extends StyledProps>(props: T, ...classNames: string[]) => {
+    export const mergeClassNeme = <T extends StyledProps>(
+        props: T,
+        ...classNames: string[]
+    ) => {
         if (props) {
             let assign: StyledProps = {
-                className: [props.className, ...classNames].filter(x => x).join(' ')
+                className: [props.className, ...classNames]
+                    .filter(x => x)
+                    .join(' ')
             };
             return Object.assign({}, props, assign);
         }
@@ -80,7 +102,9 @@ export namespace Cbn {
             className: [...classNames].filter(x => x).join(' ')
         };
     };
-    export const mergeClasses = <Style>(...classesList: Partial<Record<keyof Style, string>>[]) => {
+    export const mergeClasses = <Style>(
+        ...classesList: Partial<Record<keyof Style, string>>[]
+    ) => {
         let copy = {} as Record<keyof Style, string>;
         let x = 'x';
         x += 'a';
@@ -106,13 +130,19 @@ export namespace Cbn {
     };
 
     export namespace Observable {
-        export const fromEvent = <T, Key extends keyof T>(emitter: EventEmitter<T>, key: Key) => {
-            return rxjs.Observable.fromEvent(emitter.inner, key).map((v: any) => {
-                return v as T[Key];
-            });
+        export const fromEvent = <T, Key extends keyof T>(
+            emitter: EventEmitter<T>,
+            key: Key
+        ) => {
+            return rxjs.Observable.fromEvent(emitter.inner, key).map(
+                (v: any) => {
+                    return v as T[Key];
+                }
+            );
         };
     }
-    export const delay = (ms: number) => new Promise(r => setTimeout(() => r(), ms));
+    export const delay = (ms: number) =>
+        new Promise(r => setTimeout(() => r(), ms));
     export namespace Ajax {
         export const getText = async (url: string) => {
             let response = await fetch(url);
@@ -181,7 +211,11 @@ export namespace Cbn {
             withLocalStorage: (keyof TStore)[]
         ): Store<TStore> => {
             withLocalStorage.forEach(key => {
-                store.before(key).subscribe(p => localStorage.setItem(key, JSON.stringify(p.value)));
+                store
+                    .before(key)
+                    .subscribe(p =>
+                        localStorage.setItem(key, JSON.stringify(p.value))
+                    );
             });
             return store;
         };
@@ -213,7 +247,10 @@ export namespace Cbn {
         export const format = (date: Date, format: string) => {
             if (!format) format = 'YYYY-MM-DD hh:mm:ss.SSS';
             format = format.replace(/YYYY/g, date.getFullYear().toString());
-            format = format.replace(/MM/g, ('0' + (date.getMonth() + 1)).slice(-2));
+            format = format.replace(
+                /MM/g,
+                ('0' + (date.getMonth() + 1)).slice(-2)
+            );
             format = format.replace(/DD/g, ('0' + date.getDate()).slice(-2));
             format = format.replace(/hh/g, ('0' + date.getHours()).slice(-2));
             format = format.replace(/mm/g, ('0' + date.getMinutes()).slice(-2));
@@ -221,7 +258,11 @@ export namespace Cbn {
             if (format.match(/S/g)) {
                 var milliSeconds = ('00' + date.getMilliseconds()).slice(-3);
                 var length = format.match(/S/g).length;
-                for (var i = 0; i < length; i++) format = format.replace(/S/, milliSeconds.substring(i, i + 1));
+                for (var i = 0; i < length; i++)
+                    format = format.replace(
+                        /S/,
+                        milliSeconds.substring(i, i + 1)
+                    );
             }
             return format;
         };

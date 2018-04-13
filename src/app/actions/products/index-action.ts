@@ -1,7 +1,10 @@
 import { Cbn } from '../../../lib/shared/cbn';
 import { Store } from 'undux';
 import { ActionBase } from '../bases/action-base';
-import { ProductsIndexEvent, ProductsIndexStoreCondition } from '../../models/actions/products';
+import {
+    ProductsIndexEvent,
+    ProductsIndexStoreCondition
+} from '../../models/actions/products';
 import { Products } from '../../services/products-service';
 
 namespace InnerScope {
@@ -31,10 +34,15 @@ namespace InnerScope {
             });
             this.observe('search').subscribe(async condition => {
                 if (condition) {
-                    this.model.condition = Object.assign(this.model.condition, condition);
+                    this.model.condition = Object.assign(
+                        this.model.condition,
+                        condition
+                    );
                 }
                 this.emit('reflesh');
-                this.model = await Products.service.getIndexAsync(this.model.condition);
+                this.model = await Products.service.getIndexAsync(
+                    this.model.condition
+                );
             });
             this.observe('selectAll').subscribe(value => {
                 this.model.items.forEach(x => (x.isSelected = value));

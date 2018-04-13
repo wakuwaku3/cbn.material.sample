@@ -12,8 +12,9 @@ import {
 import { LocalStorageRepository } from '../../lib/services/local-storage-repository';
 
 export namespace Products {
-    const storage = new LocalStorageRepository<Product<ProductVersion>>('products-storage', p1 => p2 =>
-        p1.productId === p2.productId
+    const storage = new LocalStorageRepository<Product<ProductVersion>>(
+        'products-storage',
+        p1 => p2 => p1.productId === p2.productId
     );
     class Service {
         initializeIndexAsync = async () => {
@@ -44,7 +45,9 @@ export namespace Products {
                     return res;
                 })
                 .map((v): ProductsIndexStoreItem => {
-                    let version = v.productVersions.sort(Cbn.sort(v => v.date, 'desc'));
+                    let version = v.productVersions.sort(
+                        Cbn.sort(v => v.date, 'desc')
+                    );
                     let latestVersion = version[0] ? version[0].version : null;
                     return {
                         isSelected: false,
@@ -57,20 +60,24 @@ export namespace Products {
                 })
                 .sort((v1, v2) => {
                     let key =
-                        req.sorting && req.sorting.name && Object.keys(v1).indexOf(req.sorting.name)
+                        req.sorting &&
+                        req.sorting.name &&
+                        Object.keys(v1).indexOf(req.sorting.name)
                             ? req.sorting.name
                             : 'id';
                     return Cbn.sort(v => v[key], req.sorting.direction)(v1, v2);
                 });
             let total = items.length;
             if (req.pagination.current * req.pagination.display > total) {
-                req.pagination.current = Math.floor(total / req.pagination.display);
+                req.pagination.current = Math.floor(
+                    total / req.pagination.display
+                );
             }
             let skip = req.pagination.current * req.pagination.display;
 
             items = items.slice(skip, skip + req.pagination.display);
             let condition = Object.assign({}, req, {
-                pager: {
+                pagination: {
                     total,
                     current: req.pagination.current,
                     display: req.pagination.display
@@ -83,8 +90,17 @@ export namespace Products {
         };
         createAsync = async (product: Product<ProductVersion>) => {
             let list = await storage.getAsync();
-            product.productId = list.length ? Math.max(...list.map(x => x.productId)) + 1 : 0;
-            let did = Math.max(...list.map(x => Math.max(...x.productVersions.map(y => y.productVersionId)))) + 1;
+            product.productId = list.length
+                ? Math.max(...list.map(x => x.productId)) + 1
+                : 0;
+            let did =
+                Math.max(
+                    ...list.map(x =>
+                        Math.max(
+                            ...x.productVersions.map(y => y.productVersionId)
+                        )
+                    )
+                ) + 1;
             product.productVersions.forEach(x => {
                 x.productId = product.productId;
                 x.productVersionId = did++;

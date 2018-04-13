@@ -1,7 +1,13 @@
 import * as React from 'react';
 import { themeAction } from '../../actions/shared/theme-action';
 import { decorate } from '../../helper/app-style-helper';
-import { AppTypography, AppFormControl, AppSelect, AppMenuItem, AppIconButton } from '../material-ui/wrapper';
+import {
+    AppTypography,
+    AppFormControl,
+    AppSelect,
+    AppMenuItem,
+    AppIconButton
+} from '../material-ui/wrapper';
 import {
     FirstPageIcon,
     KeyboardArrowLeftIcon,
@@ -9,6 +15,7 @@ import {
     LastPageIcon
 } from '../material-ui/icon-wrapper';
 import { Pagination } from '../../../lib/models/pagination';
+
 namespace InnerScope {
     export interface Style {
         root;
@@ -41,9 +48,9 @@ namespace InnerScope {
         onChange: (pagination: Pagination) => void;
         rowsPerPage?: number[];
     }
-    interface State {}
     export const component = decorate(style)<Props>(sheet => props => {
-        let getlastPage = () => Math.ceil(props.pagination.total / props.pagination.display) - 1;
+        let getlastPage = () =>
+            Math.ceil(props.pagination.total / props.pagination.display) - 1;
         let getdescription = () => {
             let { total, display, current } = props.pagination;
             let start = display * current + 1;
@@ -57,7 +64,9 @@ namespace InnerScope {
         };
         return (
             <div className={sheet.classes.root}>
-                <AppTypography className={sheet.classes.text}>表示件数</AppTypography>
+                <AppTypography className={sheet.classes.text}>
+                    表示件数
+                </AppTypography>
                 <AppFormControl className={sheet.classes.display}>
                     <AppSelect
                         value={props.pagination.display}
@@ -74,7 +83,9 @@ namespace InnerScope {
                         ))}
                     </AppSelect>
                 </AppFormControl>
-                <AppTypography className={sheet.classes.text}>{getdescription()}</AppTypography>
+                <AppTypography className={sheet.classes.text}>
+                    {getdescription()}
+                </AppTypography>
                 <div className={sheet.classes['button-container']}>
                     <AppIconButton
                         onClick={e =>

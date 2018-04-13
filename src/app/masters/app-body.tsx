@@ -16,6 +16,7 @@ import { AppMessages } from './app-messages';
 import { authAction } from '../actions/shared/auth-action';
 import { browserAction } from '../actions/shared/browser-action';
 import { decorateWithStore } from '../helper/app-style-helper';
+import { AppDialog } from './app-dialog';
 
 namespace InnerScope {
     let pt = 10;
@@ -46,6 +47,7 @@ namespace InnerScope {
         return (
             <div className={sheet.classes.body}>
                 <AppMessages />
+                <AppDialog />
                 {authAction.model.authenticated ? <AppRouter /> : <LogIn />}
             </div>
         );

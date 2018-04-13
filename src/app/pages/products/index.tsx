@@ -1,11 +1,22 @@
 import * as React from 'react';
 import { decorate, decorateWithStore } from '../../helper/app-style-helper';
-import { AppButton, AppGrid, AppTextField } from '../../components/material-ui/wrapper';
-import { AddIcon, RemoveIcon, RefreshIcon } from '../../components/material-ui/icon-wrapper';
+import {
+    AppButton,
+    AppGrid,
+    AppTextField
+} from '../../components/material-ui/wrapper';
+import {
+    AddIcon,
+    RemoveIcon,
+    RefreshIcon
+} from '../../components/material-ui/icon-wrapper';
 import { productsIndexAction } from '../../actions/products/index-action';
 import { TableRow } from 'material-ui';
 import { CheckedCell } from '../../components/table-control/checked-cell';
-import { HeadCell, HeadCellProps } from '../../components/table-control/head-cell';
+import {
+    HeadCell,
+    HeadCellProps
+} from '../../components/table-control/head-cell';
 import { Cell } from '../../components/table-control/cell';
 import { TableContainer } from '../../components/table-control/table-container';
 import { Adjuster } from '../../components/layout/adjuster';
@@ -27,7 +38,10 @@ namespace InnerScope {
     };
     const SearchResult = decorate(style)<RouteComponentProps<{}>>(
         sheet =>
-            class extends React.Component<RouteComponentProps<{}>, { columns: number[] }> {
+            class extends React.Component<
+                RouteComponentProps<{}>,
+                { columns: number[] }
+            > {
                 constructor(props) {
                     super(props);
                     this.state = { columns: [50, 100, 300, 300, 300, 300] };
@@ -43,14 +57,24 @@ namespace InnerScope {
                             variant="raised"
                             size="small"
                             color="primary"
-                            onClick={() => this.props.history.push(Url.productsCreate)}
+                            onClick={() =>
+                                this.props.history.push(Url.productsCreate)
+                            }
                         >
                             <AddIcon />
                         </AppButton>
-                        <AppButton variant="raised" size="small" color="secondary">
+                        <AppButton
+                            variant="raised"
+                            size="small"
+                            color="secondary"
+                        >
                             <RemoveIcon />
                         </AppButton>
-                        <AppButton variant="raised" size="small" onClick={e => productsIndexAction.emit('search')}>
+                        <AppButton
+                            variant="raised"
+                            size="small"
+                            onClick={e => productsIndexAction.emit('search')}
+                        >
                             <RefreshIcon />
                         </AppButton>
                     </div>
@@ -66,7 +90,9 @@ namespace InnerScope {
                         sorting={productsIndexAction.model.condition.sorting}
                         onSizeChange={this.handleSizeChange(index)}
                         name={name}
-                        onSort={(e, s) => productsIndexAction.emit('search', { sorting: s })}
+                        onSort={(e, s) =>
+                            productsIndexAction.emit('search', { sorting: s })
+                        }
                     >
                         {text}
                     </HeadCell>
@@ -75,13 +101,22 @@ namespace InnerScope {
                     <TableRow>
                         <CheckedCell
                             hidden={!productsIndexAction.model.items.length}
-                            checked={productsIndexAction.model.items.every(x => x.isSelected)}
-                            onChange={e => productsIndexAction.emit('selectAll', e.target.checked)}
+                            checked={productsIndexAction.model.items.every(
+                                x => x.isSelected
+                            )}
+                            onChange={e =>
+                                productsIndexAction.emit(
+                                    'selectAll',
+                                    e.target.checked
+                                )
+                            }
                         />
                         {this.getHead(1, 'id', 'ID')}
                         {this.getHead(2, 'name', '製品名')}
                         {this.getHead(3, 'status', '状態')}
-                        {this.getHead(4, 'price', '価格', { cellProps: { numeric: true } })}
+                        {this.getHead(4, 'price', '価格', {
+                            cellProps: { numeric: true }
+                        })}
                         {this.getHead(5, 'latestVersion', '最新バージョン')}
                     </TableRow>
                 );
@@ -91,6 +126,11 @@ namespace InnerScope {
                             <TableRow
                                 key={n.id}
                                 selected={n.isSelected}
+                                onDoubleClick={e =>
+                                    this.props.history.push(
+                                        Url.productsUpdate(n.id)
+                                    )
+                                }
                                 onClick={e => {
                                     productsIndexAction.emit('select', {
                                         value: !n.isSelected,
@@ -129,7 +169,9 @@ namespace InnerScope {
                     return (
                         <TableContainer
                             columns={this.state.columns}
-                            pagination={productsIndexAction.model.condition.pagination}
+                            pagination={
+                                productsIndexAction.model.condition.pagination
+                            }
                             onPaging={e => {
                                 productsIndexAction.emit('search', {
                                     pagination: e
@@ -172,7 +214,11 @@ namespace InnerScope {
             </AppGrid>
             <AppGrid item xs={12}>
                 <Adjuster horizontal="right">
-                    <AppButton variant="raised" color="secondary" onClick={() => productsIndexAction.emit('reset')}>
+                    <AppButton
+                        variant="raised"
+                        color="secondary"
+                        onClick={() => productsIndexAction.emit('reset')}
+                    >
                         リセット
                     </AppButton>
                 </Adjuster>
@@ -181,23 +227,23 @@ namespace InnerScope {
     );
 
     const styles = {};
-    export const component = decorateWithStore(styles, productsIndexAction.key)<RouteComponentProps<{}>>(
-        sheet => props => {
-            return (
-                <AppGrid container>
-                    <AppGrid item xs={12}>
-                        <Page title="製品一覧" loading={!productsIndexAction.model}>
-                            <FieldSet title="検索条件" defaultExpanded={false}>
-                                <Condition />
-                            </FieldSet>
-                            <FieldSet title="検索結果">
-                                <SearchResult {...props} />
-                            </FieldSet>
-                        </Page>
-                    </AppGrid>
+    export const component = decorateWithStore(styles, productsIndexAction.key)<
+        RouteComponentProps<{}>
+    >(sheet => props => {
+        return (
+            <AppGrid container>
+                <AppGrid item xs={12}>
+                    <Page title="製品一覧" loading={!productsIndexAction.model}>
+                        <FieldSet title="検索条件" defaultExpanded={false}>
+                            <Condition />
+                        </FieldSet>
+                        <FieldSet title="検索結果">
+                            <SearchResult {...props} />
+                        </FieldSet>
+                    </Page>
                 </AppGrid>
-            );
-        }
-    );
+            </AppGrid>
+        );
+    });
 }
 export const ProductsIndex = InnerScope.component;

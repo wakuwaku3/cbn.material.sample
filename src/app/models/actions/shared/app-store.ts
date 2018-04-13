@@ -6,12 +6,14 @@ import { MessagesStore } from './messages';
 import { HomeIndexStore } from '../home';
 import { HomeAboutStore } from '../home/about';
 import { ProductsIndexStore } from '../products';
+import { DialogStore } from './dialog';
 
 export class AppStore {
     theme: ThemeStore = this.getByLocalStorage('theme');
     browser: BrowserStore = this.getNewValue('browser');
     auth: AuthStore = this.getByLocalStorage('auth');
     messages: MessagesStore = this.getNewValue('messages');
+    dialog: DialogStore = this.getNewValue('dialog');
     homeIndex: HomeIndexStore = this.getNewValue('homeIndex');
     homeAbout: HomeAboutStore = this.getNewValue('homeAbout');
     productsIndex: ProductsIndexStore = this.getNewValue('productsIndex');

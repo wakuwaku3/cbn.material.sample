@@ -31,6 +31,7 @@ import { Products } from '../../services/products-service';
 import { messagesAction } from '../../actions/shared/messages-action';
 import { Url } from '../../masters/app-router';
 import { productsIndexAction } from '../../actions/products/index-action';
+import { dialogAction } from '../../actions/shared/dialog-action';
 
 namespace InnerScope {
     interface Style {
@@ -111,7 +112,7 @@ namespace InnerScope {
                         e.target.value;
                     this.setState({ product: this.state.product });
                 };
-                handleClickAdd = (e: React.ChangeEvent<HTMLInputElement>) => {
+                handleClickAdd = () => {
                     this.state.product.productVersions.push(
                         this.createNewVersion()
                     );
@@ -120,16 +121,24 @@ namespace InnerScope {
                 handleClickExecute = async () => {
                     switch (this.mode) {
                         case 'create':
-                            await Products.service.createAsync(
-                                this.state.product
-                            );
-                            messagesAction.emit('showMessage', {
-                                text: '製品を登録しました。',
-                                level: 'info'
+                            dialogAction.emit('showYesNo', {
+                                title: '製品登録',
+                                text: '製品を登録します。よろしいですか？',
+                                callBack: async yes => {
+                                    if (yes) {
+                                        await Products.service.createAsync(
+                                            this.state.product
+                                        );
+                                        messagesAction.emit('showMessage', {
+                                            text: '製品を登録しました。',
+                                            level: 'info'
+                                        });
+                                        this.handleClickReturn();
+                                    }
+                                }
                             });
                             break;
                     }
-                    this.handleClickReturn();
                 };
                 handleClickReset = () => {
                     if (this.mode === 'create') {
@@ -256,7 +265,7 @@ namespace InnerScope {
                                 variant="raised"
                                 size="small"
                                 color="primary"
-                                onClick={() => {}}
+                                onClick={this.handleClickAdd}
                             >
                                 <AddIcon />
                             </AppButton>
