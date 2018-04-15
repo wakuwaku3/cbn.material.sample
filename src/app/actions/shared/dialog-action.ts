@@ -1,38 +1,50 @@
-import { ActionBase } from '../bases/action-base';
-import { DialogContent } from '../../models/actions/shared/dialog';
+import { ActionBase } from '../../../lib/shared/react-frxp';
 
 namespace InnerScope {
-    const key = 'dialog';
-    type key = 'dialog';
-    export interface event {
-        reset: void;
-        showSimple: DialogContent;
-        showYesNo: DialogContent;
+    export interface Store extends Content {
+        mode: 'none' | 'simple' | 'yesno';
+        title: string;
+        text: string;
+        callBack: (yes?: boolean) => void;
     }
-    export class Action extends ActionBase<key, event> {
-        constructor() {
-            super(key);
-        }
+    export interface Content {
+        title: string;
+        text: string;
+        callBack: (yes?: boolean) => void;
+    }
+    export interface Event {
+        reset: void;
+        showSimple: Content;
+        showYesNo: Content;
+    }
+    export class Action extends ActionBase<Store, Event> {
         protected initialize() {
             this.observe('reset').subscribe(value => {
-                this.model = {
+                this.setStore({
                     mode: 'none',
                     title: '',
                     text: '',
                     callBack: () => {}
-                };
+                });
+                this.next('render');
             });
             this.observe('showSimple').subscribe(content => {
-                this.model = Object.assign(content, {
-                    mode: 'simple' as 'simple'
-                });
+                this.setStore(
+                    Object.assign(content, {
+                        mode: 'simple' as 'simple'
+                    })
+                );
+                this.next('render');
             });
             this.observe('showYesNo').subscribe(content => {
-                this.model = Object.assign(content, {
-                    mode: 'yesno' as 'yesno'
-                });
+                this.setStore(
+                    Object.assign(content, {
+                        mode: 'yesno' as 'yesno'
+                    })
+                );
+                this.next('render');
             });
-            this.emit('reset');
+            this.next('reset');
         }
     }
 }

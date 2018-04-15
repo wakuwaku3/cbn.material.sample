@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { themeAction } from '../actions/shared/theme-action';
-import { decorateWithStore } from '../helper/app-style-helper';
 import { authAction } from '../actions/shared/auth-action';
 import { Route, RouteComponentProps } from 'react-router';
 import {
@@ -13,11 +12,17 @@ import {
     AppDivider
 } from '../components/material-ui/wrapper';
 import { Url } from './app-router';
-import { AppsIcon, AccountCircleIcon, MenuIcon } from '../components/material-ui/icon-wrapper';
+import {
+    AppsIcon,
+    AccountCircleIcon,
+    MenuIcon
+} from '../components/material-ui/icon-wrapper';
+import { decorate, StyledProps } from '../../lib/shared/style-helper';
+import { withStore } from '../../lib/shared/react-frxp';
+import { Theme } from 'material-ui';
 
 namespace InnerScope {
-    export const getHeight = () => {
-        const theme = themeAction.theme;
+    export const getHeight = (theme: Theme) => {
         if (window.innerWidth >= theme.breakpoints.values.sm) {
             return theme.mixins.toolbar[theme.breakpoints.up('sm')].minHeight;
         }
@@ -45,31 +50,35 @@ namespace InnerScope {
         menu: HTMLElement;
     }
 
-    export const component = decorateWithStore(style, authAction.key)(
-        sheet =>
-            class extends React.Component<{}, State> {
-                constructor(props) {
-                    super(props);
-                    this.state = { profile: null, menu: null };
-                }
-                private handleOpenMenu(el: HTMLElement) {
-                    this.setState({ menu: el });
-                }
-                private handleCloseMenu() {
-                    this.setState({ menu: null });
-                }
-                private handleOpenProfile(el: HTMLElement) {
-                    this.setState({ profile: el });
-                }
-                private handleCloseProfile() {
-                    this.setState({ profile: null });
-                }
-                render() {
-                    return <Route render={this.getElement} />;
-                }
-                getElement = ({ history }: RouteComponentProps<{}>) => (
+    interface InnerProps {
+        authenticated: boolean;
+        onLogout: () => void;
+    }
+    const Inner = decorate(style)(
+        class extends React.Component<InnerProps & StyledProps<Style>, State> {
+            constructor(props) {
+                super(props);
+                this.state = { profile: null, menu: null };
+            }
+            private handleOpenMenu(el: HTMLElement) {
+                this.setState({ menu: el });
+            }
+            private handleCloseMenu() {
+                this.setState({ menu: null });
+            }
+            private handleOpenProfile(el: HTMLElement) {
+                this.setState({ profile: el });
+            }
+            private handleCloseProfile() {
+                this.setState({ profile: null });
+            }
+            render() {
+                return <Route render={this.getElement} />;
+            }
+            getElement = ({ history }: RouteComponentProps<{}>) => {
+                return (
                     <AppBar position="static">
-                        <AppToolbar className={sheet.classes.bar}>
+                        <AppToolbar className={this.props.classes.bar}>
                             <AppIconButton
                                 color="inherit"
                                 onClick={e => {
@@ -78,16 +87,24 @@ namespace InnerScope {
                             >
                                 <AppsIcon />
                             </AppIconButton>
-                            <AppTypography variant="title" color="inherit" className={sheet.classes.title}>
+                            <AppTypography
+                                variant="title"
+                                color="inherit"
+                                className={this.props.classes.title}
+                            >
                                 Title
                             </AppTypography>
-                            {authAction.model.authenticated && (
+                            {this.props.authenticated && (
                                 <div>
                                     <AppIconButton
                                         aria-owns="menu-appbar"
                                         aria-haspopup="true"
                                         color="inherit"
-                                        onClick={e => this.handleOpenProfile(e.currentTarget)}
+                                        onClick={e =>
+                                            this.handleOpenProfile(
+                                                e.currentTarget
+                                            )
+                                        }
                                     >
                                         <AccountCircleIcon />
                                     </AppIconButton>
@@ -104,7 +121,9 @@ namespace InnerScope {
                                         }}
                                         getContentAnchorEl={null}
                                         open={Boolean(this.state.profile)}
-                                        onClose={() => this.handleCloseProfile()}
+                                        onClose={() =>
+                                            this.handleCloseProfile()
+                                        }
                                     >
                                         <AppMenuItem
                                             onClick={() => {
@@ -118,17 +137,21 @@ namespace InnerScope {
                                         <AppMenuItem
                                             onClick={() => {
                                                 this.handleCloseProfile();
-                                                authAction.emit('logout');
+                                                this.props.onLogout();
                                             }}
                                         >
                                             LogOut
                                         </AppMenuItem>
                                     </AppMenu>
                                     <AppIconButton
-                                        className={sheet.classes.menuButton}
+                                        className={
+                                            this.props.classes.menuButton
+                                        }
                                         aria-haspopup="true"
                                         color="inherit"
-                                        onClick={e => this.handleOpenMenu(e.currentTarget)}
+                                        onClick={e =>
+                                            this.handleOpenMenu(e.currentTarget)
+                                        }
                                         aria-label="Menu"
                                     >
                                         <MenuIcon />
@@ -171,8 +194,16 @@ namespace InnerScope {
                         </AppToolbar>
                     </AppBar>
                 );
-            }
+            };
+        }
     );
+
+    export const component = withStore(authAction)(() => (
+        <Inner
+            authenticated={authAction.store.authenticated}
+            onLogout={() => authAction.next('logout')}
+        />
+    ));
 }
 export const getTopHeight = InnerScope.getHeight;
 export const AppTop = InnerScope.component;

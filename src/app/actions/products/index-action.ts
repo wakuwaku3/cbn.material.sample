@@ -1,63 +1,60 @@
-import { Cbn } from '../../../lib/shared/cbn';
-import { Store } from 'undux';
-import { ActionBase } from '../bases/action-base';
+import { ActionBase } from '../../../lib/shared/react-frxp';
 import {
-    ProductsIndexEvent,
-    ProductsIndexStoreCondition
-} from '../../models/actions/products';
-import { Products } from '../../services/products-service';
+    ProductsIndexItem,
+    ProductsIndexCondition,
+    Products
+} from '../../services/products-service';
 
 namespace InnerScope {
-    const key = 'productsIndex';
-    type key = 'productsIndex';
-    export interface event {
+    export interface Store {
+        condition: ProductsIndexCondition;
+        items: ProductsIndexItem[];
+    }
+    export interface Event {
         reset: void;
         initialize: void;
-        search: Partial<ProductsIndexStoreCondition>;
+        search: Partial<ProductsIndexCondition>;
         select: { value: boolean; id: number };
         selectAll: boolean;
         remove: number[];
     }
-    export class Action extends ActionBase<key, event> {
-        constructor() {
-            super(key);
-        }
+    export class Action extends ActionBase<Store, Event> {
         protected initialize() {
             this.observe('initialize').subscribe(() => {
-                if (!this.model || !this.model.condition) {
-                    this.emit('reset');
+                if (!this.store || !this.store.condition) {
+                    this.next('reset');
                     return;
                 }
-                this.emit('search', this.model.condition);
+                this.next('search', this.store.condition);
             });
             this.observe('reset').subscribe(async () => {
-                this.model = await Products.service.initializeIndexAsync();
+                this.setStore(await Products.service.initializeIndexAsync());
             });
             this.observe('search').subscribe(async condition => {
                 if (condition) {
-                    this.model.condition = Object.assign(
-                        this.model.condition,
+                    this.store.condition = Object.assign(
+                        this.store.condition,
                         condition
                     );
                 }
-                this.emit('reflesh');
-                this.model = await Products.service.getIndexAsync(
-                    this.model.condition
+                this.next('render');
+                this.setStore(
+                    await Products.service.getIndexAsync(this.store.condition)
                 );
             });
             this.observe('selectAll').subscribe(value => {
-                this.model.items.forEach(x => (x.isSelected = value));
-                this.emit('reflesh');
+                this.store.items.forEach(x => (x.isSelected = value));
+                this.next('render');
             });
             this.observe('select').subscribe(({ value, id }) => {
-                this.model.items.find(x => x.id === id).isSelected = value;
-                this.emit('reflesh');
+                this.store.items.find(x => x.id === id).isSelected = value;
+                this.next('render');
             });
             this.observe('remove').subscribe(async ids => {
                 await Products.service.removeRangeAsync(...ids);
-                this.emit('search');
+                this.next('search');
             });
-            this.emit('initialize');
+            this.next('initialize');
         }
     }
 }

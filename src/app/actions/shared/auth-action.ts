@@ -1,15 +1,22 @@
-import { Cbn } from '../../../lib/shared/cbn';
-import { Store } from 'undux';
-import { AuthEvent } from '../../models/actions/shared/auth';
-import { ActionBase } from '../bases/action-base';
-let i = 0;
+import { LocalstorageActionBase } from '../../../lib/shared/react-frxp';
+import { Message } from './messages-action';
+
 namespace InnerScope {
-    const key = 'auth';
-    type key = 'auth';
-    type event = AuthEvent;
-    export class Action extends ActionBase<key, event> {
+    export interface Store {
+        authenticated: boolean;
+    }
+    export interface LogInEventArgs {
+        id: string;
+        password: string;
+        callBackHasError: (message: Message) => void;
+    }
+    export interface Event {
+        login: LogInEventArgs;
+        logout: void;
+    }
+    export class Action extends LocalstorageActionBase<Store, Event> {
         constructor() {
-            super(key);
+            super('auth');
         }
         protected initialize() {
             this.observe('login').subscribe(args => {
@@ -20,16 +27,17 @@ namespace InnerScope {
                         level: 'error'
                     });
                 } else {
-                    this.model.authenticated = true;
-                    this.emitter.emit('reflesh');
+                    this.store.authenticated = true;
+                    this.next('render');
                 }
             });
             this.observe('logout').subscribe(() => {
-                this.model.authenticated = false;
-                this.emitter.emit('reflesh');
+                this.store.authenticated = false;
+                this.next('render');
             });
-            if (!this.model) {
-                this.model = { authenticated: false };
+            if (!this.store) {
+                this.setStore({ authenticated: false });
+                this.next('render');
             }
         }
     }

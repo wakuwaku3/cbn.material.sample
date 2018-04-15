@@ -1,31 +1,19 @@
-import { Cbn } from '../../../lib/shared/cbn';
-import { Store } from 'undux';
-import { BrowserEvent } from '../../models/actions/shared/browser';
-import { ActionBase } from '../bases/action-base';
+import { ActionBase } from '../../../lib/shared/react-frxp';
+import { observeWindow } from '../../../lib/shared/window-helper';
 
 namespace InnerScope {
-    const key = 'browser';
-    type key = 'browser';
-    type event = BrowserEvent;
-    export class Action extends ActionBase<key, event> {
-        constructor() {
-            super(key);
-        }
+    export interface Event {
+        resize: void;
+        resizeWindowItem: void;
+    }
+    export class Action extends ActionBase<{}, Event> {
         protected initialize() {
-            Cbn.Window.observe('resize').subscribe(() => {
-                this.emit('resize');
-            });
-            this.observe('initialize').subscribe(() => {
-                if (!this.model) {
-                    this.model = { windowHeight: window.innerHeight };
-                    this.emit('resize');
-                }
+            observeWindow('resize').subscribe(() => {
+                this.next('resize');
             });
             this.observe('resize').subscribe(() => {
-                this.model.windowHeight = innerHeight;
-                this.emitter.emit('reflesh');
+                this.next('render');
             });
-            this.emitter.emit('initialize');
         }
     }
 }

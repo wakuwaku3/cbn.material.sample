@@ -18,3 +18,4 @@ export type ThProps = React.DetailedHTMLProps<
 export type SortDirection = 'asc' | 'desc';
 export type Classes<Style> = Record<keyof Partial<Style>, string>;
 export type MessageLevel = 'error' | 'warning' | 'info';
+export type StyleFactory<T extends object> = (theme) => T;

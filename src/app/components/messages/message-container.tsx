@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { themeAction } from '../../actions/shared/theme-action';
-import { Message } from '../../models/actions/shared/messages';
 import { SnackBarOrigin } from 'material-ui/Snackbar';
-import { decorate } from '../../helper/app-style-helper';
 import { MessageBar } from './message-bar';
+import { Message } from '../../actions/shared/messages-action';
+import { decorate } from '../../../lib/shared/style-helper';
+import { Theme } from 'material-ui';
 
 namespace InnerScope {
     interface Style {
@@ -15,32 +16,32 @@ namespace InnerScope {
         'root-horizontal-center';
         'root-horizontal-right';
     }
-    const style: Style = {
-        root: themeAction.getThemeObservable().map(theme => ({
+    const style = (theme: Theme): Style => ({
+        root: {
             position: 'fixed',
             'z-index': theme.zIndex.snackbar,
             width: '100%',
             [theme.breakpoints.up('md')]: {
                 width: 0
             }
-        })),
+        },
         'root-vertical-top': { top: 0 },
         'root-vertical-center': { top: 0, bottom: 0 },
         'root-vertical-bottom': { bottom: 0 },
         'root-horizontal-left': { left: 0 },
         'root-horizontal-center': { left: 0, right: 0 },
         'root-horizontal-right': { right: 0 }
-    };
+    });
     export interface Props {
         onClose?: (index: number) => void;
         messages: Message[];
         anchorOrigin?: SnackBarOrigin;
     }
-    export const component = decorate(style)<Props>(sheet => props => {
+    export const component = decorate(style)<Props>(props => {
         let className = [
-            sheet.classes.root,
-            sheet.classes['root-vertical-' + props.anchorOrigin.vertical],
-            sheet.classes['root-horizontal-' + props.anchorOrigin.horizontal]
+            props.classes.root,
+            props.classes['root-vertical-' + props.anchorOrigin.vertical],
+            props.classes['root-horizontal-' + props.anchorOrigin.horizontal]
         ].join(' ');
         return (
             <div className={className}>

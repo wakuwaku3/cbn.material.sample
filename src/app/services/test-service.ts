@@ -1,12 +1,12 @@
-import { Cbn } from '../../lib/shared/cbn';
+import { AjaxHelper } from '../../lib/shared/ajax-helper';
 
 export namespace Test {
     class Service {
         async getInitializeAsync() {
-            return await Cbn.Ajax.getText('/test/get');
+            return await AjaxHelper.getTextAsync('/test/get');
         }
         async getStepAsync() {
-            return await Cbn.Ajax.get<number>('/test/getStep');
+            return await AjaxHelper.getAsync<number>('/test/getStep');
         }
     }
     export const service = new Service();

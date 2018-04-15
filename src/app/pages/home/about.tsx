@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Observable } from 'rxjs';
-import { Cbn } from '../../../lib/shared/cbn';
 import { Test } from '../../services/test-service';
 import { AppTypography, AppButton } from '../../components/material-ui/wrapper';
 import { AddIcon, RemoveIcon } from '../../components/material-ui/icon-wrapper';
 import { homeAboutAction } from '../../actions/home/about-actions';
-import { decorateWithStore } from '../../helper/app-style-helper';
+import { decorate } from '../../../lib/shared/style-helper';
+import { withStore } from '../../../lib/shared/react-frxp';
 
 namespace InnerScope {
     const styles = {
@@ -20,27 +20,28 @@ namespace InnerScope {
             width: '100%',
             height: '100%'
         },
-        'home-about': {
-            padding: homeAboutAction.paddingObservable,
+        'home-about': (props: Props) => ({
+            padding: props.counter,
             textAlign: 'center'
-        }
+        })
     };
-    const item = (
+    interface Props {
+        header: string;
+        counter: number;
+        onClickOperateCounterButton: (plus: boolean) => void;
+    }
+    const Item = (props: Props) => (
         <div>
             <AppTypography variant="display3">About</AppTypography>
-            <AppTypography variant="display2">
-                {homeAboutAction.model.header}
-            </AppTypography>
+            <AppTypography variant="display2">{props.header}</AppTypography>
             <AppTypography variant="display1">
-                現在の数値：{homeAboutAction.model.counter}
+                現在の数値：{props.counter}
             </AppTypography>
             <AppButton
                 variant="fab"
                 color="primary"
                 mini={true}
-                onClick={e =>
-                    homeAboutAction.emit('clickOperateCounterButton', true)
-                }
+                onClick={e => props.onClickOperateCounterButton(true)}
             >
                 <AddIcon />
             </AppButton>
@@ -48,23 +49,36 @@ namespace InnerScope {
                 variant="fab"
                 color="secondary"
                 mini={true}
-                onClick={e =>
-                    homeAboutAction.emit('clickOperateCounterButton', false)
-                }
+                onClick={e => props.onClickOperateCounterButton(false)}
             >
                 <RemoveIcon />
             </AppButton>
         </div>
     );
-    export const component = decorateWithStore(styles, homeAboutAction.key)(
-        sheet => () => (
-            <div className={sheet.classes.container}>
-                <div className={sheet.classes.item}>
-                    <div className={sheet.classes['home-about']}>{item}</div>
+    const Inner = decorate(styles)(props => (
+        <div className={props.classes.container}>
+            <div className={props.classes.item}>
+                <div className={props.classes['home-about']}>
+                    <Item
+                        counter={homeAboutAction.store.counter}
+                        header={homeAboutAction.store.header}
+                        onClickOperateCounterButton={p =>
+                            homeAboutAction.next('clickOperateCounterButton', p)
+                        }
+                    />
                 </div>
-                <div className={sheet.classes['home-about']}>{item}</div>
             </div>
-        )
-    );
+            <div className={props.classes['home-about']}>
+                <Item
+                    counter={homeAboutAction.store.counter}
+                    header={homeAboutAction.store.header}
+                    onClickOperateCounterButton={p =>
+                        homeAboutAction.next('clickOperateCounterButton', p)
+                    }
+                />
+            </div>
+        </div>
+    ));
+    export const component = withStore(homeAboutAction)(() => <Inner />);
 }
 export const HomeAbout = InnerScope.component;

@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { themeAction } from '../../actions/shared/theme-action';
-import { Message } from '../../models/actions/shared/messages';
 import Snackbar, { SnackBarOrigin } from 'material-ui/Snackbar';
-import { decorate } from '../../helper/app-style-helper';
 import { MessageField } from './message-field';
 import { AppIconButton } from '../material-ui/wrapper';
 import { CloseIcon } from '../material-ui/icon-wrapper';
+import { Message } from '../../actions/shared/messages-action';
+import { decorate } from '../../../lib/shared/style-helper';
+import { Theme } from 'material-ui';
 
 namespace InnerScope {
     interface Style {
@@ -16,19 +17,19 @@ namespace InnerScope {
         'content-button';
         'close-icon';
     }
-    const style: Style = {
-        root: themeAction.getThemeObservable().map(theme => ({
+    const style = (theme: Theme): Style => ({
+        root: {
             position: 'relative',
             [theme.breakpoints.up('md')]: {
                 'margin-bottom': '5px'
             }
-        })),
-        content: themeAction.getThemeObservable().map(theme => ({
+        },
+        content: {
             color: theme.palette.text.primary,
             background: theme.palette.background.paper,
             display: 'flex',
             'flex-wrap': 'nowrap'
-        })),
+        },
         'content-message': {
             overflow: 'hidden'
         },
@@ -36,24 +37,24 @@ namespace InnerScope {
         'content-button': {
             height: 'inherit'
         },
-        'close-icon': themeAction.getThemeObservable().map(theme => ({
+        'close-icon': {
             'font-size': theme.typography.title.fontSize
-        }))
-    };
+        }
+    });
     export interface Props {
         onClose?: () => void;
         message: Message;
         anchorOrigin?: SnackBarOrigin;
     }
-    export const component = decorate(style)<Props>(sheet => props => {
+    export const component = decorate(style)<Props>(props => {
         return (
             <Snackbar
-                className={sheet.classes.root}
+                className={props.classes.root}
                 SnackbarContentProps={{
-                    className: sheet.classes.content,
+                    className: props.classes.content,
                     classes: {
-                        message: sheet.classes['content-message'],
-                        action: sheet.classes['content-action']
+                        message: props.classes['content-message'],
+                        action: props.classes['content-action']
                     }
                 }}
                 anchorOrigin={props.anchorOrigin}
@@ -69,10 +70,10 @@ namespace InnerScope {
                         key="close"
                         color="inherit"
                         disableRipple
-                        className={sheet.classes['content-button']}
+                        className={props.classes['content-button']}
                         onClick={props.onClose}
                     >
-                        <CloseIcon className={sheet.classes['close-icon']} />
+                        <CloseIcon className={props.classes['close-icon']} />
                     </AppIconButton>
                 ]}
             />

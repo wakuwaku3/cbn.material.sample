@@ -1,34 +1,42 @@
 import { Observable } from 'rxjs';
-import { Cbn } from '../../../lib/shared/cbn';
 import { Theme, createMuiTheme, Color as MuiColor } from 'material-ui';
 import * as colors from 'material-ui/colors';
 import { Store } from 'undux';
-import { ThemeEvent } from '../../models/actions/shared/theme';
-import { ActionBase } from '../bases/action-base';
 import { Color, convertToMuiColor } from '../../models/shared/color';
+import { LocalstorageActionBase } from '../../../lib/shared/react-frxp';
 
 namespace InnerScope {
-    const key = 'theme';
-    type key = 'theme';
-    type event = ThemeEvent;
-    export class Action extends ActionBase<key, event> {
+    export interface Store {
+        args: Args;
+    }
+    export interface Args {
+        primary: Color;
+        secondary: Color;
+        error: Color;
+        type: 'light' | 'dark';
+        fontSize: number;
+    }
+    export interface Event {
+        initialize: void;
+        reset: void;
+        changeTheme: Partial<Args>;
+        changedTheme: Theme;
+    }
+    export class Action extends LocalstorageActionBase<Store, Event> {
         constructor() {
-            super(key);
+            super('theme');
         }
         theme: Theme;
-        getThemeObservable(): Observable<Theme> {
-            return this.observe('changedTheme').startWith(this.theme);
-        }
         protected initialize() {
             this.observe('initialize').subscribe(() => {
-                if (!this.model || !this.model.args) {
-                    this.emitter.emit('reset');
+                if (!this.store || !this.store.args) {
+                    this.next('reset');
                     return;
                 }
-                this.emitter.emit('changeTheme');
+                this.next('changeTheme');
             });
             this.observe('reset').subscribe(() => {
-                this.model = {
+                this.setStore({
                     args: {
                         primary: Color.indigo,
                         secondary: Color.pink,
@@ -36,29 +44,27 @@ namespace InnerScope {
                         type: 'light',
                         fontSize: 14
                     }
-                };
-                this.emitter.emit('changeTheme');
+                });
+                this.next('changeTheme');
             });
             this.observe('changeTheme').subscribe(args => {
-                this.model.args = Object.assign(
-                    this.model.args,
+                this.store.args = Object.assign(
+                    this.store.args,
                     args ? args : {}
                 );
                 this.theme = createMuiTheme({
                     palette: {
-                        primary: convertToMuiColor(this.model.args.primary),
-                        secondary: convertToMuiColor(this.model.args.secondary),
-                        error: convertToMuiColor(this.model.args.error),
-                        type: this.model.args.type
+                        primary: convertToMuiColor(this.store.args.primary),
+                        secondary: convertToMuiColor(this.store.args.secondary),
+                        error: convertToMuiColor(this.store.args.error),
+                        type: this.store.args.type
                     },
-                    typography: { fontSize: this.model.args.fontSize }
+                    typography: { fontSize: this.store.args.fontSize }
                 });
-                this.emitter.emit('changedTheme', this.theme);
+                this.next('changedTheme', this.theme);
             });
-            this.observe('changedTheme').subscribe(() =>
-                this.emitter.emit('reflesh')
-            );
-            this.emitter.emit('initialize');
+            this.observe('changedTheme').subscribe(() => this.next('render'));
+            this.next('initialize');
         }
     }
 }

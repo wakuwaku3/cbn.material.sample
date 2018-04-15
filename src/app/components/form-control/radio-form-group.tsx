@@ -9,8 +9,8 @@ import {
     AppFormControlLabelProps,
     AppRadioProps
 } from '../material-ui/wrapper';
-import { decorate } from '../../helper/app-style-helper';
 import { SelectableContainer } from './selectable-container';
+import { decorate } from '../../../lib/shared/style-helper';
 
 namespace InnerScope {
     export interface Props {
@@ -37,11 +37,11 @@ namespace InnerScope {
             padding: [16, 0, 0]
         }
     };
-    export const component = decorate(style)<Props>(sheet => props => (
+    export const component = decorate(style)<Props>(props => (
         <AppFormControl
             component="fieldset"
             classes={{
-                root: sheet.classes['form-control-root']
+                root: props.classes['form-control-root']
             }}
         >
             <AppFormLabel>{props.title}</AppFormLabel>

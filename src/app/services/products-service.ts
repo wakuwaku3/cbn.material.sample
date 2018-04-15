@@ -1,15 +1,35 @@
-import { Cbn } from '../../lib/shared/cbn';
 import { Pagination } from '../../lib/models/pagination';
 import { Sorting } from '../../lib/models/sorting';
 import { Selectable } from '../../lib/models/selectable';
-import {
-    ProductsIndexStoreCondition,
-    ProductsIndexStore,
-    ProductsIndexStoreItem,
-    Product,
-    ProductVersion
-} from '../models/actions/products';
 import { LocalStorageRepository } from '../../lib/services/local-storage-repository';
+import { Condition } from '../../lib/models/condition';
+import { delay, sort } from '../../lib/shared/cbn';
+
+export interface Product<T extends ProductVersion> {
+    productId: number;
+    name: string;
+    status: string;
+    price: number;
+    productVersions: T[];
+}
+export interface ProductVersion {
+    productVersionId: number;
+    productId: number;
+    version: string;
+    date: string;
+    notes: string;
+}
+export interface ProductsIndexCondition extends Condition {
+    name?: string;
+    status?: string;
+}
+export interface ProductsIndexItem extends Selectable {
+    id: number;
+    name: string;
+    status: string;
+    price: number;
+    latestVersion: string;
+}
 
 export namespace Products {
     const storage = new LocalStorageRepository<Product<ProductVersion>>(
@@ -18,7 +38,7 @@ export namespace Products {
     );
     class Service {
         initializeIndexAsync = async () => {
-            let condition: ProductsIndexStoreCondition = {
+            let condition: ProductsIndexCondition = {
                 pagination: {
                     display: 10,
                     current: 0,
@@ -31,8 +51,8 @@ export namespace Products {
             };
             return await this.getIndexAsync(condition);
         };
-        getIndexAsync = async (req: ProductsIndexStoreCondition) => {
-            await Cbn.delay(500);
+        getIndexAsync = async (req: ProductsIndexCondition) => {
+            await delay(500);
             let items = (await storage.getAllAsync())
                 .filter(x => {
                     let res = true;
@@ -44,9 +64,9 @@ export namespace Products {
                     }
                     return res;
                 })
-                .map((v): ProductsIndexStoreItem => {
+                .map((v): ProductsIndexItem => {
                     let version = v.productVersions.sort(
-                        Cbn.sort(v => v.date, 'desc')
+                        sort(v => v.date, 'desc')
                     );
                     let latestVersion = version[0] ? version[0].version : null;
                     return {
@@ -65,7 +85,7 @@ export namespace Products {
                         Object.keys(v1).indexOf(req.sorting.name)
                             ? req.sorting.name
                             : 'id';
-                    return Cbn.sort(v => v[key], req.sorting.direction)(v1, v2);
+                    return sort(v => v[key], req.sorting.direction)(v1, v2);
                 });
             let total = items.length;
             if (req.pagination.current * req.pagination.display > total) {

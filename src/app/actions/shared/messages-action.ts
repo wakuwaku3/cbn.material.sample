@@ -1,35 +1,36 @@
-import { Cbn } from '../../../lib/shared/cbn';
-import { Store } from 'undux';
-import { Message } from '../../models/actions/shared/messages';
-import { ActionBase } from '../bases/action-base';
+import { MessageLevel } from '../../../lib/models/types';
+import { ActionBase } from '../../../lib/shared/react-frxp';
 
+export interface Message {
+    text: string;
+    level: MessageLevel;
+}
 namespace InnerScope {
-    const key = 'messages';
-    type key = 'messages';
-    export interface event {
+    export interface Store {
+        messages: Message[];
+    }
+    export interface Event {
         initialize: void;
         showMessage: Message;
         removeMessage: number;
     }
-    export class Action extends ActionBase<key, event> {
-        constructor() {
-            super(key);
-        }
+    export class Action extends ActionBase<Store, Event> {
         protected initialize() {
             this.observe('initialize').subscribe(() => {
-                if (!this.model) {
-                    this.model = { messages: [] };
+                if (!this.store) {
+                    this.setStore({ messages: [] });
+                    this.next('render');
                 }
             });
             this.observe('showMessage').subscribe(msg => {
-                this.model.messages.push(msg);
-                this.emitter.emit('reflesh');
+                this.store.messages.push(msg);
+                this.next('render');
             });
             this.observe('removeMessage').subscribe(i => {
-                this.model.messages.splice(i, 1);
-                this.emitter.emit('reflesh');
+                this.store.messages.splice(i, 1);
+                this.next('render');
             });
-            this.emitter.emit('initialize');
+            this.next('initialize');
         }
     }
 }

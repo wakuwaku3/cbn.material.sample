@@ -1,11 +1,13 @@
-import { Cbn } from '../../../lib/shared/cbn';
 import * as React from 'react';
-import { decorateWithProps } from '../../helper/app-style-helper';
+import { decorate } from '../../../lib/shared/style-helper';
 
 namespace InnerScope {
     export interface Props
         extends StyledArgs,
-            React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLDivElement>, HTMLDivElement> {}
+            React.DetailedHTMLProps<
+                React.FormHTMLAttributes<HTMLDivElement>,
+                HTMLDivElement
+            > {}
 
     type vertical = 'top' | 'center' | 'bottom';
     type horizontal = 'left' | 'center' | 'right';
@@ -54,9 +56,8 @@ namespace InnerScope {
             return style;
         }
     };
-    export const component = decorateWithProps(styles)<Props>(props => {
-        let merged = Cbn.mergeClassNeme(props, props.classes.container);
-        return <div {...merged}>{props.children}</div>;
+    export const component = decorate(styles)<Props>(props => {
+        return <div {...props}>{props.children}</div>;
     });
 }
 export type AdjusterProps = InnerScope.Props;

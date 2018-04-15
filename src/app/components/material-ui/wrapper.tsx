@@ -53,7 +53,6 @@ import { AppBarProps as MuiAppBarProps } from 'material-ui/AppBar';
 import { ToolbarProps } from 'material-ui/Toolbar';
 import { MenuProps, MenuItemProps } from 'material-ui/Menu';
 import { DividerProps } from 'material-ui/Divider';
-import { decorateWithProps, decorate } from '../../helper/app-style-helper';
 import {
     TableProps,
     TableHeadProps,
@@ -65,6 +64,7 @@ import { TooltipProps } from 'material-ui/Tooltip';
 import { SelectProps } from 'material-ui/Select';
 import { InputProps, InputLabelProps } from 'material-ui/Input';
 import { CheckboxProps } from 'material-ui/Checkbox';
+import { decorate } from '../../../lib/shared/style-helper';
 
 export interface AppTextFieldProps extends TextFieldProps {}
 export const AppTextField: React.SFC<AppTextFieldProps> = props => (
@@ -116,15 +116,15 @@ export const AppSwitch: React.SFC<AppSwitchProps> = props => (
 );
 export interface AppGridProps extends GridProps {}
 const gridStyle = {
-    item: {
+    typeItem: {
         padding: [0, 8]
     }
 };
-export const AppGrid = decorate(gridStyle)<AppGridProps>(sheet => props => {
+export const AppGrid = decorate(gridStyle)<AppGridProps>(props => {
     let p = Object.assign({}, props);
     let classNames = [];
-    if (props.item) {
-        classNames.push(sheet.classes.item);
+    if (p.item && props.classes.typeItem) {
+        classNames.push(props.classes.typeItem);
     }
     if (props.className) {
         classNames.push(props.className);

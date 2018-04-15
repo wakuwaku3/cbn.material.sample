@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { decorate } from '../../helper/app-style-helper';
 import { AppButton } from '../material-ui/wrapper';
 import { DialogBase } from './dialog-base';
 

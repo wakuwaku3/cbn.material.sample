@@ -5,10 +5,11 @@ import {
     getInfoColor,
     getErrorColor
 } from '../../models/shared/color';
-import { Message } from '../../models/actions/shared/messages';
-import { decorate } from '../../helper/app-style-helper';
 import { AppTypography } from '../material-ui/wrapper';
 import { InfoIcon, WarningIcon, ErrorIcon } from '../material-ui/icon-wrapper';
+import { Message } from '../../actions/shared/messages-action';
+import { decorate } from '../../../lib/shared/style-helper';
+import { Theme } from 'material-ui';
 
 namespace InnerScope {
     interface Style {
@@ -18,30 +19,24 @@ namespace InnerScope {
         'warning-icon';
         'error-icon';
     }
-    const style: Style = {
+    const style = (theme: Theme): Style => ({
         root: {},
         text: {
             'word-wrap': 'break-word;',
             overflow: 'hidden'
         },
-        'info-icon': themeAction
-            .getThemeObservable()
-            .map(theme => ({ color: getInfoColor(theme) })),
-        'warning-icon': themeAction
-            .getThemeObservable()
-            .map(theme => ({ color: getWarningColor(theme) })),
-        'error-icon': themeAction
-            .getThemeObservable()
-            .map(theme => ({ color: getErrorColor(theme) }))
-    };
+        'info-icon': { color: getInfoColor(theme) },
+        'warning-icon': { color: getWarningColor(theme) },
+        'error-icon': { color: getErrorColor(theme) }
+    });
     export interface Props {
         message: Message;
     }
-    export const component = decorate(style)<Props>(sheet => props => {
+    export const component = decorate(style)<Props>(props => {
         return (
-            <div className={sheet.classes.root}>
+            <div className={props.classes.root}>
                 <AppTypography
-                    className={sheet.classes[props.message.level + '-icon']}
+                    className={props.classes[props.message.level + '-icon']}
                 >
                     {(() => {
                         switch (props.message.level) {
@@ -55,7 +50,7 @@ namespace InnerScope {
                         return '';
                     })()}
                 </AppTypography>
-                <AppTypography variant="caption" className={sheet.classes.text}>
+                <AppTypography variant="caption" className={props.classes.text}>
                     {props.message.text}
                 </AppTypography>
             </div>

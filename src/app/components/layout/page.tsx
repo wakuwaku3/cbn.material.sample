@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { Cbn } from '../../../lib/shared/cbn';
 import { AppPaper, AppTypography, AppPaperProps } from '../material-ui/wrapper';
-import { decorate } from '../../helper/app-style-helper';
 import { Title } from './title';
 import { Adjuster } from './adjuster';
 import { Loading } from '../form-control/loading';
+import { decorate, mergeClassNeme } from '../../../lib/shared/style-helper';
 
 namespace InnerScope {
     export interface Props {
@@ -28,11 +27,11 @@ namespace InnerScope {
             bottom: 0
         }
     };
-    export const component = decorate(styles)<Props>(sheet => props => {
-        let paperProps = Cbn.mergeClassNeme(props.paperProps, sheet.classes.paper);
+    export const component = decorate(styles)<Props>(props => {
+        let paperProps = mergeClassNeme(props.paperProps, props.classes.paper);
         if (props.loading) {
             return (
-                <div className={sheet.classes.loading}>
+                <div className={props.classes.loading}>
                     <Loading size={60} />
                 </div>
             );

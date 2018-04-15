@@ -1,30 +1,30 @@
-import { Cbn } from '../../../lib/shared/cbn';
-import { Store } from 'undux';
-import { ActionBase } from '../bases/action-base';
-import { HomeIndexEvent } from '../../models/actions/home';
+import { ActionBase } from '../../../lib/shared/react-frxp';
 
 namespace InnerScope {
-    const key = 'homeIndex';
-    type key = 'homeIndex';
-    type event = HomeIndexEvent;
-    export class Action extends ActionBase<key, event> {
-        constructor() {
-            super(key);
-        }
+    export interface Store {
+        name: string;
+        count: number;
+    }
+    export interface Event {
+        setName: string;
+        initialize: void;
+        count: void;
+    }
+    export class Action extends ActionBase<Store, Event> {
         protected initialize() {
             this.observe('initialize').subscribe(() => {
-                this.model = { count: 0, name: 'test' };
-                this.emitter.emit('reflesh');
+                this.setStore({ count: 0, name: 'test' });
+                this.next('render');
             });
             this.observe('count').subscribe(() => {
-                this.model.count++;
-                this.emitter.emit('reflesh');
+                this.store.count++;
+                this.next('render');
             });
             this.observe('setName').subscribe(name => {
-                this.model.name = name;
-                this.emitter.emit('reflesh');
+                this.store.name = name;
+                this.next('render');
             });
-            this.emitter.emit('initialize');
+            this.next('initialize');
         }
     }
 }

@@ -1,27 +1,20 @@
+import { decorate } from '../../lib/shared/style-helper';
 import * as React from 'react';
-import { Cbn } from '../../lib/shared/cbn';
-import { AppRouter } from './app-router';
-import {
-    withStyles,
-    WithStyles,
-    StyleRulesCallback,
-    Button
-} from 'material-ui';
-import { AppTop, getTopHeight } from './app-top';
-import { StyleRules } from 'material-ui/styles';
-import { Store } from 'undux';
-import { LogIn } from './components/login';
-import { getFooterHeight } from './app-footer';
 import { AppMessages } from './app-messages';
+import { AppDialog } from './app-dialog';
+import { AppRouter } from './app-router';
+import { LogIn } from './login';
+import { getTopHeight } from './app-top';
+import { getFooterHeight } from './app-footer';
+import { withStore } from '../../lib/shared/react-frxp';
+import { Theme } from 'material-ui';
 import { authAction } from '../actions/shared/auth-action';
 import { browserAction } from '../actions/shared/browser-action';
-import { decorateWithStore } from '../helper/app-style-helper';
-import { AppDialog } from './app-dialog';
 
 namespace InnerScope {
     let pt = 10;
     let pb = 10;
-    const styles = {
+    const styles = (theme: Theme) => ({
         body: {
             paddingTop: pt,
             paddingBottom: pb,
@@ -29,27 +22,29 @@ namespace InnerScope {
             paddingRight: 10,
             position: 'relative',
             overflow: 'auto' as 'auto',
-            height: browserAction.emitter
-                .observe('resize')
-                .map(() => '')
-                .startWith('')
-                .map(() => {
-                    let top = getTopHeight();
-                    return window.innerHeight - getFooterHeight() - top;
-                })
+            height: (props: InnerProps) => {
+                let top = getTopHeight(theme);
+                return props.windowInnerHeight - getFooterHeight() - top;
+            }
         }
-    };
-    export const component = decorateWithStore(
-        styles,
-        browserAction.key,
-        authAction.key
-    )(sheet => props => {
+    });
+    interface InnerProps {
+        authenticated: boolean;
+        windowInnerHeight: number;
+    }
+    const Inner = decorate(styles)<InnerProps>(props => (
+        <div className={props.classes.body}>
+            <AppMessages />
+            <AppDialog />
+            {props.authenticated ? <AppRouter /> : <LogIn />}
+        </div>
+    ));
+    export const component = withStore(browserAction, authAction)(() => {
         return (
-            <div className={sheet.classes.body}>
-                <AppMessages />
-                <AppDialog />
-                {authAction.model.authenticated ? <AppRouter /> : <LogIn />}
-            </div>
+            <Inner
+                authenticated={authAction.store.authenticated}
+                windowInnerHeight={window.innerHeight}
+            />
         );
     });
 }

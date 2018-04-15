@@ -1,4 +1,4 @@
-import { Cbn } from '../shared/cbn';
+import { delay } from '../shared/cbn';
 
 export class LocalStorageRepository<T extends object> {
     private _store: T[];
@@ -16,14 +16,14 @@ export class LocalStorageRepository<T extends object> {
         localStorage.setItem(this._key, JSON.stringify(this._store));
     };
     private resetAsync = async () => {
-        await Cbn.delay(0);
+        await delay(0);
         this.reset();
     };
     getAll = () => {
         return this._store.map(x => Object.assign({}, x));
     };
     getAllAsync = async () => {
-        await Cbn.delay(0);
+        await delay(0);
         return this.getAll();
     };
     push = async (model: T) => {
