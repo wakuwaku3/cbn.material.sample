@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { decorate, StyledProps } from '../../lib/shared/style-helper';
+import { decorate } from '../../lib/shared/style-helper';
 import { authAction } from '../actions/shared/auth-action';
 import { Message, messagesAction } from '../actions/shared/messages-action';
 import { Adjuster } from '../components/layout/adjuster';
@@ -10,6 +10,8 @@ import {
     AppTextField,
     AppButton
 } from '../components/material-ui/wrapper';
+import { FormComponent } from '../../lib/bases/form-component';
+import { withStore } from '../../lib/shared/react-frxp';
 
 namespace InnerScope {
     interface Style {
@@ -28,91 +30,102 @@ namespace InnerScope {
             padding: [10, 0]
         }
     };
+    export interface InnerProps extends State {
+        onChange: (name: keyof State, value: string) => void;
+        onLogIn: () => void;
+    }
+    const Inner = decorate(style)<InnerProps>(props => (
+        <Adjuster
+            vertical="center"
+            horizontal="center"
+            className={props.classes.root}
+        >
+            <Title hiddenTitle={true}>ログイン</Title>
+            <AppPaper className={props.classes.paper}>
+                <form>
+                    <AppGrid container>
+                        <AppGrid item xs={12}>
+                            <AppTextField
+                                label="ユーザーId"
+                                value={props.id}
+                                margin="normal"
+                                fullWidth
+                                onChange={e =>
+                                    props.onChange('id', e.target.value)
+                                }
+                            />
+                        </AppGrid>
+                        <AppGrid item xs={12}>
+                            <AppTextField
+                                label="パスワード"
+                                type="password"
+                                value={props.password}
+                                margin="normal"
+                                fullWidth
+                                onChange={e =>
+                                    props.onChange('password', e.target.value)
+                                }
+                            />
+                        </AppGrid>
+                        <AppGrid item xs={12}>
+                            <Adjuster
+                                vertical="center"
+                                horizontal="center"
+                                className={props.classes['button-container']}
+                            >
+                                <AppButton
+                                    variant="raised"
+                                    color="primary"
+                                    onClick={props.onLogIn}
+                                >
+                                    ログイン
+                                </AppButton>
+                            </Adjuster>
+                        </AppGrid>
+                    </AppGrid>
+                </form>
+            </AppPaper>
+        </Adjuster>
+    ));
+    interface Event {
+        handleChange: { name: keyof State; value: string };
+        login: void;
+    }
     export interface State {
         id: string;
         password: string;
     }
-    export const component = decorate(style)(
-        class extends React.Component<StyledProps<Style>, State> {
-            constructor(props) {
-                super(props);
-                this.state = { id: '', password: '' };
-            }
-            private handleChange = (name: keyof State) => event => {
-                let state = {};
-                state[name] = event.target.value;
-                this.setState(state);
-            };
-            private handleLogIn = event => {
+    export class component extends FormComponent<Event, State> {
+        protected setupObservable() {
+            this.observe('initialize').map(() => {
+                this.next('render', { id: '', password: '' });
+            });
+            this.observe('handleChange').map(({ name, value }) => {
+                this.next('render', { [name]: value });
+            });
+            this.observe('login').map(() => {
                 let args = Object.assign(
                     {
-                        callBackHasError: this.showError
+                        callBackHasError: message =>
+                            messagesAction.next('showMessage', message)
                     },
                     this.state
                 );
                 authAction.next('login', args);
-            };
-            private showError(message: Message) {
-                messagesAction.next('showMessage', message);
-            }
-            render() {
-                return (
-                    <Adjuster
-                        vertical="center"
-                        horizontal="center"
-                        className={this.props.classes.root}
-                    >
-                        <Title hiddenTitle={true}>ログイン</Title>
-                        <AppPaper className={this.props.classes.paper}>
-                            <form>
-                                <AppGrid container>
-                                    <AppGrid item xs={12}>
-                                        <AppTextField
-                                            label="ユーザーId"
-                                            value={this.state.id}
-                                            margin="normal"
-                                            fullWidth
-                                            onChange={this.handleChange('id')}
-                                        />
-                                    </AppGrid>
-                                    <AppGrid item xs={12}>
-                                        <AppTextField
-                                            label="パスワード"
-                                            type="password"
-                                            value={this.state.password}
-                                            margin="normal"
-                                            fullWidth
-                                            onChange={this.handleChange(
-                                                'password'
-                                            )}
-                                        />
-                                    </AppGrid>
-                                    <AppGrid item xs={12}>
-                                        <Adjuster
-                                            vertical="center"
-                                            horizontal="center"
-                                            className={
-                                                this.props.classes[
-                                                    'button-container'
-                                                ]
-                                            }
-                                        >
-                                            <AppButton
-                                                variant="raised"
-                                                color="primary"
-                                                onClick={this.handleLogIn}
-                                            >
-                                                ログイン
-                                            </AppButton>
-                                        </Adjuster>
-                                    </AppGrid>
-                                </AppGrid>
-                            </form>
-                        </AppPaper>
-                    </Adjuster>
-                );
-            }
+            });
         }
-    );
+        render() {
+            return (
+                <Inner
+                    id={this.state.id}
+                    password={this.state.password}
+                    onChange={(name, value) =>
+                        this.next('handleChange', { name, value })
+                    }
+                    onLogIn={() => this.next('login')}
+                />
+            );
+        }
+    }
 }
 export const LogIn = InnerScope.component;

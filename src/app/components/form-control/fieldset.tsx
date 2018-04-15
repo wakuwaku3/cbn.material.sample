@@ -16,6 +16,7 @@ namespace InnerScope {
         title: string;
     }
     const styles = (theme: Theme) => ({
+        root: {},
         'summary-root': {
             'min-height': 'inherit'
         },
@@ -34,7 +35,10 @@ namespace InnerScope {
     });
     export const component = decorate(styles)<Props>(props => {
         return (
-            <ExpansionPanel defaultExpanded={props.defaultExpanded}>
+            <ExpansionPanel
+                defaultExpanded={props.defaultExpanded}
+                className={props.classes.root}
+            >
                 <ExpansionPanelSummary
                     expandIcon={<ExpandMoreIcon />}
                     className={props.classes.header}
@@ -45,7 +49,10 @@ namespace InnerScope {
                 >
                     <AppTypography>{props.title}</AppTypography>
                 </ExpansionPanelSummary>
-                <ExpansionPanelDetails className={props.classes.details}>
+                <ExpansionPanelDetails
+                    className={props.classes.details}
+                    classes={{}}
+                >
                     {props.children}
                 </ExpansionPanelDetails>
             </ExpansionPanel>

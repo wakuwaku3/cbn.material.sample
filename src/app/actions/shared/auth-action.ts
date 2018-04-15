@@ -1,4 +1,4 @@
-import { LocalstorageActionBase } from '../../../lib/shared/react-frxp';
+import { LocalstorageActionBase } from '../../../lib/bases/localstorage-action-base';
 import { Message } from './messages-action';
 
 namespace InnerScope {

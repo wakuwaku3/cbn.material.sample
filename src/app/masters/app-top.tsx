@@ -17,9 +17,10 @@ import {
     AccountCircleIcon,
     MenuIcon
 } from '../components/material-ui/icon-wrapper';
-import { decorate, StyledProps } from '../../lib/shared/style-helper';
+import { decorate } from '../../lib/shared/style-helper';
 import { withStore } from '../../lib/shared/react-frxp';
 import { Theme } from 'material-ui';
+import { StyledComponent } from '../../lib/bases/styled-component';
 
 namespace InnerScope {
     export const getHeight = (theme: Theme) => {
@@ -55,7 +56,7 @@ namespace InnerScope {
         onLogout: () => void;
     }
     const Inner = decorate(style)(
-        class extends React.Component<InnerProps & StyledProps<Style>, State> {
+        class extends StyledComponent<Style, InnerProps, State> {
             constructor(props) {
                 super(props);
                 this.state = { profile: null, menu: null };

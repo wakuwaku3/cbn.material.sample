@@ -17,4 +17,5 @@ export class EventSubject<TEvent> {
             .filter(x => Object.keys(x).some(y => y === key))
             .map(x => x[key]);
     };
+    unsubscribe = () => this._inner.unsubscribe();
 }

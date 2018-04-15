@@ -1,5 +1,5 @@
 import { MessageLevel } from '../../../lib/models/types';
-import { ActionBase } from '../../../lib/shared/react-frxp';
+import { ActionBase } from '../../../lib/bases/action-base';
 
 export interface Message {
     text: string;

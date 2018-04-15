@@ -3,7 +3,7 @@ import { Theme, createMuiTheme, Color as MuiColor } from 'material-ui';
 import * as colors from 'material-ui/colors';
 import { Store } from 'undux';
 import { Color, convertToMuiColor } from '../../models/shared/color';
-import { LocalstorageActionBase } from '../../../lib/shared/react-frxp';
+import { LocalstorageActionBase } from '../../../lib/bases/localstorage-action-base';
 
 namespace InnerScope {
     export interface Store {

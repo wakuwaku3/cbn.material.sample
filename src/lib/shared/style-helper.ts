@@ -1,12 +1,10 @@
 import injectSheet from 'react-jss';
-import { StyleFactory } from '../models/types';
-import { RenderObservable } from './react-frxp';
+import { StyleFactory, StyledComponentType } from '../models/types';
 
-export type StyledProps<Style> = { classes: Record<keyof Style, string> };
 export const decorate = <T extends object>(style: T | StyleFactory<T>) => <
     Props = {}
 >(
-    component: React.ComponentType<Props & StyledProps<T>>
+    component: StyledComponentType<T, Props>
 ): React.ComponentType<Props> => injectSheet(style)(component);
 export const mergeClassNeme = (
     props: { className?: string },

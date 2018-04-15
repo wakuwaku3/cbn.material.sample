@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { AppTypography } from '../material-ui/wrapper';
 import { WithStyles } from 'material-ui';
-import { decorate, StyledProps } from '../../../lib/shared/style-helper';
+import { decorate } from '../../../lib/shared/style-helper';
+import { StyledComponent } from '../../../lib/bases/styled-component';
 
 namespace InnerScope {
     export interface Props {
@@ -16,7 +17,7 @@ namespace InnerScope {
         }
     };
     export const component = decorate(style)(
-        class extends React.Component<Props & StyledProps<Style>> {
+        class extends StyledComponent<Style, Props> {
             componentDidMount() {
                 document.title = `cbn.undux.sample - ${this.props.children.toString()}`;
             }

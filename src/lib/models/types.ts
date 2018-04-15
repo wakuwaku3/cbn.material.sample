@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 export type Vertical = 'Top' | 'Bottom';
 export type Horizontal = 'Right' | 'Left';
 export type Axis = 'Vertical' | 'Horizontal';
@@ -19,3 +21,7 @@ export type SortDirection = 'asc' | 'desc';
 export type Classes<Style> = Record<keyof Partial<Style>, string>;
 export type MessageLevel = 'error' | 'warning' | 'info';
 export type StyleFactory<T extends object> = (theme) => T;
+export type StyledProps<Style> = { classes: Record<keyof Style, string> };
+export type StyledComponentType<Style, Props = {}> = React.ComponentType<
+    Props & StyledProps<Style>
+>;

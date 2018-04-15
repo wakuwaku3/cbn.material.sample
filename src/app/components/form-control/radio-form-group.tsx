@@ -31,10 +31,13 @@ namespace InnerScope {
     export interface State {
         value: string;
     }
-    type style = 'form-control-root';
-    const style = {
+    interface Style {
+        'form-control-root';
+    }
+    const style: Style = {
         'form-control-root': {
-            padding: [16, 0, 0]
+            padding: [16, 0, 0],
+            display: 'flex'
         }
     };
     export const component = decorate(style)<Props>(props => (

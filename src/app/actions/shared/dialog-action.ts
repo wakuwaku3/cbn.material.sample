@@ -1,4 +1,4 @@
-import { ActionBase } from '../../../lib/shared/react-frxp';
+import { ActionBase } from '../../../lib/bases/action-base';
 
 namespace InnerScope {
     export interface Store extends Content {

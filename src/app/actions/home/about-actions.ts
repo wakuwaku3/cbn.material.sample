@@ -1,5 +1,5 @@
-import { ActionBase } from '../../../lib/shared/react-frxp';
 import { Test } from '../../services/test-service';
+import { ActionBase } from '../../../lib/bases/action-base';
 
 namespace InnerScope {
     export interface Store {
