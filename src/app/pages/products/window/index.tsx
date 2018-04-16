@@ -30,8 +30,10 @@ namespace InnerScope {
                     <WindowContainer ref="parent">
                         <WindowItem
                             findParent={() => findDOMNode(this.refs.parent)}
-                            width="50%"
-                            left="50%"
+                            width="66%"
+                            height="66%"
+                            left="33%"
+                            top="33%"
                             zIndex={this.state.zIndexEdit}
                         >
                             <ProductsEdit
@@ -50,7 +52,8 @@ namespace InnerScope {
                         <WindowItem
                             findParent={() => findDOMNode(this.refs.parent)}
                             zIndex={this.state.zIndexIndex}
-                            width="50%"
+                            width="66%"
+                            height="66%"
                         >
                             <ProductsSearch
                                 disabledAdd={this.state.mode === 'create'}
