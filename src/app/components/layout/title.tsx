@@ -2,7 +2,7 @@ import * as React from 'react';
 import { AppTypography } from '../material-ui/wrapper';
 import { WithStyles } from 'material-ui';
 import { decorate } from '../../../lib/shared/style-helper';
-import { StyledComponent } from '../../../lib/bases/styled-component';
+import { StyledComponentBase } from '../../../lib/bases/styled-component-base';
 
 namespace InnerScope {
     export interface Props {
@@ -17,7 +17,7 @@ namespace InnerScope {
         }
     };
     export const component = decorate(style)(
-        class extends StyledComponent<Style, Props> {
+        class extends StyledComponentBase<Style, Props> {
             componentDidMount() {
                 document.title = `cbn.material.sample - ${this.props.children.toString()}`;
             }

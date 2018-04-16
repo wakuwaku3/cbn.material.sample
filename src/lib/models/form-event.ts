@@ -1,4 +1,4 @@
-export interface FormEvent<State> extends Event {
+export interface FormEvent<State> {
     initialize: void;
     render: Partial<State>;
 }

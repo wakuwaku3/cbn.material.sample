@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyledProps } from '../models/types';
 
-export abstract class StyledComponent<
+export abstract class StyledComponentBase<
     Style,
     Props = {},
     State = {}

@@ -10,8 +10,8 @@ import {
     AppTextField,
     AppButton
 } from '../components/material-ui/wrapper';
-import { FormComponent } from '../../lib/bases/form-component';
 import { withStore } from '../../lib/shared/react-frxp';
+import { EventComponentBase } from '../../lib/bases/event-component-base';
 
 namespace InnerScope {
     interface Style {
@@ -95,15 +95,20 @@ namespace InnerScope {
         id: string;
         password: string;
     }
-    export class component extends FormComponent<Event, State> {
+    export class component extends EventComponentBase<Event, {}, State> {
+        constructor(props) {
+            super(props);
+        }
         protected setupObservable() {
-            this.observe('initialize').map(() => {
-                this.next('render', { id: '', password: '' });
+            this.observe('initialize').subscribe(() => {
+                this.setState({ id: '', password: '' });
             });
-            this.observe('handleChange').map(({ name, value }) => {
-                this.next('render', { [name]: value });
+            this.observe('handleChange').subscribe(({ name, value }) => {
+                let p = {};
+                p[name] = value;
+                this.setState(p);
             });
-            this.observe('login').map(() => {
+            this.observe('login').subscribe(() => {
                 let args = Object.assign(
                     {
                         callBackHasError: message =>

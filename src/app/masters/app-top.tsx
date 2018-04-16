@@ -20,7 +20,7 @@ import {
 import { decorate } from '../../lib/shared/style-helper';
 import { withStore } from '../../lib/shared/react-frxp';
 import { Theme } from 'material-ui';
-import { StyledComponent } from '../../lib/bases/styled-component';
+import { StyledComponentBase } from '../../lib/bases/styled-component-base';
 
 namespace InnerScope {
     export const getHeight = (theme: Theme) => {
@@ -56,7 +56,7 @@ namespace InnerScope {
         onLogout: () => void;
     }
     const Inner = decorate(style)(
-        class extends StyledComponent<Style, InnerProps, State> {
+        class extends StyledComponentBase<Style, InnerProps, State> {
             constructor(props) {
                 super(props);
                 this.state = { profile: null, menu: null };

@@ -183,3 +183,7 @@ export interface AppCheckboxProps extends CheckboxProps {}
 export const AppCheckbox: React.SFC<AppCheckboxProps> = props => (
     <Checkbox {...props}>{props.children}</Checkbox>
 );
+export interface AppTableRowProps extends TableRowProps {}
+export const AppTableRow: React.SFC<AppTableRowProps> = props => (
+    <TableRow {...props}>{props.children}</TableRow>
+);

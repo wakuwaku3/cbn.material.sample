@@ -14,6 +14,6 @@ export abstract class LocalstorageActionBase<
 
         observeWindow('storage')
             .filter(e => e.key === key)
-            .map(e => (this._store = JSON.parse(e.newValue)));
+            .subscribe(e => (this._store = JSON.parse(e.newValue)));
     }
 }

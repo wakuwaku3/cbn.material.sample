@@ -47,7 +47,9 @@ export namespace Products {
                 sorting: {
                     name: '',
                     direction: 'asc'
-                }
+                },
+                name: '',
+                status: ''
             };
             return await this.getIndexAsync(condition);
         };

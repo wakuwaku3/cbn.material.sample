@@ -5,10 +5,10 @@ import * as React from 'react';
 import { Subscription } from 'rxjs/Subscription';
 import { RenderObservable } from '../models/render-observable';
 
-export const withStore = (...refleshables: RenderObservable[]) => (
-    component: React.ComponentType
+export const withStore = (...refleshables: RenderObservable[]) => <Props={}>(
+    component: React.ComponentType<Props>
 ) =>
-    class extends React.Component<{}, { renderTrigger: boolean }> {
+    class extends React.Component<Props, { renderTrigger: boolean }> {
         subscriptions: Subscription[] = [];
         constructor(props) {
             super(props);

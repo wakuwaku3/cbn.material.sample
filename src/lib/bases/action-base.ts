@@ -13,7 +13,7 @@ export abstract class ActionBase<TStore extends object, TEvent = {}>
     ) {
         if (!this.setStore) {
             this.setStore = store => {
-                if (this._store) {
+                if (!this._store) {
                     this._store = store as TStore;
                     return;
                 }
@@ -35,7 +35,7 @@ export abstract class ActionBase<TStore extends object, TEvent = {}>
     observeRender() {
         return this.observe('render');
     }
-    protected observe<TKey extends keyof (TEvent & RenderEvent)>(
+    observe<TKey extends keyof (TEvent & RenderEvent)>(
         key: TKey
     ): Observable<(TEvent & RenderEvent)[TKey]> {
         return this.subject.observe(key);

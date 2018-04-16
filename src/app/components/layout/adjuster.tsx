@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { decorate } from '../../../lib/shared/style-helper';
+import { decorate, mergeClassNeme } from '../../../lib/shared/style-helper';
 
 namespace InnerScope {
     export interface Props
@@ -57,7 +57,8 @@ namespace InnerScope {
         }
     };
     export const component = decorate(styles)<Props>(props => {
-        return <div {...props}>{props.children}</div>;
+        let p = mergeClassNeme(props, props.classes.container);
+        return <div {...p}>{props.children}</div>;
     });
 }
 export type AdjusterProps = InnerScope.Props;
