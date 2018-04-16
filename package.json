@@ -16,9 +16,6 @@
         "babel-plugin-transform-object-assign": "^6.22.0",
         "babel-polyfill": "^6.26.0",
         "babel-runtime": "^6.26.0",
-        "create-react-class": "^15.6.3",
-        "jss": "^9.8.1",
-        "jss-preset-default": "^4.3.0",
         "material-ui": "^1.0.0-beta.40",
         "material-ui-icons": "^1.0.0-beta.36",
         "react": "^16.2.0",
@@ -28,12 +25,9 @@
         "regenerator-runtime": "^0.11.1",
         "rxjs": "^5.5.8",
         "typeface-roboto": "0.0.54",
-        "undux": "^3.2.1",
         "whatwg-fetch": "^2.0.4"
     },
     "devDependencies": {
-        "@types/create-react-class": "^15.6.1",
-        "@types/jss": "^9.3.2",
         "@types/node": "^9.6.0",
         "@types/react": "^16.0.36",
         "@types/react-dom": "^16.0.3",
