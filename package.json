@@ -37,6 +37,7 @@
         "babel-preset-env": "^1.6.1",
         "child_process": "^1.0.2",
         "css-loader": "^0.28.11",
+        "file-loader": "^1.1.11",
         "gulp": "^3.9.1",
         "gulp-dotnet-cli": "^1.1.0",
         "path": "^0.12.7",
@@ -44,6 +45,7 @@
         "source-map-loader": "^0.2.3",
         "style-loader": "^0.20.3",
         "typescript": "^2.7.1",
+        "url-loader": "^1.0.1",
         "webpack": "^3.10.0"
     }
 }

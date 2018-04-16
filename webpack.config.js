@@ -32,6 +32,10 @@ const app = {
                 enforce: 'pre',
                 test: /\.js$/,
                 loader: 'source-map-loader'
+            },
+            {
+                test: /\.(jpg|png)$/,
+                loaders: 'url-loader'
             }
         ]
     },
