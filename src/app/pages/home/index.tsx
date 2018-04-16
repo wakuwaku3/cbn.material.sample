@@ -1,81 +1,69 @@
-import { Component } from 'react';
 import * as React from 'react';
-import { Typography, TextField } from 'material-ui';
 import {
-    AppTextField,
-    AppTypography,
-    AppPaper
+    AppGrid,
+    AppCard,
+    AppCardHeader,
+    AppCardMedia,
+    AppCardContent,
+    AppTypography
 } from '../../components/material-ui/wrapper';
-import { Counter } from './components/counter';
-import { homeIndexAction } from '../../actions/home/index-actions';
-import {
-    WindowItem,
-    WindowContainer
-} from '../../components/layout/window-item';
-import { findDOMNode } from 'react-dom';
-import { PaneContainer } from '../../components/layout/pane-container';
-import { withStore } from '../../../lib/shared/react-frxp';
-import { EventComponentBase } from '../../../lib/bases/event-component-base';
 
 namespace InnerScope {
     const styles = {};
-    interface Props {
-        name: string;
-        count: number;
-        onCount: () => void;
-        onChangeName: (name: string) => void;
-    }
-    const Content: React.SFC<Props> = props => (
-        <div>
-            <AppTypography>Home</AppTypography>
-            <Counter
-                name={props.name}
-                count={props.count}
-                onClick={props.onCount}
-            />
-            <AppTextField
-                label="name"
-                value={props.name}
-                onChange={e => props.onChangeName(e.target.value)}
-            />
-        </div>
-    );
 
-    const getItem = () => {
+    export const component: React.SFC = props => {
         return (
-            <Content
-                name={homeIndexAction.store.name}
-                count={homeIndexAction.store.count}
-                onCount={() => homeIndexAction.next('count')}
-                onChangeName={name => homeIndexAction.next('setName', name)}
-            />
+            <AppGrid container>
+                <AppGrid item>
+                    <AppCard>
+                        <AppCardHeader
+                            title="Simple CRUD"
+                            subheader="シンプルな画面デモ"
+                        />
+                        <AppCardMedia
+                            //image="/static/images/cards/paella.jpg"
+                            title="Simple CRUD"
+                        />
+                    </AppCard>
+                </AppGrid>
+                <AppGrid item>
+                    <AppCard>
+                        <AppCardHeader
+                            title="Pane CRUD"
+                            subheader="サイズ調節可能な画面デモ"
+                        />
+                        <AppCardMedia
+                            //image="/static/images/cards/paella.jpg"
+                            title="Pane CRUD"
+                        />
+                    </AppCard>
+                </AppGrid>
+                <AppGrid item>
+                    <AppCard>
+                        <AppCardHeader
+                            title="Window CRUD"
+                            subheader="Window風の画面のデモ"
+                        />
+                        <AppCardMedia
+                            //image="/static/images/cards/paella.jpg"
+                            title="Window CRUD"
+                        />
+                    </AppCard>
+                </AppGrid>
+                <AppGrid item>
+                    <AppCard>
+                        <AppCardHeader
+                            title="Settings"
+                            subheader="表示テーマの変更"
+                        />
+                        <AppCardMedia
+                            //image="/static/images/cards/paella.jpg"
+                            title="Settings"
+                        />
+                    </AppCard>
+                </AppGrid>
+            </AppGrid>
         );
     };
-
-    export const component = withStore(homeIndexAction)(
-        class extends React.Component {
-            render() {
-                return (
-                    <WindowContainer ref="parent">
-                        <WindowItem
-                            findParent={() => findDOMNode(this.refs.parent)}
-                        >
-                            <PaneContainer
-                                elements={[getItem(), getItem(), getItem()]}
-                            />
-                        </WindowItem>
-                        <WindowItem
-                            findParent={() => findDOMNode(this.refs.parent)}
-                        >
-                            <PaneContainer
-                                axis="Vertical"
-                                elements={[getItem(), getItem(), getItem()]}
-                            />
-                        </WindowItem>
-                    </WindowContainer>
-                );
-            }
-        }
-    );
 }
 export const HomeIndex = InnerScope.component;

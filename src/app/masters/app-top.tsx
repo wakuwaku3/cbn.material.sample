@@ -93,7 +93,7 @@ namespace InnerScope {
                                 color="inherit"
                                 className={this.props.classes.title}
                             >
-                                Title
+                                Demo
                             </AppTypography>
                             {this.props.authenticated && (
                                 <div>

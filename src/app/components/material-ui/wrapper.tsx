@@ -65,6 +65,15 @@ import { SelectProps } from 'material-ui/Select';
 import { InputProps, InputLabelProps } from 'material-ui/Input';
 import { CheckboxProps } from 'material-ui/Checkbox';
 import { decorate } from '../../../lib/shared/style-helper';
+import Card, {
+    CardProps,
+    CardHeaderProps,
+    CardHeader,
+    CardMediaProps,
+    CardMedia,
+    CardContentProps,
+    CardContent
+} from 'material-ui/Card';
 
 export interface AppTextFieldProps extends TextFieldProps {}
 export const AppTextField: React.SFC<AppTextFieldProps> = props => (
@@ -186,4 +195,20 @@ export const AppCheckbox: React.SFC<AppCheckboxProps> = props => (
 export interface AppTableRowProps extends TableRowProps {}
 export const AppTableRow: React.SFC<AppTableRowProps> = props => (
     <TableRow {...props}>{props.children}</TableRow>
+);
+export interface AppCardProps extends CardProps {}
+export const AppCard: React.SFC<AppCardProps> = props => (
+    <Card {...props}>{props.children}</Card>
+);
+export interface AppCardHeaderProps extends CardHeaderProps {}
+export const AppCardHeader: React.SFC<AppCardHeaderProps> = props => (
+    <CardHeader {...props}>{props.children}</CardHeader>
+);
+export interface AppCardMediaProps extends CardMediaProps {}
+export const AppCardMedia: React.SFC<AppCardMediaProps> = props => (
+    <CardMedia {...props}>{props.children}</CardMedia>
+);
+export interface AppCardContentProps extends CardContentProps {}
+export const AppCardContent: React.SFC<AppCardContentProps> = props => (
+    <CardContent {...props}>{props.children}</CardContent>
 );
