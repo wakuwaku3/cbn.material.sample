@@ -5,12 +5,12 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "cbn.undux.sample",
+      "name": "cbn.material.sample",
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
       "program":
-        "${workspaceFolder}/bin/Debug/netcoreapp2.0/cbn.undux.sample.dll",
+        "${workspaceFolder}/bin/Debug/netcoreapp2.0/cbn.material.sample.dll",
       "args": [],
       "cwd": "${workspaceFolder}",
       "stopAtEntry": false,

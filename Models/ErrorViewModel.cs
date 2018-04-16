@@ -1,6 +1,6 @@
 using System;
 
-namespace cbn.undux.sample.Models
+namespace cbn.material.sample.Models
 {
     public class ErrorViewModel
     {

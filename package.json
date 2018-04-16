@@ -1,7 +1,7 @@
 {
-    "name": "cbn.undux.sample",
+    "name": "cbn.material.sample",
     "version": "1.0.0",
-    "description": "typescript + es2017 + react + undux + material-ui のサンプル",
+    "description": "typescript + es2017 + react + material-ui のサンプル",
     "main": ".src/entrypoint.js",
     "scripts": {
         "install": "gulp restore",

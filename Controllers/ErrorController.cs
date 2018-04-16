@@ -1,8 +1,8 @@
 using System.Diagnostics;
-using cbn.undux.sample.Models;
+using cbn.material.sample.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace cbn.undux.sample.Controllers
+namespace cbn.material.sample.Controllers
 {
     public class ErrorController : Controller
     {

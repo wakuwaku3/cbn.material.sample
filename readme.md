@@ -1,6 +1,6 @@
-# cbn.undux.sample
+# cbn.material.sample
 
-typescript + es2017 + react + undux + material-ui のサンプル
+typescript + es2017 + react + material-ui のサンプル
 
 ## Requirement
 

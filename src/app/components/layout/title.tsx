@@ -19,7 +19,7 @@ namespace InnerScope {
     export const component = decorate(style)(
         class extends StyledComponent<Style, Props> {
             componentDidMount() {
-                document.title = `cbn.undux.sample - ${this.props.children.toString()}`;
+                document.title = `cbn.material.sample - ${this.props.children.toString()}`;
             }
             render() {
                 if (this.props.hiddenTitle) {

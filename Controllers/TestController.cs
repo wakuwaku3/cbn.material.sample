@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace cbn.undux.sample.Controllers
+namespace cbn.material.sample.Controllers
 {
     public class TestController : Controller
     {

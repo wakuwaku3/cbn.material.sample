@@ -12,7 +12,7 @@ const path = require('path');
 const runSequence = require('run-sequence');
 const spawn = require('child_process').spawn;
 
-const webprj = 'cbn.undux.sample.csproj';
+const webprj = 'cbn.material.sample.csproj';
 const web = `**/${webprj}`;
 const appentries = [web];
 const testentries = [];
