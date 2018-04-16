@@ -141,7 +141,7 @@ namespace InnerScope {
                                                 this.props.onLogout();
                                             }}
                                         >
-                                            LogOut
+                                            ログアウト
                                         </AppMenuItem>
                                     </AppMenu>
                                     <AppIconButton
@@ -174,20 +174,33 @@ namespace InnerScope {
                                     >
                                         <AppMenuItem
                                             onClick={() => {
-                                                history.push(Url.homeAbout);
+                                                history.push(
+                                                    Url.productsSimpleIndex
+                                                );
                                                 this.handleCloseMenu();
                                             }}
                                         >
-                                            About
+                                            Simple
                                         </AppMenuItem>
-                                        <AppDivider />
                                         <AppMenuItem
                                             onClick={() => {
-                                                history.push(Url.productsIndex);
+                                                history.push(
+                                                    Url.productsPaneIndex
+                                                );
                                                 this.handleCloseMenu();
                                             }}
                                         >
-                                            製品一覧
+                                            Pane
+                                        </AppMenuItem>
+                                        <AppMenuItem
+                                            onClick={() => {
+                                                history.push(
+                                                    Url.productsWindowIndex
+                                                );
+                                                this.handleCloseMenu();
+                                            }}
+                                        >
+                                            Window
                                         </AppMenuItem>
                                     </AppMenu>
                                 </div>

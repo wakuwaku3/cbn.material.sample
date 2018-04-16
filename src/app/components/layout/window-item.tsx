@@ -101,19 +101,15 @@ namespace InnerScope {
         cornor: {
             opacity: 0
         },
-        root: (props: Props) => ({
+        root: {
             position: 'absolute',
-            top: props.top,
-            left: props.left,
-            width: props.width,
-            height: props.height,
-            'z-index': props.zIndex,
             '&:hover $cornor': {
                 opacity: 1
             }
-        }),
+        },
         content: {
             padding: [lineWidth * 5, lineWidth * 2, lineWidth * 2],
+            overflow: 'auto',
             width: '100%',
             height: '100%',
             'min-width': 'inherit',
@@ -267,10 +263,11 @@ namespace InnerScope {
             }
             getRect = () => {
                 let item = this.node;
+                let parentRect = this.getParent().getBoundingClientRect();
                 let rect = item.getBoundingClientRect();
                 return {
-                    top: this.props.top,
-                    left: this.props.left,
+                    top: rect.top - parentRect.top,
+                    left: rect.left - parentRect.left,
                     width: rect.width,
                     height: rect.height
                 };
@@ -377,6 +374,13 @@ namespace InnerScope {
                             this.node = node;
                         }}
                         className={this.props.classes.root}
+                        style={{
+                            top: this.props.top,
+                            left: this.props.left,
+                            width: this.props.width,
+                            height: this.props.height,
+                            zIndex: this.props.zIndex
+                        }}
                         onMouseDown={event =>
                             this.next('handleDown', { event, keies: [] })
                         }
@@ -412,8 +416,12 @@ namespace InnerScope {
                 <Inner
                     {...this.props}
                     {...this.state}
-                    onChange={x => this.setState(x)}
-                />
+                    onChange={x => {
+                        this.setState(x);
+                    }}
+                >
+                    {this.props.children}
+                </Inner>
             );
         }
     }

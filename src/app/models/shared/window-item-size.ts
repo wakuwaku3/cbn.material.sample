@@ -1,6 +1,6 @@
 export interface WindowItemSize {
-    top: number;
-    left: number;
+    top: string | number;
+    left: string | number;
     width: string | number;
     height: string | number;
     zIndex: number;

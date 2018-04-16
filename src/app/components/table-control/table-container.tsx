@@ -186,7 +186,11 @@ namespace InnerScope {
                     {(() => {
                         if (this.props.pagination) {
                             return (
-                                <Adjuster horizontal="right" vertical="center">
+                                <Adjuster
+                                    horizontal="right"
+                                    vertical="center"
+                                    width="inherit"
+                                >
                                     <Pager
                                         pagination={this.props.pagination}
                                         onChange={e => {

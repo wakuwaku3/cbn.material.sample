@@ -4,6 +4,7 @@ import {
     ProductsIndexCondition,
     Products
 } from '../../services/products-service';
+import { dialogAction } from '../shared/dialog-action';
 
 namespace InnerScope {
     export interface Store {
@@ -17,7 +18,8 @@ namespace InnerScope {
         search: Partial<ProductsIndexCondition>;
         select: { value: boolean; id: number };
         selectAll: boolean;
-        remove: number[];
+        remove: void;
+        removeCallback: number[];
         handleSizeChange: { index: number; width: number };
     }
     export class Action extends ActionBase<Store, Event> {
@@ -50,7 +52,23 @@ namespace InnerScope {
                 this.store.items.find(x => x.id === id).isSelected = value;
                 this.next('render');
             });
-            this.observe('remove').subscribe(async ids => {
+            this.observe('remove').subscribe(() => {
+                let ids = this.store.items
+                    .filter(x => x.isSelected)
+                    .map(x => x.id);
+                let text =
+                    ids.length + '件の製品情報を削除します。よろしいですか？';
+                dialogAction.next('showYesNo', {
+                    title: '製品情報',
+                    text,
+                    callBack: yes => {
+                        if (yes) {
+                            productsIndexAction.next('removeCallback', ids);
+                        }
+                    }
+                });
+            });
+            this.observe('removeCallback').subscribe(async ids => {
                 await Products.service.removeRangeAsync(...ids);
                 this.next('search');
             });
@@ -74,7 +92,7 @@ export const productsIndexAction = new InnerScope.Action({
             direction: 'asc'
         },
         name: '',
-        status:''
+        status: ''
     },
     columns: [50, 100, 300, 300, 300, 300],
     items: []
