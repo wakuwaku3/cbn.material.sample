@@ -75,7 +75,6 @@ namespace InnerScope {
         elements: JSX.Element[];
         minSize?: number;
         sizes?: number[];
-        onChange?: (sizes: number[]) => void;
     }
     interface State {
         isActive: boolean;
@@ -91,11 +90,15 @@ namespace InnerScope {
         handleMove: any;
         handleUp: void;
     }
-    export const containerComponent = decorate(style)<Props & DivProps>(
+    type InnerProps = Props &
+        DivProps & {
+            onChange?: (sizes: number[]) => void;
+        };
+    export const Inner = decorate(style)<InnerProps>(
         class extends StyledEventComponentBase<
             Event,
             Style,
-            Props & DivProps,
+            InnerProps,
             State
         > {
             resizeSubscription: Subscription;
@@ -364,11 +367,28 @@ namespace InnerScope {
                 });
         }
     );
-    containerComponent.defaultProps = {
+    export class component extends React.Component<Props, { sizes: number[] }> {
+        constructor(props) {
+            super(props);
+            this.state = { sizes: this.props.sizes };
+        }
+        render() {
+            return (
+                <Inner
+                    {...this.props}
+                    {...this.state}
+                    onChange={sizes => {
+                        this.setState({ sizes });
+                    }}
+                />
+            );
+        }
+    }
+    Inner.defaultProps = {
         minSize: 25,
         axis: 'Horizontal',
         onChange: sizes => {}
     };
 }
 export type DividerContainerProps = InnerScope.Props;
-export const PaneContainer = InnerScope.containerComponent;
+export const PaneContainer = InnerScope.component;

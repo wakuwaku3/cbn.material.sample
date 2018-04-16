@@ -1,4 +1,5 @@
 import { EventSubject } from './frxp';
+import { EventReducer } from './event-reducer';
 
 interface WindowEvent {
     resize: UIEvent;
@@ -6,6 +7,7 @@ interface WindowEvent {
     storage: StorageEvent;
 }
 const subject = new EventSubject<WindowEvent>();
+const reducer = new EventReducer(100);
 window.addEventListener('resize', e => {
     subject.next('resize', e);
 });

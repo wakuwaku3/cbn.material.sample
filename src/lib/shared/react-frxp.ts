@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Subscription } from 'rxjs/Subscription';
 import { RenderObservable } from '../models/render-observable';
 
-export const withStore = (...refleshables: RenderObservable[]) => <Props={}>(
+export const withStore = (...refleshables: RenderObservable[]) => <Props = {}>(
     component: React.ComponentType<Props>
 ) =>
     class extends React.Component<Props, { renderTrigger: boolean }> {
@@ -16,11 +16,11 @@ export const withStore = (...refleshables: RenderObservable[]) => <Props={}>(
         }
         componentWillMount() {
             this.subscriptions = refleshables.map(item => {
-                return item.observeRender().subscribe(() =>
+                return item.observeRender().subscribe(() => {
                     this.setState({
                         renderTrigger: !this.state.renderTrigger
-                    })
-                );
+                    });
+                });
             });
         }
         componentWillUnmount() {
@@ -29,7 +29,10 @@ export const withStore = (...refleshables: RenderObservable[]) => <Props={}>(
             }
         }
         render() {
-            let props = Object.assign({}, this.props, this.state);
-            return React.createElement(component, props, this.props.children);
+            return React.createElement(
+                component,
+                this.props,
+                this.props.children
+            );
         }
     };

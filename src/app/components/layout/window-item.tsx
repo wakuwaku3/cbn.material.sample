@@ -16,6 +16,7 @@ import { decorate } from '../../../lib/shared/style-helper';
 import { StyledComponentBase } from '../../../lib/bases/styled-component-base';
 import { StyledEventComponentBase } from '../../../lib/bases/event-component-base';
 import { WindowItemSize } from '../../models/shared/window-item-size';
+import { EventReducer } from '../../../lib/shared/event-reducer';
 
 namespace InnerScope2 {
     interface Style {
@@ -57,9 +58,11 @@ namespace InnerScope {
         findParent?: () => Element;
         minWidth?: number;
         minHeight?: number;
+    }
+    export interface InnerProps extends Props {
         onChange?: (size: WindowItemSize) => void;
     }
-    interface State extends DragFlag {
+    interface InnerState extends DragFlag {
         x: number;
         y: number;
         w: number;
@@ -98,12 +101,17 @@ namespace InnerScope {
         cornor: {
             opacity: 0
         },
-        root: {
+        root: (props: Props) => ({
             position: 'absolute',
+            top: props.top,
+            left: props.left,
+            width: props.width,
+            height: props.height,
+            'z-index': props.zIndex,
             '&:hover $cornor': {
                 opacity: 1
             }
-        },
+        }),
         content: {
             padding: [lineWidth * 5, lineWidth * 2, lineWidth * 2],
             width: '100%',
@@ -122,8 +130,13 @@ namespace InnerScope {
             keies: (keyof DragFlag | string)[];
         };
     }
-    export const component = decorate(styles)<Props>(
-        class extends StyledEventComponentBase<Event, Style, Props, State> {
+    export const Inner = decorate(styles)<InnerProps>(
+        class extends StyledEventComponentBase<
+            Event,
+            Style,
+            InnerProps,
+            InnerState
+        > {
             resizeSubscription: Subscription;
             node: HTMLDivElement;
             constructor(props) {
@@ -266,28 +279,26 @@ namespace InnerScope {
                 let parentRect = this.getParent().getBoundingClientRect();
                 if (rect.left < 0) rect.left = 0;
                 if (rect.top < 0) rect.top = 0;
-                if (rect.left + rect.width > parentRect.width) {
-                    if (isAdjustSize) {
-                        rect.width = parentRect.width - rect.left;
-                    } else {
-                        rect.left = parentRect.width - rect.width;
+
+                if (rect.left + lineWidth * 5 > parentRect.width) {
+                    if (!isAdjustSize) {
+                        rect.left = parentRect.width - lineWidth * 5;
                         if (rect.left < 0) {
                             rect.width += rect.left;
                             rect.left = 0;
                         }
                     }
                 }
-                if (rect.top + rect.height > parentRect.height) {
+                if (rect.top + lineWidth * 5 > parentRect.height) {
                     if (isAdjustSize) {
-                        rect.height = parentRect.height - rect.top;
-                    } else {
-                        rect.top = parentRect.height - rect.height;
+                        rect.top = parentRect.height - lineWidth * 5;
                         if (rect.top < 0) {
                             rect.height += rect.top;
                             rect.top = 0;
                         }
                     }
                 }
+
                 if (rect.width <= this.props.minWidth)
                     rect.width = this.props.minWidth;
                 if (rect.height <= this.props.minHeight)
@@ -366,15 +377,6 @@ namespace InnerScope {
                             this.node = node;
                         }}
                         className={this.props.classes.root}
-                        style={{
-                            top: this.props.top,
-                            left: this.props.left,
-                            width: this.props.width,
-                            height: this.props.height,
-                            minWidth: this.props.minWidth,
-                            minHeight: this.props.minHeight,
-                            zIndex: this.props.zIndex
-                        }}
                         onMouseDown={event =>
                             this.next('handleDown', { event, keies: [] })
                         }
@@ -391,6 +393,30 @@ namespace InnerScope {
             }
         }
     );
+
+    export class component extends React.Component<Props, WindowItemSize> {
+        public static defaultProps: Partial<Props>;
+
+        constructor(props) {
+            super(props);
+            this.state = {
+                top: this.props.top,
+                left: this.props.left,
+                width: this.props.width,
+                height: this.props.height,
+                zIndex: this.props.zIndex
+            };
+        }
+        render() {
+            return (
+                <Inner
+                    {...this.props}
+                    {...this.state}
+                    onChange={x => this.setState(x)}
+                />
+            );
+        }
+    }
     const defaultSize = {
         top: 0,
         left: 0,

@@ -59,45 +59,17 @@ namespace InnerScope {
                     <WindowContainer ref="parent">
                         <WindowItem
                             findParent={() => findDOMNode(this.refs.parent)}
-                            {...homeIndexAction.store.windowItemSizes[0]}
-                            onChange={size =>
-                                homeIndexAction.next('changeWindowSize', {
-                                    size,
-                                    index: 0
-                                })
-                            }
                         >
                             <PaneContainer
-                                sizes={homeIndexAction.store.paneSizes[0]}
                                 elements={[getItem(), getItem(), getItem()]}
-                                onChange={sizes =>
-                                    homeIndexAction.next('changePaneSize', {
-                                        sizes,
-                                        index: 0
-                                    })
-                                }
                             />
                         </WindowItem>
                         <WindowItem
                             findParent={() => findDOMNode(this.refs.parent)}
-                            {...homeIndexAction.store.windowItemSizes[1]}
-                            onChange={size =>
-                                homeIndexAction.next('changeWindowSize', {
-                                    size,
-                                    index: 1
-                                })
-                            }
                         >
                             <PaneContainer
-                                sizes={homeIndexAction.store.paneSizes[1]}
                                 axis="Vertical"
                                 elements={[getItem(), getItem(), getItem()]}
-                                onChange={sizes =>
-                                    homeIndexAction.next('changePaneSize', {
-                                        sizes,
-                                        index: 1
-                                    })
-                                }
                             />
                         </WindowItem>
                     </WindowContainer>
