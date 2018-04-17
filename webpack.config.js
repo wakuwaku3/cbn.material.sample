@@ -42,9 +42,7 @@ const app = {
     // import 文で .ts ファイルを解決するため
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.json']
-    },
-    // ソースマップを有効に
-    devtool: 'source-map'
+    }
 };
 
 if (process.env.NODE_ENV !== 'production') {

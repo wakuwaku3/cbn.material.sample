@@ -38,6 +38,7 @@ namespace InnerScope {
         'button-container': {
             display: 'flex',
             'align-items': 'center',
+            'margin-right': 'auto',
             '& button': { 'margin-right': '4px' },
             [theme.breakpoints.down('sm')]: {
                 'overflow-x': 'auto'
@@ -55,6 +56,7 @@ namespace InnerScope {
         },
         table: {
             width: 0,
+            overflow: 'auto',
             'table-layout': 'fixed',
             '& th': {
                 background: theme.palette.primary[theme.palette.type],
@@ -175,6 +177,7 @@ namespace InnerScope {
                     <Adjuster
                         horizontal="left"
                         vertical="center"
+                        width="inherit"
                         className={this.classes['button-container']}
                     >
                         {(() => {
