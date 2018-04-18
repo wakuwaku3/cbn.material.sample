@@ -6,20 +6,31 @@ import { decorate, mergeClasses } from '../../../lib/shared/style-helper';
 namespace InnerScope {
     interface Style {
         root;
+        container;
     }
     const style: Style = {
         root: {
             'text-overflow': 'ellipsis',
             overflow: 'hidden',
             'white-space': 'nowrap',
-            position: 'relative'
+            height: 0,
+            padding: 0
+        },
+        container: {
+            position: 'relative',
+            display: 'flex',
+            height: '100%',
+            'align-items': 'center',
+            padding: [4, 56, 4, 24]
         }
     };
     export interface Props extends TableCellProps {}
     export const component = decorate(style)<Props>(props => {
-        let classes = mergeClasses(props.classes, props.classes);
-        let mergedprops = Object.assign({}, props, { classes });
-        return <TableCell {...mergedprops}>{props.children}</TableCell>;
+        return (
+            <TableCell {...props}>
+                <div className={props.classes.container}>{props.children}</div>
+            </TableCell>
+        );
     });
 }
 export type CellProps = InnerScope.Props;

@@ -6,11 +6,15 @@ import { decorate } from '../../../lib/shared/style-helper';
 namespace InnerScope {
     interface Style {
         root;
+        container;
     }
     const style: Style = {
         root: {
             'text-align': 'center',
             'min-width': 50,
+            padding: 0
+        },
+        container: {
             padding: 0
         }
     };
@@ -22,7 +26,7 @@ namespace InnerScope {
     }
     export const component = decorate(style)<Props>(props => {
         return (
-            <Cell classes={{ root: props.classes.root }}>
+            <Cell classes={props.classes}>
                 {(() => {
                     if (!props.hidden) {
                         return (

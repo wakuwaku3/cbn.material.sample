@@ -23,11 +23,9 @@ namespace InnerScope {
         w: number;
     }
     export interface Style {
-        root;
         dummy;
     }
     const style: Style = {
-        root: {},
         dummy: {
             position: 'absolute',
             width: '100%',
@@ -134,7 +132,7 @@ namespace InnerScope {
                         : false
                 });
                 return (
-                    <Cell {...cellProps} className={classes.root}>
+                    <Cell {...cellProps}>
                         {this.getLine()}
                         {this.getContent()}
                     </Cell>
