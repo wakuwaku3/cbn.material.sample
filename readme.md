@@ -5,7 +5,6 @@ typescript + es2017 + react + material-ui のサンプル
 ## Requirement
 
 * npm
-* .net core2.0
 
 ## Install
 
@@ -16,10 +15,6 @@ typescript + es2017 + react + material-ui のサンプル
 #### Build
 
 `npm run build`
-
-#### Publish
-
-`npm run publish`
 
 #### Start
 
