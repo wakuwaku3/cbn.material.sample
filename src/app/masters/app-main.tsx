@@ -8,18 +8,18 @@ import { AppBody } from './app-body';
 import { AppFooter } from './app-footer';
 
 namespace InnerScope {
-    export const component = withStore(themeAction)(() => {
-        return (
-            <MaterialThemeProvider theme={themeAction.theme}>
-                <BrowserRouter>
-                    <div>
-                        <AppTop />
-                        <AppBody />
-                        <AppFooter />
-                    </div>
-                </BrowserRouter>
-            </MaterialThemeProvider>
-        );
-    });
+  export const component = withStore(themeAction)(() => {
+    return (
+      <MaterialThemeProvider theme={themeAction.theme}>
+        <BrowserRouter>
+          <div>
+            <AppTop />
+            <AppBody />
+            <AppFooter />
+          </div>
+        </BrowserRouter>
+      </MaterialThemeProvider>
+    );
+  });
 }
 export const AppMain = InnerScope.component;

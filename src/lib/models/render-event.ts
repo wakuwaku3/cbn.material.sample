@@ -1,3 +1,3 @@
 export interface RenderEvent {
-    render: void;
+  render: void;
 }

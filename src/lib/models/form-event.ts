@@ -1,4 +1,4 @@
 export interface FormEvent<State> {
-    initialize: void;
-    render: Partial<State>;
+  initialize: void;
+  render: Partial<State>;
 }

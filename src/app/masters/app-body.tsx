@@ -12,40 +12,40 @@ import { authAction } from '../actions/shared/auth-action';
 import { browserAction } from '../actions/shared/browser-action';
 
 namespace InnerScope {
-    let pt = 10;
-    let pb = 10;
-    const styles = (theme: Theme) => ({
-        body: {
-            paddingTop: pt,
-            paddingBottom: pb,
-            paddingLeft: 10,
-            paddingRight: 10,
-            position: 'relative',
-            overflow: 'auto' as 'auto',
-            height: (props: InnerProps) => {
-                let top = getTopHeight(theme);
-                return props.windowInnerHeight - getFooterHeight() - top;
-            }
-        }
-    });
-    interface InnerProps {
-        authenticated: boolean;
-        windowInnerHeight: number;
-    }
-    const Inner = decorate(styles)<InnerProps>(props => (
-        <div className={props.classes.body}>
-            <AppMessages />
-            <AppDialog />
-            {props.authenticated ? <AppRouter /> : <LogIn />}
-        </div>
-    ));
-    export const component = withStore(browserAction, authAction)(() => {
-        return (
-            <Inner
-                authenticated={authAction.store.authenticated}
-                windowInnerHeight={window.innerHeight}
-            />
-        );
-    });
+  const pt = 10;
+  const pb = 10;
+  const styles = (theme: Theme) => ({
+    body: {
+      paddingTop: pt,
+      paddingBottom: pb,
+      paddingLeft: 10,
+      paddingRight: 10,
+      position: 'relative',
+      overflow: 'auto' as 'auto',
+      height: (props: InnerProps) => {
+        const top = getTopHeight(theme);
+        return props.windowInnerHeight - getFooterHeight() - top;
+      },
+    },
+  });
+  interface InnerProps {
+    authenticated: boolean;
+    windowInnerHeight: number;
+  }
+  const Inner = decorate(styles)<InnerProps>(props => (
+    <div className={props.classes.body}>
+      <AppMessages />
+      <AppDialog />
+      {props.authenticated ? <AppRouter /> : <LogIn />}
+    </div>
+  ));
+  export const component = withStore(browserAction, authAction)(() => {
+    return (
+      <Inner
+        authenticated={authAction.store.authenticated}
+        windowInnerHeight={window.innerHeight}
+      />
+    );
+  });
 }
 export const AppBody = InnerScope.component;

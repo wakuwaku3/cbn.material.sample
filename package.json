@@ -1,51 +1,33 @@
 {
-    "name": "cbn.material.sample",
-    "version": "1.0.0",
-    "description": "typescript + es2017 + react + material-ui のサンプル",
-    "main": ".src/entrypoint.js",
-    "scripts": {
-        "install": "gulp restore",
-        "build": "gulp build",
-        "test": "gulp test",
-        "publish": "gulp publish",
-        "start": "gulp run"
-    },
-    "author": "wakuwaku3",
-    "license": "ISC",
-    "dependencies": {
-        "babel-plugin-transform-object-assign": "^6.22.0",
-        "babel-polyfill": "^6.26.0",
-        "babel-runtime": "^6.26.0",
-        "material-ui": "^1.0.0-beta.40",
-        "material-ui-icons": "^1.0.0-beta.36",
-        "react": "^16.2.0",
-        "react-dom": "^16.2.0",
-        "react-jss": "^8.4.0",
-        "react-router-dom": "^4.2.2",
-        "regenerator-runtime": "^0.11.1",
-        "rxjs": "^5.5.8",
-        "typeface-roboto": "0.0.54",
-        "whatwg-fetch": "^2.0.4"
-    },
-    "devDependencies": {
-        "@types/node": "^9.6.0",
-        "@types/react": "^16.0.36",
-        "@types/react-dom": "^16.0.3",
-        "@types/react-router-dom": "^4.2.3",
-        "awesome-typescript-loader": "^3.4.1",
-        "babel-core": "^6.26.0",
-        "babel-preset-env": "^1.6.1",
-        "child_process": "^1.0.2",
-        "css-loader": "^0.28.11",
-        "file-loader": "^1.1.11",
-        "gulp": "^3.9.1",
-        "gulp-dotnet-cli": "^1.1.0",
-        "path": "^0.12.7",
-        "run-sequence": "^2.2.1",
-        "source-map-loader": "^0.2.3",
-        "style-loader": "^0.20.3",
-        "typescript": "^2.7.1",
-        "url-loader": "^1.0.1",
-        "webpack": "^3.10.0"
-    }
+  "name": "cbn.material.sample",
+  "version": "0.1.0",
+  "private": true,
+  "description": "typescript + es2017 + react + material-ui のサンプル",
+  "author": "wakuwaku3",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "react-scripts-ts": "2.15.1",
+    "material-ui": "^1.0.0-beta.40",
+    "material-ui-icons": "^1.0.0-beta.36",
+    "react-jss": "^8.4.0",
+    "react-router-dom": "^4.2.2",
+    "rxjs": "^5.5.8",
+    "typeface-roboto": "0.0.54"
+  },
+  "scripts": {
+    "start": "react-scripts-ts start",
+    "build": "react-scripts-ts build",
+    "test": "react-scripts-ts test --env=jsdom",
+    "eject": "react-scripts-ts eject"
+  },
+  "devDependencies": {
+    "@types/jest": "^22.2.3",
+    "@types/node": "^7.0.63",
+    "@types/react": "^16.3.13",
+    "@types/react-dom": "^16.0.5",
+    "@types/react-router-dom": "^4.2.6",
+    "typescript": "^2.8.3"
+  }
 }

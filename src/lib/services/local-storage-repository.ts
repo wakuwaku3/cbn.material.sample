@@ -1,55 +1,55 @@
 import { delay } from '../shared/cbn';
 
 export class LocalStorageRepository<T extends object> {
-    private _store: T[];
-    constructor(
-        private _key: string,
-        private _equal: (model1: T) => (model2: T) => boolean
-    ) {
-        this.load();
-    }
-    private load = () => {
-        let json = localStorage.getItem(this._key);
-        this._store = json ? JSON.parse(json) : [];
-    };
-    private reset = () => {
-        localStorage.setItem(this._key, JSON.stringify(this._store));
-    };
-    private resetAsync = async () => {
-        await delay(0);
-        this.reset();
-    };
-    getAll = () => {
-        return this._store.map(x => Object.assign({}, x));
-    };
-    getAllAsync = async () => {
-        await delay(0);
-        return this.getAll();
-    };
-    push = async (model: T) => {
-        this._store.push(Object.assign({}, model));
-        this.reset();
-    };
-    pushAsync = async (model: T) => {
-        this._store.push(Object.assign({}, model));
-        await this.resetAsync();
-    };
-    update = async (model: T) => {
-        let id = this._store.findIndex(this._equal(model));
-        this._store[id] = Object.assign(this._store[id], model);
-        this.reset();
-    };
-    updateAsync = async (model: T) => {
-        let id = this._store.findIndex(this._equal(model));
-        this._store[id] = Object.assign(this._store[id], model);
-        await this.resetAsync();
-    };
-    remove = (model: T) => {
-        this._store.splice(this._store.findIndex(this._equal(model)), 1);
-        this.reset();
-    };
-    removeAsync = async (model: T) => {
-        this._store.splice(this._store.findIndex(this._equal(model)), 1);
-        await this.resetAsync();
-    };
+  private innerStore: T[];
+  constructor(
+    private key: string,
+    private equal: (model1: T) => (model2: T) => boolean,
+  ) {
+    this.load();
+  }
+  private load = () => {
+    const json = localStorage.getItem(this.key);
+    this.innerStore = json ? JSON.parse(json) : [];
+  };
+  private reset = () => {
+    localStorage.setItem(this.key, JSON.stringify(this.innerStore));
+  };
+  private resetAsync = async () => {
+    await delay(0);
+    this.reset();
+  };
+  public getAll = () => {
+    return this.innerStore.map(x => Object.assign({}, x));
+  };
+  public getAllAsync = async () => {
+    await delay(0);
+    return this.getAll();
+  };
+  public push = async (model: T) => {
+    this.innerStore.push(Object.assign({}, model));
+    this.reset();
+  };
+  public pushAsync = async (model: T) => {
+    this.innerStore.push(Object.assign({}, model));
+    await this.resetAsync();
+  };
+  public update = async (model: T) => {
+    const id = this.innerStore.findIndex(this.equal(model));
+    this.innerStore[id] = Object.assign(this.innerStore[id], model);
+    this.reset();
+  };
+  public updateAsync = async (model: T) => {
+    const id = this.innerStore.findIndex(this.equal(model));
+    this.innerStore[id] = Object.assign(this.innerStore[id], model);
+    await this.resetAsync();
+  };
+  public remove = (model: T) => {
+    this.innerStore.splice(this.innerStore.findIndex(this.equal(model)), 1);
+    this.reset();
+  };
+  public removeAsync = async (model: T) => {
+    this.innerStore.splice(this.innerStore.findIndex(this.equal(model)), 1);
+    await this.resetAsync();
+  };
 }

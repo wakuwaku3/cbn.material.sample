@@ -1,3 +1,3 @@
 export interface Selectable {
-    isSelected: boolean;
+  isSelected: boolean;
 }

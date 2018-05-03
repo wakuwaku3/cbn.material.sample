@@ -4,54 +4,13 @@
       "path": "."
     }
   ],
-  "settings": {
-    "files.exclude": {
-      "**/.git": true,
-      "**/.awcache": true,
-      "**/bin": true,
-      "**/obj": true,
-      "**/package-lock.json": true,
-      "**/.svn": true,
-      "**/.hg": true,
-      "**/CVS": true,
-      "**/.DS_Store": true,
-      "**/src/**/*.js": true,
-      "**/src/**/*.js.map": true,
-      "**/node_modules": true,
-      "**/dist": true
-    },
-    "editor.formatOnType": true,
-    "editor.formatOnPaste": false,
-    "editor.formatOnSave": true,
-    "editor.detectIndentation": true,
-    "prettier.semi": true,
-    "prettier.tabWidth": 4,
-    "prettier.singleQuote": true,
-    "csharpfixformat.style.braces.onSameLine": false,
-    "csharpfixformat.style.spaces.beforeParenthesis": false,
-    "csharpfixformat.style.spaces.beforeIndexerBracket": false,
-    "editor.tabCompletion": true,
-    "omnisharp.useEditorFormattingSettings": false,
-    "prettier.disableLanguages": ["jchannon.csharpextensions", "markdown"],
-    "csproj.excludeRegex": ".*",
-    "csproj.silentDeletion": true
-  },
   "extensions": {
     "recommendations": [
-      "Angular.ng-template",
       "christian-kohler.path-intellisense",
-      "eg2.vscode-npm-script",
       "esbenp.prettier-vscode",
-      "fknop.vscode-npm",
-      "jchannon.csharpextensions",
-      "k--kato.docomment",
-      "Leopotam.csharpfixformat",
-      "ms-vscode.csharp",
-      "ms-vscode.node-debug",
-      "ms-vscode.node-debug2",
       "msjsdiag.debugger-for-chrome",
-      "natewallace.angular2-inline",
-      "steoates.autoimport"
+      "steoates.autoimport",
+      "eg2.tslint"
     ]
   }
 }

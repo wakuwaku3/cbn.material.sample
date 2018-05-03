@@ -6,22 +6,22 @@ export type Axis = 'Vertical' | 'Horizontal';
 export type Scroll = 'auto' | 'hidden' | 'scroll';
 export type Positioning = Vertical | Horizontal;
 export type DivProps = React.DetailedHTMLProps<
-    React.HTMLAttributes<HTMLDivElement>,
-    HTMLDivElement
+  React.HTMLAttributes<HTMLDivElement>,
+  HTMLDivElement
 >;
 export type TdProps = React.DetailedHTMLProps<
-    React.TdHTMLAttributes<HTMLTableDataCellElement>,
-    HTMLTableDataCellElement
+  React.TdHTMLAttributes<HTMLTableDataCellElement>,
+  HTMLTableDataCellElement
 >;
 export type ThProps = React.DetailedHTMLProps<
-    React.ThHTMLAttributes<HTMLTableDataCellElement>,
-    HTMLTableDataCellElement
+  React.ThHTMLAttributes<HTMLTableDataCellElement>,
+  HTMLTableDataCellElement
 >;
 export type SortDirection = 'asc' | 'desc';
 export type Classes<Style> = Record<keyof Partial<Style>, string>;
 export type MessageLevel = 'error' | 'warning' | 'info';
 export type StyleFactory<T extends object> = (theme) => T;
-export type StyledProps<Style> = { classes: Record<keyof Style, string> };
+export interface StyledProps<Style> { classes: Record<keyof Style, string> }
 export type StyledComponentType<Style, Props = {}> = React.ComponentType<
-    Props & StyledProps<Style>
+  Props & StyledProps<Style>
 >;
